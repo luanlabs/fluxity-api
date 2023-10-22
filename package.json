@@ -1,0 +1,39 @@
+{
+  "name": "fluxity-api",
+  "version": "0.1.0",
+  "description": "The Fluxity API",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev:start": "nodemon --exec node dist/index.js",
+    "dev:build": "tsc --watch",
+    "dev": "npm-run-all --parallel dev:build dev:start",
+    "dev:run": "npm-run-all --parallel dev:build dev:start",
+    "lint": "eslint . --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:FluxityStellar/fluxity-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^4.17.20",
+    "@types/node": "^20.8.7",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
+    "eslint": "^8.52.0",
+    "eslint-config-standard-with-typescript": "^39.1.1",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.2.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "mongoose": "^7.6.3"
+  }
+}
