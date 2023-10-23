@@ -16,7 +16,7 @@ const uriDb = process.env.DB_URI;
 const nameDb = process.env.DB_NAME;
 
 if (typeof uriDb !== 'string' || typeof nameDb !== 'string') {
-  console.log('database URI or ame is invalid');
+  console.log('database URI or name is invalid');
   process.exit(1);
 }
 
