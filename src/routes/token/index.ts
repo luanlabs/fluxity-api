@@ -1,9 +1,9 @@
 import express from 'express';
 
-import tokenIndex from './token';
+import addTokenRoute from './addToken';
 
 const router = express.Router();
 
-router.use('/token', tokenIndex);
+router.get('/add', addTokenRoute);
 
 export default router;
