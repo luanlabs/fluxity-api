@@ -1,82 +1,96 @@
 import { RequestHandler } from 'express';
-import SorobanClient from 'soroban-client';
-import dotenv from 'dotenv';
+import { Account, Contract } from 'soroban-client';
 
-import address from '../../models/address';
-import {
-  transactionMintBuild,
-  transactionBalanceBuild,
-} from '../../utils/token/transactionBuild';
+import buildMintTransaction from '../../utils/soroban/token/buildMint';
+import address from '../../models/AlreadyMinted';
 import getToken from '../../utils/token/getToken';
-import returnObj from '../../utils/returnObj';
+import responseTemplate from '../../utils/responseTemplate';
 import getTransaction from '../../utils/token/getTransaction';
-import addAddressToDb from '../../utils/address/addAddressToDb';
-import { responseTransaction } from '../../utils/interfaces';
-
-dotenv.config();
-
-const server = new SorobanClient.Server(process.env.SOROBAN_SERVER);
-
-const fee = 100000;
+import addAlreadyMintedToDB from '../../utils/address/addAlreadyMintedToDB';
+import getServer from '../../utils/soroban/getServer';
+import getAccount from '../../utils/soroban/getAccount';
+import authAdmin from '../../utils/authAdmin';
 
 const mintToken: RequestHandler = async (req, res) => {
   try {
-    const { addressUser } = req.body;
-
-    const findAddress = await address.findOne({ address: addressUser });
-    if (findAddress) {
-      return res.json(returnObj(false, 'address exist in database', null));
+    const authorization = req.headers.authorization;
+    if (!authorization) {
+      return res.status(400).json(
+        responseTemplate({
+          status: 'error',
+          message: 'Authorization not found',
+          result: {},
+        }),
+      );
+    } else {
+      if (!authAdmin(authorization)) {
+        return res.status(400).json(
+          responseTemplate({
+            status: 'error',
+            message: 'Access not found',
+            result: {},
+          }),
+        );
+      }
     }
 
-    const adminAddress: string | undefined = process.env.ADMIN_ADDRESS;
+    const { user } = req.body;
 
+    const isUserAlreadyMinted = await address.findOne({ address: user });
+    if (isUserAlreadyMinted) {
+      return res.status(400).json(
+        responseTemplate({
+          status: 'error',
+          message: 'User has already minted tokens',
+          result: {},
+        }),
+      );
+    }
+    console.log(1);
+    const adminAddress = await getAccount.accountAddress();
+    console.log(adminAddress);
     const tokens = await getToken();
+    const server = await getServer();
 
     const accountAdmin = await server.getAccount(adminAddress);
 
-    const transactions: responseTransaction[] = [];
-
     for (let i = 0; i < tokens.length; i++) {
-      const contract = new SorobanClient.Contract(tokens[i].address);
-      const sequence = (BigInt(accountAdmin.sequence) + BigInt(i)).toString();
-      const transactionMint = await transactionMintBuild(
-        accountAdmin._accountId,
-        sequence,
-        fee,
-        contract,
-        addressUser,
-      );
+      const contract = new Contract(tokens[i].address);
 
-      await getTransaction(transactionMint, server);
+      const sequence = (
+        BigInt(accountAdmin.sequenceNumber()) + BigInt(i)
+      ).toString();
+
+      const admin = new Account(accountAdmin.accountId(), sequence);
+
+      const mintTx = await buildMintTransaction(admin, contract, user);
+
+      if (mintTx?.status === 'error') {
+        return res.status(500).json(mintTx);
+      }
+
+      if (typeof mintTx?.result === 'string')
+        await getTransaction(mintTx?.result, server);
     }
 
-    for (let i = 0; i < tokens.length; i++) {
-      const contract = new SorobanClient.Contract(tokens[i].address);
-      const balance = await transactionBalanceBuild(
-        accountAdmin,
-        addressUser,
-        10000,
-        contract,
-      );
+    await addAlreadyMintedToDB(user);
 
-      const responseTransaction: responseTransaction = {
-        address: addressUser,
-        name: tokens[i].name,
-        symbol: tokens[i].symbol,
-        decimals: tokens[i].decimals,
-        balance: balance.toString(),
-      };
-
-      transactions.push(responseTransaction);
-    }
-
-    await addAddressToDb(addressUser);
-
-    return res.json(transactions);
+    return res.status(200).json(
+      responseTemplate({
+        status: 'success',
+        message: 'Minted tokens',
+        result: tokens,
+      }),
+    );
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e.message);
-      return res.json(returnObj(false, e.message, null));
+      return res.status(500).json(
+        responseTemplate({
+          status: 'error',
+          message: e.message,
+          result: {},
+        }),
+      );
     }
   }
 };

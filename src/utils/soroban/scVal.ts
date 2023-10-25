@@ -1,7 +1,5 @@
 import { xdr, Address } from 'soroban-client';
 
-import responseTemplate from '../../utils/responseTemplate';
-
 const bigNumberFromBytes = (...bytes: number[]): bigint => {
   bytes[0] &= 0x7f;
 

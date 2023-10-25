@@ -1,11 +1,11 @@
 import express from 'express';
 
 import addTokenRoute from './addToken';
-import mintToken from './mintToken';
+import mintTokenRoute from './mintToken';
 
 const router = express.Router();
 
-router.get('/add', addTokenRoute);
-router.post('/mint', mintToken);
+router.post('/', addTokenRoute);
+router.post('/mint', mintTokenRoute);
 
 export default router;

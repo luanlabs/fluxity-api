@@ -1,6 +1,7 @@
-import returnObj from '../returnObj';
+import responseTemplate from '../responseTemplate';
+import { Server } from 'soroban-client';
 
-const getTransaction = async (hash: string, server: any) => {
+const getTransaction = async (hash: string, server: Server) => {
   try {
     let status = 'PENDING';
 
@@ -9,14 +10,22 @@ const getTransaction = async (hash: string, server: any) => {
 
       if (tx.status !== 'NOT_FOUND') {
         status = 'COMPLETED';
-        return tx;
+        return responseTemplate({
+          status: 'success',
+          message: 'Transaction completed',
+          result: tx,
+        });
       }
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
   } catch (e) {
     if (e instanceof Error) {
-      return returnObj(false, e.message, null);
+      return responseTemplate({
+        status: 'error',
+        message: e.message,
+        result: {},
+      });
     }
   }
 };

@@ -1,28 +1,30 @@
-import token from '../../models/token';
-import returnObj from '../returnObj';
-import { tokenType } from '../interfaces';
+import token from '../../models/Token';
+import responseTemplate from '../responseTemplate';
+import { TokenType } from '../../models/Token';
 
-const addTokenToDb = async (
-  address: string,
-  name: string,
-  symbol: string,
-  decimals: string,
-) => {
-  const tokenDetail: tokenType = {
-    address: address,
-    symbol: symbol,
-    name: name,
-    decimals: decimals,
-  };
-
+const addTokenToDb = async (params: TokenType) => {
   try {
-    const tokenDb = new token(tokenDetail);
-    await tokenDb.save();
-    return returnObj(true, 'add token to database', tokenDb);
+    const tokenDetail: TokenType = {
+      address: params.address,
+      symbol: params.symbol,
+      name: params.name,
+      decimals: params.decimals,
+    };
+
+    const newToken = new token(tokenDetail);
+    await newToken.save();
+    return responseTemplate({
+      status: 'success',
+      message: 'Added token successfully',
+      result: newToken,
+    });
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e.message);
-      return returnObj(false, e.message, null);
+      responseTemplate({
+        status: 'error',
+        message: e.message,
+        result: {},
+      });
     }
   }
 };

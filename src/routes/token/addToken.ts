@@ -1,66 +1,104 @@
 import { RequestHandler } from 'express';
-import SorobanClient from 'soroban-client';
-import dotenv from 'dotenv';
+import { Contract } from 'soroban-client';
 
-import token from '../../models/token';
-import { transactionBuild } from '../../utils/token/transactionBuild';
+import Token from '../../models/Token';
+import simulateTransaction from '../../utils/soroban/token/simulateTransaction';
 import addTokenToDb from '../../utils/token/addTokenToDb';
-import returnObj from '../../utils/returnObj';
+import responseTemplate from '../../utils/responseTemplate';
+import getServer from '../../utils/soroban/getServer';
+import getAccount from '../../utils/soroban/getAccount';
+import authAdmin from '../../utils/authAdmin';
 
-dotenv.config();
-
-const server = new SorobanClient.Server(process.env.SOROBAN_SERVER);
-
-const fee = 100;
+const server = getServer();
 
 const addToken: RequestHandler = async (req, res) => {
   try {
-    const { tokenAddress } = req.body;
-
-    const findToken = await token.findOne({ address: tokenAddress });
-    if (findToken) {
-      return res.json(returnObj(false, 'token exist in database', null));
+    const authorization = req.headers.authorization;
+    if (!authorization) {
+      return res.status(400).json(
+        responseTemplate({
+          status: 'error',
+          message: 'Authorization not found',
+          result: {},
+        }),
+      );
+    } else {
+      if (!authAdmin(authorization)) {
+        return res.status(400).json(
+          responseTemplate({
+            status: 'error',
+            message: 'Access not found',
+            result: {},
+          }),
+        );
+      }
     }
 
-    const accountAdmin = await server.getAccount(process.env.ADMIN_ADDRESS);
-    const contract: object = new SorobanClient.Contract(tokenAddress);
+    const { token } = req.body;
 
-    const transactionName = transactionBuild(
+    const isTokenExist = await Token.findOne({ address: token });
+    if (isTokenExist) {
+      return res.status(400).json(
+        responseTemplate({
+          status: 'error',
+          message: 'Token already exists',
+          result: {},
+        }),
+      );
+    }
+    console.log(1);
+    const accountAdmin = await server.getAccount(getAccount.accountAddress());
+    console.log(1);
+    const contract = new Contract(token);
+    console.log(1);
+    const getTokenName = simulateTransaction(accountAdmin, contract, 'name');
+    console.log(1);
+    const getTokenSymbol = simulateTransaction(
       accountAdmin,
-      fee,
-      contract,
-      'name',
-    );
-    const transactionSymbol = transactionBuild(
-      accountAdmin,
-      fee,
       contract,
       'symbol',
     );
-    const transactionDecimals = transactionBuild(
+    const getTokenDecimals = simulateTransaction(
       accountAdmin,
-      fee,
       contract,
       'decimals',
     );
 
     const result = await Promise.all([
-      transactionName,
-      transactionSymbol,
-      transactionDecimals,
+      getTokenName,
+      getTokenSymbol,
+      getTokenDecimals,
     ]);
-
-    const tokenSaveDb = await addTokenToDb(
-      tokenAddress,
-      result[0],
-      result[1],
-      result[2],
-    );
-
-    return res.json(tokenSaveDb);
+    console.log(result);
+    if (
+      typeof result[0]?.result === 'string' &&
+      typeof result[1]?.result === 'string' &&
+      typeof result[2]?.result === 'string'
+    ) {
+      const newToken = await addTokenToDb({
+        address: token,
+        name: result[0]?.result,
+        symbol: result[1]?.result,
+        decimals: result[2]?.result,
+      });
+      console.log(3);
+      return res.status(200).json(
+        responseTemplate({
+          status: 'success',
+          message: 'Added token successful',
+          result: newToken?.result,
+        }),
+      );
+    }
   } catch (e) {
     if (e instanceof Error) {
-      return res.json(returnObj(false, e.message, null));
+      return res.status(500).json(
+        responseTemplate({
+          status: 'error',
+          message: e.message,
+          result: {},
+        }),
+      );
     }
   }
 };

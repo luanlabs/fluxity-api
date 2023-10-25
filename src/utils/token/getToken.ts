@@ -1,7 +1,7 @@
-import token from '../../models/token';
+import Tokens from '../../models/Token';
 
-const getToken = async () => {
-  const find = await token.find({});
+const getTokens = async () => {
+  const find = await Tokens.find({});
   return find;
 };
-export default getToken;
+export default getTokens;
