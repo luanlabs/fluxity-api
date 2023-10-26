@@ -7,7 +7,7 @@ export interface TokenType {
   decimals: string;
 }
 
-const Token = new mongoose.Schema({
+const Token = new mongoose.Schema<TokenType>({
   address: { type: String, required: true, unique: true },
   symbol: { type: String, required: true, unique: true },
   name: { type: String, required: true, unique: true },
