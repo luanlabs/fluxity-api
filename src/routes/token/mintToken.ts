@@ -3,37 +3,15 @@ import { Account, Contract } from 'soroban-client';
 
 import buildMintTransaction from '../../utils/soroban/token/buildMint';
 import address from '../../models/AlreadyMinted';
-import getToken from '../../utils/token/getToken';
+import getToken from '../../utils/token/getTokens';
 import responseTemplate from '../../utils/responseTemplate';
 import getTransaction from '../../utils/token/getTransaction';
 import addAlreadyMintedToDB from '../../utils/address/addAlreadyMintedToDB';
 import getServer from '../../utils/soroban/getServer';
-import getAccount from '../../utils/soroban/getAccount';
-import authAdmin from '../../utils/authAdmin';
+import getAdmin from '../../utils/soroban/getAdmin';
 
 const mintToken: RequestHandler = async (req, res) => {
   try {
-    const authorization = req.headers.authorization;
-    if (!authorization) {
-      return res.status(400).json(
-        responseTemplate({
-          status: 'error',
-          message: 'Authorization not found',
-          result: {},
-        }),
-      );
-    } else {
-      if (!authAdmin(authorization)) {
-        return res.status(400).json(
-          responseTemplate({
-            status: 'error',
-            message: 'Access not found',
-            result: {},
-          }),
-        );
-      }
-    }
-
     const { user } = req.body;
 
     const isUserAlreadyMinted = await address.findOne({ address: user });
@@ -46,9 +24,9 @@ const mintToken: RequestHandler = async (req, res) => {
         }),
       );
     }
-    console.log(1);
-    const adminAddress = await getAccount.accountAddress();
-    console.log(adminAddress);
+
+    const adminAddress = await getAdmin().publicKey();
+
     const tokens = await getToken();
     const server = await getServer();
 
@@ -69,8 +47,9 @@ const mintToken: RequestHandler = async (req, res) => {
         return res.status(500).json(mintTx);
       }
 
-      if (typeof mintTx?.result === 'string')
+      if (typeof mintTx?.result === 'string') {
         await getTransaction(mintTx?.result, server);
+      }
     }
 
     await addAlreadyMintedToDB(user);
@@ -78,7 +57,7 @@ const mintToken: RequestHandler = async (req, res) => {
     return res.status(200).json(
       responseTemplate({
         status: 'success',
-        message: 'Minted tokens',
+        message: 'Tokens minted successfully',
         result: tokens,
       }),
     );
