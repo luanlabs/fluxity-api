@@ -1,7 +1,7 @@
 import SorobanClient, { Account, Contract, xdr } from 'soroban-client';
 import getFee from './getFee';
 import getServer from './getServer';
-import getAccount from './getAccount';
+import getAdmin from './getAdmin';
 import getNetwork from './getNetwork';
 import ToScVal from './scVal';
 
@@ -16,7 +16,7 @@ interface CreateTransactionType {
 const createTransaction = async (params: CreateTransactionType) => {
   const server = getServer();
   const fee = getFee();
-  const adminAccount = getAccount.accountPrivetKey();
+  const adminAccount = getAdmin();
 
   let transaction = await new SorobanClient.TransactionBuilder(params.admin, {
     fee,
