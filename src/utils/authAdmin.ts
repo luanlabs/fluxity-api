@@ -4,9 +4,9 @@ import responseTemplate from './responseTemplate';
 
 dotenv.config();
 
-const isAuthorization: RequestHandler = (req, res, next) => {
-  const Authorization = req.headers.authorization;
-  if (!Authorization) {
+const authAdmin: RequestHandler = (req, res, next) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
     return res.status(401).json(
       responseTemplate({
         status: 'error',
@@ -14,7 +14,7 @@ const isAuthorization: RequestHandler = (req, res, next) => {
         result: {},
       }),
     );
-  } else if (Authorization === process.env.ADMIN_PASSWORD) {
+  } else if (authorization === process.env.ADMIN_PASSWORD) {
     next();
   } else {
     return res.status(403).json(
@@ -27,4 +27,4 @@ const isAuthorization: RequestHandler = (req, res, next) => {
   }
 };
 
-export default isAuthorization;
+export default authAdmin;

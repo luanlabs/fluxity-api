@@ -4,7 +4,7 @@ import { TokenType } from '../../models/Token';
 
 const saveToken = async (params: TokenType) => {
   try {
-    const newToken = new Token({ ...params });
+    const newToken = new Token({ params });
     await newToken.save();
     return responseTemplate({
       status: 'success',

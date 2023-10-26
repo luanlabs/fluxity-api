@@ -71,7 +71,7 @@ const addToken: RequestHandler = async (req, res) => {
       return res.status(500).json(
         responseTemplate({
           status: 'error',
-          message: 'Field get token name, symbol or desimals',
+          message: 'Failed get token name, symbol or desimals',
           result: {},
         }),
       );

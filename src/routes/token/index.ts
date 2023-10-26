@@ -2,11 +2,11 @@ import express from 'express';
 
 import addTokenRoute from './addToken';
 import mintTokenRoute from './mintToken';
-import isAuthorization from '../../utils/authAdmin';
+import authAdmin from '../../utils/authAdmin';
 
 const router = express.Router();
 
-router.post('/', isAuthorization, addTokenRoute);
-router.post('/mint', isAuthorization, mintTokenRoute);
+router.post('/', authAdmin, addTokenRoute);
+router.post('/mint', mintTokenRoute);
 
 export default router;
