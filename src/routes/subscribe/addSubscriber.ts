@@ -1,10 +1,8 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import Subscriber from '../../models/Subscriber';
 import { validateEmail } from '../../utils/validateEmail';
 
-const router = express.Router();
-
-router.post('/subscribe', async (req: Request, res: Response) => {
+const addSubscriber = async (req: Request, res: Response) => {
     try {
         const { email } = req.body;
 
@@ -34,6 +32,6 @@ router.post('/subscribe', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ message: "Error adding subscriber", error });
     }
-});
+};
 
-export default router;
+export default addSubscriber;
