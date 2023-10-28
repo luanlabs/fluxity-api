@@ -10,7 +10,7 @@ const configSwagger = () => {
       },
       servers: [
         {
-          url: 'http://localhost:3000',
+          url: 'https://api.fluxity.finance',
         },
       ],
     },
