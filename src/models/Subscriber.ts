@@ -2,10 +2,9 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 interface ISubscriber extends Document {
     email: string;
-    dateSubscribed: Date;
-}
+};
 
-const subscriberSchema: Schema = new Schema({
+const subscriberSchema = new Schema<ISubscriber>({
     email: {
         type: String,
         required: true,
@@ -13,12 +12,7 @@ const subscriberSchema: Schema = new Schema({
         trim: true,
         lowercase: true,
     },
-    dateSubscribed: {
-        type: Date,
-        required: true,
-        default: Date.now
-    }
-});
+}, { timestamps: true });
 
 const Subscriber = mongoose.model<ISubscriber>('Subscriber', subscriberSchema);
 
