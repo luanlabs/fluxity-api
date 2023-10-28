@@ -2,7 +2,6 @@ import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 import responseTemplate from '../../utils/responseTemplate';
-import removeToken from '../../utils/token/removeToken';
 
 const deleteToken: RequestHandler = async (req, res) => {
   try {
@@ -13,19 +12,19 @@ const deleteToken: RequestHandler = async (req, res) => {
       return res.status(400).json(
         responseTemplate({
           status: 'error',
-          message: 'Token not exists',
+          message: 'Token does not exist the database',
           result: {},
         }),
       );
     }
 
-    const tokenDeleted = await removeToken(token);
+    const tokenDeleted = await Token.findOneAndDelete({ address: token });
 
     return res.status(200).json(
       responseTemplate({
         status: 'success',
-        message: 'Deleted token successful',
-        result: tokenDeleted?.result,
+        message: 'Token deleted successful',
+        result: tokenDeleted,
       }),
     );
   } catch (e) {

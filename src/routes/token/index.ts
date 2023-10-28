@@ -3,7 +3,7 @@ import express from 'express';
 import addTokenRoute from './addToken';
 import mintTokenRoute from './mintToken';
 import authAdmin from '../../utils/authAdmin';
-import deleteToken from './deleteToken';
+import deleteToken from './delete';
 
 const router = express.Router();
 
