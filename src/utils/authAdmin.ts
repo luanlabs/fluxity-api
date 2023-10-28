@@ -10,7 +10,7 @@ const authAdmin: RequestHandler = (req, res, next) => {
     return res.status(401).json(
       responseTemplate({
         status: 'error',
-        message: 'Authorization not found',
+        message: 'Authorization failed',
         result: {},
       }),
     );
@@ -20,7 +20,7 @@ const authAdmin: RequestHandler = (req, res, next) => {
     return res.status(403).json(
       responseTemplate({
         status: 'error',
-        message: 'Access not found',
+        message: 'Authorization failed',
         result: {},
       }),
     );

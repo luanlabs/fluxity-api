@@ -1,9 +1,9 @@
 /**
  * @swagger
- * /token/mint:
+ * /token:
  *   post:
- *     summary: Mint token
- *     tags: [Apis]
+ *     summary: Adds an ERC20-like token to the list of claimable tokens.
+ *     tags: [token]
  *     requestBody:
  *       required: true
  *       content:
@@ -14,10 +14,13 @@
  *               token:
  *                 type: string
  *                 required: true
- *                 example : GBLBJBTC2URCWUTIXY42W7M5GAZ2NIKTS4QF77BHHWHSBKKSPS2DTOHA
+ *                 example : CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H
+ *     security:
+ *       - Authorization : []
+ *
  *     responses:
  *       200:
- *         description:  Minted token
+ *         description: Token has been saved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -28,20 +31,20 @@
  *                   example: success
  *                 message:
  *                   type: string
- *                   example: Tokens minted successfully
+ *                   example: Token has been saved successfully
  *                 result:
- *                   type: array
- *                   example: [{
- *                     _id: "6538cee619e2c76fe6cad499",
- *                     "address": "CASS3CUNR7W4ASUCEGOMK3TUWITT7KKDS6DQ2TS27UPKRAAKTSHHUJPB",
+ *                   type: object
+ *                   example: {
+ *                     address: CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H,
  *                     symbol: fDAI,
  *                     name: FakeDAI,
  *                     decimals: 7,
+ *                     _id: 6539a4b453971c96d697f9c0,
  *                     __v: 0
- *                   },]
+ *                   }
  *
  *       400:
- *         description: User minted
+ *         description: Token already exists in the database
  *         content:
  *           application/json:
  *             schema:
@@ -52,11 +55,44 @@
  *                   example: error
  *                 message:
  *                   type: string
- *                   example: User has already minted tokens
+ *                   example: Token already exists
  *                 result:
  *                   type: object
  *                   example: {}
  *
+ *       401:
+ *         description: Authorization failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Authorization failed
+ *                 result:
+ *                   type: object
+ *                   example: {}
+ *
+ *       403:
+ *         description: Access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Authorization failed
+ *                 result:
+ *                   type: object
+ *                   example: {}
  *
  *       500:
  *         description: Internal server error
@@ -70,12 +106,14 @@
  *                     example: error
  *                   message:
  *                     type: string
- *                     example: Address invalid ...
+ *                     example: Failed to save the token
  *                   result:
  *                     type: object
  *                     example: {}
- * components:
  *
+ *
+ *
+ * components:
  *     securitySchemes:
  *       Authorization:
  *         type: apiKey

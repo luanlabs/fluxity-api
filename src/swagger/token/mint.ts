@@ -1,9 +1,9 @@
 /**
  * @swagger
- * /token:
+ * /token/mint:
  *   post:
- *     summary: Add token
- *     tags: [Apis]
+ *     summary: Mints a new token and transfers the tokens to the specified destination address.
+ *     tags: [token]
  *     requestBody:
  *       required: true
  *       content:
@@ -11,13 +11,13 @@
  *           schema:
  *             type: object
  *             properties:
- *               token:
+ *               user:
  *                 type: string
  *                 required: true
  *                 example : GBLBJBTC2URCWUTIXY42W7M5GAZ2NIKTS4QF77BHHWHSBKKSPS2DTOHA
  *     responses:
  *       200:
- *         description: Added token
+ *         description: Token has been minted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -28,20 +28,20 @@
  *                   example: success
  *                 message:
  *                   type: string
- *                   example: Added token successful
+ *                   example: Tokens minted successfully
  *                 result:
- *                   type: object
- *                   example: {
- *                     address: CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H,
+ *                   type: array
+ *                   example: [{
+ *                     _id: "6538cee619e2c76fe6cad499",
+ *                     "address": "CASS3CUNR7W4ASUCEGOMK3TUWITT7KKDS6DQ2TS27UPKRAAKTSHHUJPB",
  *                     symbol: fDAI,
  *                     name: FakeDAI,
  *                     decimals: 7,
- *                     _id: 6539a4b453971c96d697f9c0,
  *                     __v: 0
- *                   }
+ *                   },]
  *
  *       400:
- *         description: Token exist
+ *         description: User has already minted the fake tokens
  *         content:
  *           application/json:
  *             schema:
@@ -52,44 +52,11 @@
  *                   example: error
  *                 message:
  *                   type: string
- *                   example: Token already exists
+ *                   example: User has already minted tokens
  *                 result:
  *                   type: object
  *                   example: {}
  *
- *       401:
- *         description: Authorization
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: error
- *                 message:
- *                   type: string
- *                   example: Authorization not found
- *                 result:
- *                   type: object
- *                   example: {}
- *
- *       403:
- *         description: Access
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: error
- *                 message:
- *                   type: string
- *                   example: Access not found
- *                 result:
- *                   type: object
- *                   example: {}
  *
  *       500:
  *         description: Internal server error
@@ -103,20 +70,10 @@
  *                     example: error
  *                   message:
  *                     type: string
- *                     example: Token Invalid ...
+ *                     example: Address invalid ...
  *                   result:
  *                     type: object
  *                     example: {}
- *
- *
- *
- * components:
- *
- *     securitySchemes:
- *       Authorization:
- *         type: apiKey
- *         name: authorization
- *         in: header
  *
  *
  */

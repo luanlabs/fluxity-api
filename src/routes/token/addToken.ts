@@ -63,7 +63,7 @@ const addToken: RequestHandler = async (req, res) => {
       return res.status(200).json(
         responseTemplate({
           status: 'success',
-          message: 'Added token successful',
+          message: 'Token has been saved successfully',
           result: newToken?.result,
         }),
       );

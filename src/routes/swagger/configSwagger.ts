@@ -5,7 +5,8 @@ const configSwagger = () => {
       info: {
         title: 'Fluxity API',
         version: '0.1.0',
-        description: 'This is a API fluxity',
+        description:
+          'Fluxity API allows users to mint free tokens, subscribe to our news, and get aggregared data of the streams',
       },
       servers: [
         {
@@ -13,7 +14,7 @@ const configSwagger = () => {
         },
       ],
     },
-    apis: ['./src/routes/swagger/apis/*.ts'],
+    apis: ['./src/swagger/token/*.ts'],
   };
   return options;
 };

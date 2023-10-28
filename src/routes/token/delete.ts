@@ -9,10 +9,10 @@ const deleteToken: RequestHandler = async (req, res) => {
 
     const isTokenExist = await Token.findOne({ address: token });
     if (!isTokenExist) {
-      return res.status(400).json(
+      return res.status(404).json(
         responseTemplate({
           status: 'error',
-          message: 'Token does not exist the database',
+          message: 'Token dose not exist',
           result: {},
         }),
       );
@@ -23,7 +23,7 @@ const deleteToken: RequestHandler = async (req, res) => {
     return res.status(200).json(
       responseTemplate({
         status: 'success',
-        message: 'Token deleted successful',
+        message: 'Token deleted successfully',
         result: tokenDeleted,
       }),
     );

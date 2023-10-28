@@ -2,8 +2,8 @@
  * @swagger
  * /token:
  *   delete:
- *     summary: Delete token
- *     tags: [Apis]
+ *     summary: Deletes a token from the list of claimable tokens.
+ *     tags: [token]
  *     requestBody:
  *       required: true
  *       content:
@@ -14,10 +14,14 @@
  *               token:
  *                 type: string
  *                 required: true
- *                 example : GBLBJBTC2URCWUTIXY42W7M5GAZ2NIKTS4QF77BHHWHSBKKSPS2DTOHA
+ *                 example : CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H
+ *
+ *     security:
+ *       - Authorization : []
+ *
  *     responses:
  *       200:
- *         description: Deleted token
+ *         description: Token has been deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -28,7 +32,7 @@
  *                   example: success
  *                 message:
  *                   type: string
- *                   example: Deleted token successful
+ *                   example: Token deleted successfully
  *                 result:
  *                   type: object
  *                   example: {
@@ -40,8 +44,8 @@
  *                     __v: 0
  *                   }
  *
- *       400:
- *         description: Token not exist
+ *       404:
+ *         description: Token dose not exist on the database
  *         content:
  *           application/json:
  *             schema:
@@ -52,13 +56,13 @@
  *                   example: error
  *                 message:
  *                   type: string
- *                   example: Token not exists
+ *                   example: Token dose not exist
  *                 result:
  *                   type: object
  *                   example: {}
  *
  *       401:
- *         description: Authorization
+ *         description: Authorization failed
  *         content:
  *           application/json:
  *             schema:
@@ -69,7 +73,7 @@
  *                   example: error
  *                 message:
  *                   type: string
- *                   example: Authorization not found
+ *                   example: Authorization failed
  *                 result:
  *                   type: object
  *                   example: {}
@@ -86,7 +90,7 @@
  *                   example: error
  *                 message:
  *                   type: string
- *                   example: Access not found
+ *                   example: Authorization failed
  *                 result:
  *                   type: object
  *                   example: {}
@@ -111,7 +115,6 @@
  *
  *
  * components:
- *
  *     securitySchemes:
  *       Authorization:
  *         type: apiKey

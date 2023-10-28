@@ -6,7 +6,6 @@ import swaggerRoutes from './swagger';
 const router = express.Router();
 
 router.use('/token', tokenRoutes);
-
-router.use('/', swaggerRoutes);
+router.use('/swagger', swaggerRoutes);
 
 export default router;
