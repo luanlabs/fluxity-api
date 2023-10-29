@@ -1,11 +1,11 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-export interface AlreadyMintedType {
+export interface IAlreadyMinted {
   address: string;
 }
 
-const AlreadyMinted = new mongoose.Schema<AlreadyMintedType>({
+const AlreadyMinted = new Schema<IAlreadyMinted>({
   address: { type: String, required: true, unique: true },
 });
 
-export default mongoose.model('AlreadyMinted', AlreadyMinted);
+export default model<IAlreadyMinted>('AlreadyMinted', AlreadyMinted);

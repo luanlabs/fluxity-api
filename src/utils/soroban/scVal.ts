@@ -45,11 +45,7 @@ class ToScVal {
     return numberToScVal(number);
   }
   public static address(address: string) {
-    try {
-      return Address.fromString(address).toScVal();
-    } catch (e) {
-      return xdr.ScVal.scvVoid();
-    }
+    return Address.fromString(address).toScVal();
   }
 }
 

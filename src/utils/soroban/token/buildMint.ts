@@ -1,50 +1,33 @@
 import { Account, Contract } from 'soroban-client';
 
-import responseTemplate from '../../responseTemplate';
 import ToScVal from '../scVal';
 import getServer from '../../soroban/getServer';
-import createTransaction from '../baseTransaction';
+import baseTransaction from '../baseTransaction';
+import getAdmin from '../getAdmin';
 
 const buildMintTransaction = async (
   admin: Account,
   contract: Contract,
   toAddress: string,
-) => {
-  try {
-    const server = getServer();
+): Promise<string> => {
+  const server = getServer();
+  const adminAccount = getAdmin();
 
-    const address = await ToScVal.address(toAddress);
-    if (address.value() === undefined) {
-      return responseTemplate({
-        status: 'error',
-        message: 'Address invalid',
-        result: {},
-      });
-    }
+  const address = await ToScVal.address(toAddress);
 
-    const transaction = await createTransaction({
-      admin: admin,
-      contract: contract,
-      address: address,
-      type: 'send',
-    });
+  const transaction = await baseTransaction({
+    admin: admin,
+    contract: contract,
+    address: address,
+    type: 'send',
+  });
 
-    const response = await server.sendTransaction(transaction);
+  const transactionPrepare = await server.prepareTransaction(transaction);
+  transactionPrepare.sign(adminAccount);
 
-    return responseTemplate({
-      status: 'success',
-      message: 'Sended transaction successfully',
-      result: response.hash,
-    });
-  } catch (e) {
-    if (e instanceof Error) {
-      return responseTemplate({
-        status: 'error',
-        message: e.message,
-        result: {},
-      });
-    }
-  }
+  const response = await server.sendTransaction(transactionPrepare);
+
+  return response.hash;
 };
 
 export default buildMintTransaction;
