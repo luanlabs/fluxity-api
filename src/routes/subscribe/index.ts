@@ -1,11 +1,11 @@
 import express from 'express';
 
-import addSubscriber from './addSubscriber';
-import getSubscribers from './getSubscribers';
+import addSubscriber from './add';
+import getSubscribers from './get';
 
 const router = express.Router();
 
-router.post('/add-subscriber', addSubscriber);
-router.get('/get-subscribers', getSubscribers);
+router.post('/', addSubscriber);
+router.get('/', getSubscribers);
 
 export default router;
