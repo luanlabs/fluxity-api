@@ -56,13 +56,11 @@ const mintToken: RequestHandler = async (req, res: IResponse) => {
       result: tokens,
     });
   } catch (e) {
-    if (e instanceof Error) {
-      return res.status(500).json({
-        status: 'error',
-        message: e.message,
-        result: {},
-      });
-    }
+    return res.status(500).json({
+      status: 'error',
+      message: e.message,
+      result: {},
+    });
   }
 };
 

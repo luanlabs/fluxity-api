@@ -58,7 +58,7 @@ const addToken: RequestHandler = async (req, res: IResponse) => {
       message: 'Token has been saved successfully',
       result: newToken,
     });
-  } catch (e: any) {
+  } catch (e) {
     return res.status(500).json({
       status: 'error',
       message: e.message,

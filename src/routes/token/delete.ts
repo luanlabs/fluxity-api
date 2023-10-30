@@ -23,7 +23,7 @@ const deleteToken: RequestHandler = async (req, res: IResponse) => {
       message: 'Token deleted successfully',
       result: tokenDeleted,
     });
-  } catch (e: any) {
+  } catch (e) {
     return res.status(500).json({
       status: 'error',
       message: e.message,
