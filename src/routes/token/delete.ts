@@ -1,15 +1,14 @@
 import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
-import { IResponse } from '../../utils/responseType';
 
-const deleteToken: RequestHandler = async (req, res: IResponse) => {
+const deleteToken: RequestHandler = async (req, res) => {
   try {
     const { token } = req.body;
 
     const existingToken = await Token.findOne({ address: token });
     if (!existingToken) {
-      return res.status(404).json({
+      return res.status(404).j({
         status: 'error',
         message: 'Token dose not exist',
         result: {},
@@ -18,13 +17,13 @@ const deleteToken: RequestHandler = async (req, res: IResponse) => {
 
     const tokenDeleted = await Token.findOneAndDelete({ address: token });
 
-    return res.status(200).json({
+    return res.status(200).j({
       status: 'success',
       message: 'Token deleted successfully',
       result: tokenDeleted,
     });
   } catch (e) {
-    return res.status(500).json({
+    return res.status(500).j({
       status: 'error',
       message: e.message,
       result: {},

@@ -5,15 +5,14 @@ import Token from '../../models/Token';
 import simulateTransaction from '../../utils/soroban/token/simulateTransaction';
 import getServer from '../../utils/soroban/getServer';
 import getAdmin from '../../utils/soroban/getAdmin';
-import { IResponse } from '../../utils/responseType';
 
-const addToken: RequestHandler = async (req, res: IResponse) => {
+const addToken: RequestHandler = async (req, res) => {
   try {
     const { token } = req.body;
 
     const existingToken = await Token.findOne({ address: token });
     if (existingToken) {
-      return res.status(400).json({
+      return res.status(400).j({
         status: 'error',
         message: 'Token already exists',
         result: {},
@@ -53,13 +52,13 @@ const addToken: RequestHandler = async (req, res: IResponse) => {
 
     await newToken.save();
 
-    return res.status(200).json({
+    return res.status(201).j({
       status: 'success',
       message: 'Token has been saved successfully',
       result: newToken,
     });
   } catch (e) {
-    return res.status(500).json({
+    return res.status(500).j({
       status: 'error',
       message: e.message,
       result: {},

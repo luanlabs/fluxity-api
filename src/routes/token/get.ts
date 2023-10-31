@@ -1,11 +1,10 @@
 import { RequestHandler } from 'express';
 
-import { IResponse } from '../../utils/responseType';
 import Token from '../../models/Token';
 
-const getToken: RequestHandler = async (req, res: IResponse) => {
+const getToken: RequestHandler = async (req, res) => {
   const tokens = await Token.find({});
-  return res.status(200).json({
+  return res.status(200).j({
     status: 'success',
     message: 'Tokens have been successfully found',
     result: tokens,

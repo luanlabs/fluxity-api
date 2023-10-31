@@ -7,16 +7,14 @@ import AlreadyMinted from '../../models/AlreadyMinted';
 import finalizeTransaction from '../../utils/token/finalizeTransaction';
 import getServer from '../../utils/soroban/getServer';
 import getAdmin from '../../utils/soroban/getAdmin';
-import { IAlreadyMinted } from '../../models/AlreadyMinted';
-import { IResponse } from '../../utils/responseType';
 
-const mintToken: RequestHandler = async (req, res: IResponse) => {
+const mintToken: RequestHandler = async (req, res) => {
   try {
     const { user } = req.body;
 
     const isUserAlreadyMinted = await AlreadyMinted.findOne({ address: user });
     if (isUserAlreadyMinted) {
-      return res.status(400).json({
+      return res.status(400).j({
         status: 'error',
         message: 'User has already minted tokens',
         result: {},
@@ -44,19 +42,18 @@ const mintToken: RequestHandler = async (req, res: IResponse) => {
       await finalizeTransaction(mintTx, server);
     }
 
-    const newAddress: IAlreadyMinted = {
+    const newAlreadyMinted = new AlreadyMinted({
       address: user,
-    };
-    const newAlreadyMinted = new AlreadyMinted(newAddress);
+    });
     await newAlreadyMinted.save();
 
-    return res.status(200).json({
+    return res.status(200).j({
       status: 'success',
       message: 'Tokens minted successfully',
       result: tokens,
     });
   } catch (e) {
-    return res.status(500).json({
+    return res.status(500).j({
       status: 'error',
       message: e.message,
       result: {},
