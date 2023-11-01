@@ -1,11 +1,14 @@
-import SorobanClient, { Account, Contract, xdr } from 'soroban-client';
+import {
+  Account,
+  Contract,
+  xdr,
+  Networks,
+  TransactionBuilder,
+} from 'soroban-client';
 import getFee from './getFee';
-import getServer from './getServer';
-import getAdmin from './getAdmin';
-import getNetwork from './getNetwork';
 import ToScVal from './scVal';
 
-interface CreateTransactionType {
+interface ICreateTransaction {
   admin: Account;
   contract: Contract;
   address?: xdr.ScVal;
@@ -13,14 +16,12 @@ interface CreateTransactionType {
   type: 'send' | 'simulate';
 }
 
-const createTransaction = async (params: CreateTransactionType) => {
-  const server = getServer();
+const baseTransaction = async (params: ICreateTransaction) => {
   const fee = getFee();
-  const adminAccount = getAdmin();
 
-  let transaction = await new SorobanClient.TransactionBuilder(params.admin, {
+  let transaction = await new TransactionBuilder(params.admin, {
     fee,
-    networkPassphrase: getNetwork(),
+    networkPassphrase: Networks.FUTURENET,
   });
 
   if (params.address) {
@@ -34,15 +35,8 @@ const createTransaction = async (params: CreateTransactionType) => {
   }
 
   transaction = transaction.setTimeout(30);
-  transaction = transaction.build();
+  const transactionBuild = transaction.build();
 
-  if (params.type === 'send') {
-    transaction = await server.prepareTransaction(transaction);
-    transaction.sign(adminAccount);
-  } else if (params.type === 'simulate') {
-    transaction = await server.simulateTransaction(transaction);
-  }
-
-  return transaction;
+  return transactionBuild;
 };
-export default createTransaction;
+export default baseTransaction;
