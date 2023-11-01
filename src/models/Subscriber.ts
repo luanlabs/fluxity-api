@@ -1,18 +1,21 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 interface ISubscriber extends Document {
-    email: string;
-};
+  email: string;
+}
 
-const subscriberSchema = new Schema<ISubscriber>({
+const subscriberSchema = new Schema<ISubscriber>(
+  {
     email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        lowercase: true,
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
     },
-}, { timestamps: true });
+  },
+  { timestamps: true },
+);
 
 const Subscriber = mongoose.model<ISubscriber>('Subscriber', subscriberSchema);
 
