@@ -2,7 +2,7 @@
  * @swagger
  * /token:
  *   get:
- *     summary: Receives tokens from the list of claimable tokens.
+ *     summary: Returns the list of the claimable tokens.
  *     tags: [token]
  *
  *     responses:
