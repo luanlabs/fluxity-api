@@ -27,7 +27,7 @@ const addSubscriber: RequestHandler = async (req, res) => {
     }
 
     // Check if email is already registered
-    const existingSubscriber = await Subscriber.findOne({ eAddress });
+    const existingSubscriber = await Subscriber.findOne({ email: eAddress });
     if (existingSubscriber) {
       return res.status(400).json({
         status: 'error',
@@ -37,12 +37,12 @@ const addSubscriber: RequestHandler = async (req, res) => {
     }
 
     // Create a new subscriber
-    const newSubscriber = new Subscriber({ eAddress });
+    const newSubscriber = new Subscriber({ email: eAddress });
 
     // Save the subscriber to the database
     const savedSubscriber = await newSubscriber.save();
 
-    return res.status(200).json({
+    return res.status(201).json({
       status: 'success',
       message: 'Subscriber saved successfully',
       result: savedSubscriber,
