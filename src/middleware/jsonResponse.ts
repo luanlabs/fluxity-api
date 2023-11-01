@@ -9,6 +9,17 @@ interface IJsonResponse {
 
 declare module 'express-serve-static-core' {
   interface Response {
+    /**
+     * Json a response.
+     *
+     * Examples:
+     *
+     *     res.j({
+     *      status: 'error' | 'success',
+     *      message: 'text'
+     *      result: {}
+     *     });
+     */
     j: (body: IJsonResponse) => this;
   }
 }
