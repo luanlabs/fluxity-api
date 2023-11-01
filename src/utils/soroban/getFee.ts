@@ -1,4 +1,8 @@
-const getFee = (): number => {
-  return 100000;
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const getFee = (): string => {
+  return String(process.env.BASE_FEE) || '100000';
 };
 export default getFee;

@@ -1,4 +1,4 @@
-import { xdr, Address } from 'soroban-client';
+import { xdr, Address } from "soroban-client";
 
 const bigNumberFromBytes = (...bytes: number[]): bigint => {
   bytes[0] &= 0x7f;
@@ -21,19 +21,21 @@ const numberToScVal = (number: string) => {
     hexAmount = `0${hexAmount}`;
   }
 
-  const buf = Buffer.from(hexAmount, 'hex');
+  const buf = Buffer.from(hexAmount, "hex");
   const padded = Buffer.alloc(16);
   buf.copy(padded, padded.length - buf.length);
 
-  const hi = new xdr.Int64(
+  const hi = new xdr.Int64([
     Number(bigNumberFromBytes(...padded.slice(4, 8))),
+    // @ts-ignore
     Number(bigNumberFromBytes(...padded.slice(0, 4))),
-  );
+  ]);
 
-  const lo = new xdr.Uint64(
+  const lo = new xdr.Uint64([
     Number(bigNumberFromBytes(...padded.slice(12, 16))),
+    // @ts-ignore
     Number(bigNumberFromBytes(...padded.slice(8, 12))),
-  );
+  ]);
 
   const amountSc = xdr.ScVal.scvI128(new xdr.Int128Parts({ lo, hi }));
 
@@ -45,11 +47,7 @@ class ToScVal {
     return numberToScVal(number);
   }
   public static address(address: string) {
-    try {
-      return Address.fromString(address).toScVal();
-    } catch (e) {
-      return xdr.ScVal.scvVoid();
-    }
+    return Address.fromString(address).toScVal();
   }
 }
 
