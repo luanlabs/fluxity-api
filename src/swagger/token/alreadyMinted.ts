@@ -7,7 +7,7 @@
  *     parameters:
  *       - name: user
  *         in: path
- *         description: User public
+ *         description: User public key
  *         required: true
  *         schema:
  *           type: string
