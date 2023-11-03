@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 
 import Subscriber from '../../models/Subscriber';
 import validateEmail from '../../utils/validateEmail';
+import sendEmail from '../../utils/sendEmail';
 
 const addSubscriber: RequestHandler = async (req, res) => {
   try {
@@ -41,6 +42,19 @@ const addSubscriber: RequestHandler = async (req, res) => {
 
     // Save the subscriber to the database
     const savedSubscriber = await newSubscriber.save();
+
+    await sendEmail(
+      eAddress,
+      `Thank you for joining Fluxity's waitlist!`,
+      `Hey there! 
+      
+      You have been successfully added to our waitlist. We really appreciate your interest in Fluxity. 
+      
+      You'll be among the first to know about our news and product updates.
+      
+      Best wishes,
+      Team Fluxity`,
+    );
 
     return res.status(201).json({
       status: 'success',
