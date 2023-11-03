@@ -26,15 +26,13 @@ const numberToScVal = (number: string) => {
   buf.copy(padded, padded.length - buf.length);
 
   const hi = new xdr.Int64([
-    Number(bigNumberFromBytes(...padded.slice(4, 8))),
-    // @ts-ignore
-    Number(bigNumberFromBytes(...padded.slice(0, 4))),
+    Number(bigNumberFromBytes(...padded.subarray(4, 8))),
+    Number(bigNumberFromBytes(...padded.subarray(0, 4))),
   ]);
 
   const lo = new xdr.Uint64([
-    Number(bigNumberFromBytes(...padded.slice(12, 16))),
-    // @ts-ignore
-    Number(bigNumberFromBytes(...padded.slice(8, 12))),
+    Number(bigNumberFromBytes(...padded.subarray(12, 16))),
+    Number(bigNumberFromBytes(...padded.subarray(8, 12))),
   ]);
 
   const amountSc = xdr.ScVal.scvI128(new xdr.Int128Parts({ lo, hi }));

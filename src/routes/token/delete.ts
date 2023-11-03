@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 
-const deleteToken: RequestHandler = async (req, res) => {
+const deleteTokenRoute: RequestHandler = async (req, res) => {
   try {
     const { token } = req.body;
 
@@ -31,4 +31,4 @@ const deleteToken: RequestHandler = async (req, res) => {
   }
 };
 
-export default deleteToken;
+export default deleteTokenRoute;
