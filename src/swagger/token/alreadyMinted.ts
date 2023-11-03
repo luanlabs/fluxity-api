@@ -1,20 +1,17 @@
 /**
  * @swagger
- * /token/already-minted:
- *   post:
+ * /token/already-minted/{user}:
+ *   get:
  *     summary: Returns if user has already minted tokens.
  *     tags: [token]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               user:
- *                 type: string
- *                 required: true
- *                 example : GBLBJBTC2URCWUTIXY42W7M5GAZ2NIKTS4QF77BHHWHSBKKSPS2DTOHA
+ *     parameters:
+ *       - name: user
+ *         in: path
+ *         description: user of already minted to return
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: string
  *
  *     responses:
  *       200:

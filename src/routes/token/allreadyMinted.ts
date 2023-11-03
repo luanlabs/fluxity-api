@@ -2,9 +2,9 @@ import { RequestHandler } from 'express';
 
 import AlreadyMinted from '../../models/AlreadyMinted';
 
-const AlreadyMintedRoute: RequestHandler = async (req, res) => {
+const alreadyMintedRoute: RequestHandler = async (req, res) => {
   try {
-    const { user } = req.body;
+    const { user } = req.params;
 
     const isUserAlreadyMinted = await AlreadyMinted.findOne({ address: user });
     if (isUserAlreadyMinted) {
@@ -14,6 +14,7 @@ const AlreadyMintedRoute: RequestHandler = async (req, res) => {
         result: { minted: true },
       });
     }
+
     return res.status(200).j({
       status: 'success',
       message: 'User has not minted tokens',
@@ -27,4 +28,4 @@ const AlreadyMintedRoute: RequestHandler = async (req, res) => {
     });
   }
 };
-export default AlreadyMintedRoute;
+export default alreadyMintedRoute;

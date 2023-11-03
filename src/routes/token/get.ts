@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 
-const getToken: RequestHandler = async (req, res) => {
+const getTokenRoute: RequestHandler = async (req, res) => {
   try {
     const tokens = await Token.find({});
     return res.status(200).j({
@@ -18,4 +18,4 @@ const getToken: RequestHandler = async (req, res) => {
     });
   }
 };
-export default getToken;
+export default getTokenRoute;

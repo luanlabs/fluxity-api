@@ -6,7 +6,7 @@ import simulateTransaction from '../../utils/soroban/token/simulateTransaction';
 import getServer from '../../utils/soroban/getServer';
 import getAdmin from '../../utils/soroban/getAdmin';
 
-const addToken: RequestHandler = async (req, res) => {
+const addTokenRoute: RequestHandler = async (req, res) => {
   try {
     const { token } = req.body;
 
@@ -66,4 +66,4 @@ const addToken: RequestHandler = async (req, res) => {
   }
 };
 
-export default addToken;
+export default addTokenRoute;
