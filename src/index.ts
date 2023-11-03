@@ -1,9 +1,10 @@
-import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
+import express from 'express';
 import bodyParser from 'body-parser';
 
-import router from './routes';
 import db from './db';
+import router from './routes';
 import jsonResponse from './middleware/jsonResponse';
 
 dotenv.config();
@@ -19,6 +20,7 @@ if (typeof uriDB !== 'string' || typeof nameDB !== 'string') {
 
 db(uriDB, nameDB);
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(jsonResponse);
