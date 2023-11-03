@@ -7,7 +7,7 @@
  *     parameters:
  *       - name: user
  *         in: path
- *         description: user of already minted to return
+ *         description: User public
  *         required: true
  *         schema:
  *           type: string
