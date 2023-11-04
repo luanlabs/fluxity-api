@@ -1,19 +1,16 @@
 import {
   Account,
-  Contract,
   xdr,
   Networks,
   TransactionBuilder,
+  Operation,
 } from 'soroban-client';
+
 import getFee from './getFee';
-import ToScVal from './scVal';
 
 interface ICreateTransaction {
   admin: Account;
-  contract: Contract;
-  address?: xdr.ScVal;
-  functionName?: string;
-  type: 'send' | 'simulate';
+  contract: xdr.Operation<Operation.InvokeHostFunction>;
 }
 
 const baseTransaction = async (params: ICreateTransaction) => {
@@ -24,15 +21,7 @@ const baseTransaction = async (params: ICreateTransaction) => {
     networkPassphrase: Networks.FUTURENET,
   });
 
-  if (params.address) {
-    transaction = transaction.addOperation(
-      params.contract.call('mint', params.address, ToScVal.i128('10000000000')),
-    );
-  } else if (params.functionName) {
-    transaction = transaction.addOperation(
-      params.contract.call(params.functionName),
-    );
-  }
+  transaction = transaction.addOperation(params.contract);
 
   transaction = transaction.setTimeout(30);
   const transactionBuild = transaction.build();
