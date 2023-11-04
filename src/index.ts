@@ -1,10 +1,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
+import compression from 'compression';
+import helmet from 'helmet';
 
 import router from './routes';
 import db from './db';
 import jsonResponse from './middleware/jsonResponse';
+import notFound from './middleware/notFound';
+import errorHandler from './middleware/errorHandler';
 
 dotenv.config();
 
@@ -19,11 +23,18 @@ if (typeof uriDB !== 'string' || typeof nameDB !== 'string') {
 
 db(uriDB, nameDB);
 
+app.use(compression());
+app.use(helmet());
+app.disable('x-powered-by');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(jsonResponse);
 
+app.use(jsonResponse);
 app.use(router);
+
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
