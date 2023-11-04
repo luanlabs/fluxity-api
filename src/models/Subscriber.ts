@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import { Document, Schema, model } from 'mongoose';
 
 interface ISubscriber extends Document {
   email: string;
@@ -17,6 +17,6 @@ const subscriberSchema = new Schema<ISubscriber>(
   { timestamps: true },
 );
 
-const Subscriber = mongoose.model<ISubscriber>('Subscriber', subscriberSchema);
+const Subscriber = model<ISubscriber>('Subscriber', subscriberSchema);
 
 export default Subscriber;
