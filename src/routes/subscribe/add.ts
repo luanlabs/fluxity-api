@@ -7,16 +7,17 @@ import sendEmail from '../../utils/sendEmail';
 const addSubscriber: RequestHandler = async (req, res) => {
   try {
     const { email } = req.body;
-    const eAddress = email.toLowerCase();
 
     // Check if email is provided
-    if (!eAddress) {
+    if (!email) {
       return res.status(400).j({
         status: 'error',
         message: 'No email provided',
         result: {},
       });
     }
+
+    const eAddress = email.toLowerCase();
 
     // Check if the email is entered with the right formatting
     if (!validateEmail(eAddress)) {
