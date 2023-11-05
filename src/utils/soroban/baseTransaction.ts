@@ -8,20 +8,18 @@ import {
 
 import getFee from './getFee';
 
-interface ICreateTransaction {
-  admin: Account;
-  contract: xdr.Operation<Operation.InvokeHostFunction>;
-}
-
-const baseTransaction = async (params: ICreateTransaction) => {
+const baseTransaction = async (
+  admin: Account,
+  call: xdr.Operation<Operation.InvokeHostFunction>,
+) => {
   const fee = getFee();
 
-  let transaction = await new TransactionBuilder(params.admin, {
+  let transaction = await new TransactionBuilder(admin, {
     fee,
     networkPassphrase: Networks.FUTURENET,
   });
 
-  transaction = transaction.addOperation(params.contract);
+  transaction = transaction.addOperation(call);
 
   transaction = transaction.setTimeout(30);
   const transactionBuild = transaction.build();

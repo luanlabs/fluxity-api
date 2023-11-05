@@ -15,16 +15,9 @@ const buildMintTransaction = async (
 
   const address = await ToScVal.address(toAddress);
 
-  const contractCall = contract.call(
-    'mint',
-    address,
-    ToScVal.i128('10000000000'),
-  );
+  const mintCall = contract.call('mint', address, ToScVal.i128('10000000000'));
 
-  const transaction = await baseTransaction({
-    admin: admin,
-    contract: contractCall,
-  });
+  const transaction = await baseTransaction(admin, mintCall);
 
   const transactionPrepare = await server.prepareTransaction(transaction);
   transactionPrepare.sign(adminAccount);
