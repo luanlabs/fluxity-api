@@ -1,10 +1,37 @@
 /**
  * @swagger
- * /subscribers:
+ * components:
+ *   schemas:
+ *     Subscriber:
+ *       type: object
+ *       required:
+ *         - email
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Email address of the subscriber.
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date when the subscriber was created.
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date when the subscriber was last updated.
+ *       example:
+ *         email: example@example.com
+ *         createdAt: '2021-01-01T00:00:00Z'
+ *         updatedAt: '2021-01-01T00:00:00Z'
+ */
+
+/**
+ * @swagger
+ * /subscribe:
  *   post:
  *     tags:
- *       - Subscribers
- *     summary: Add a new subscriber
+ *       - Subscribe
+ *     summary: Adds a new subscriber
  *     description: Endpoint to add a new subscriber to the mailing list.
  *     requestBody:
  *       required: true

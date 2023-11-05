@@ -1,9 +1,36 @@
 /**
  * @swagger
- * /subscribers:
+ * components:
+ *   schemas:
+ *     Subscriber:
+ *       type: object
+ *       required:
+ *         - email
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Email address of the subscriber.
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date when the subscriber was created.
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date when the subscriber was last updated.
+ *       example:
+ *         email: example@example.com
+ *         createdAt: '2021-01-01T00:00:00Z'
+ *         updatedAt: '2021-01-01T00:00:00Z'
+ */
+
+/**
+ * @swagger
+ * /subscribe:
  *   get:
  *     tags:
- *       - Subscribers
+ *       - Subscribe
  *     summary: Retrieves a list of all subscribers.
  *     description: This endpoint retrieves all the subscribers from the database.
  *     responses:
@@ -21,9 +48,7 @@
  *                   type: string
  *                   example: Subscribers found successfully
  *                 result:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Subscriber'
+ *                   $ref: '#/components/schemas/Subscriber'
  *       500:
  *         description: Internal server error when the operation fails.
  *         content:
