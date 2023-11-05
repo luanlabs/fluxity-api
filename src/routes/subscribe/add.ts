@@ -2,24 +2,26 @@ import { RequestHandler } from 'express';
 
 import Subscriber from '../../models/Subscriber';
 import validateEmail from '../../utils/validateEmail';
+import sendEmail from '../../utils/sendEmail';
 
 const addSubscriber: RequestHandler = async (req, res) => {
   try {
     const { email } = req.body;
-    const eAddress = email.toLowerCase();
 
     // Check if email is provided
-    if (!eAddress) {
-      return res.status(400).json({
+    if (!email) {
+      return res.status(400).j({
         status: 'error',
         message: 'No email provided',
         result: {},
       });
     }
 
+    const eAddress = email.toLowerCase();
+
     // Check if the email is entered with the right formatting
     if (!validateEmail(eAddress)) {
-      return res.status(400).json({
+      return res.status(400).j({
         status: 'error',
         message: 'Invalid email format',
         result: {},
@@ -29,7 +31,7 @@ const addSubscriber: RequestHandler = async (req, res) => {
     // Check if email is already registered
     const existingSubscriber = await Subscriber.findOne({ email: eAddress });
     if (existingSubscriber) {
-      return res.status(400).json({
+      return res.status(400).j({
         status: 'error',
         message: 'Email already joined',
         result: {},
@@ -42,14 +44,27 @@ const addSubscriber: RequestHandler = async (req, res) => {
     // Save the subscriber to the database
     const savedSubscriber = await newSubscriber.save();
 
-    return res.status(201).json({
+    await sendEmail(
+      eAddress,
+      `Thank you for joining Fluxity's waitlist!`,
+      `Hey there! 
+      
+      You have been successfully added to our waitlist. We really appreciate your interest in Fluxity. 
+      
+      You'll be among the first to know about our news and product updates.
+      
+      Best wishes,
+      Team Fluxity`,
+    );
+
+    return res.status(201).j({
       status: 'success',
       message: 'Subscriber saved successfully',
       result: savedSubscriber,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    return res.status(500).json({
+  } catch (error) {
+    return res.status(500).j({
       status: 'error',
       message: error.message,
       result: {},
