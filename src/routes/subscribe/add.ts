@@ -31,7 +31,7 @@ const addSubscriber: RequestHandler = async (req, res) => {
     // Check if email is already registered
     const existingSubscriber = await Subscriber.findOne({ email: eAddress });
     if (existingSubscriber) {
-      return res.status(400).j({
+      return res.status(409).j({
         status: 'error',
         message: 'Email already joined',
         result: {},
