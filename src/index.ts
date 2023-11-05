@@ -2,6 +2,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
+import compression from 'compression';
+import helmet from 'helmet';
 
 import db from './db';
 import router from './routes';
@@ -20,11 +22,15 @@ if (typeof uriDB !== 'string' || typeof nameDB !== 'string') {
 
 db(uriDB, nameDB);
 
+app.use(compression());
+app.use(helmet());
+app.disable('x-powered-by');
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(jsonResponse);
 
+app.use(jsonResponse);
 app.use(router);
 
 app.listen(port, () => {

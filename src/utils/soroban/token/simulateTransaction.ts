@@ -9,12 +9,10 @@ export const simulateTransaction = async (
   functionName: string,
 ): Promise<string> => {
   const server = getServer();
-  const transactionResult = await createTransaction({
-    admin: admin,
-    contract: contract,
-    functionName: functionName,
-    type: 'simulate',
-  });
+
+  const call = contract.call(functionName);
+
+  const transactionResult = await createTransaction(admin, call);
 
   const transactionSimulate = await server.simulateTransaction(
     transactionResult,

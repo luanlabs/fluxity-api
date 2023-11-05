@@ -1,7 +1,4 @@
 import { RequestHandler } from 'express';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const authAdmin: RequestHandler = (req, res, next) => {
   const { authorization } = req.headers;
