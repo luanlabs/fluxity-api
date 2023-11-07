@@ -8,9 +8,9 @@ import errorHandler from '../middleware/errorHandler';
 
 const router = express.Router();
 
-router.use('/token', tokenRoutes);
-router.use('/subscribe', subscribeRoutes);
-router.use('/swagger', swaggerRoutes);
+router.use('/testnet/token', tokenRoutes);
+router.use('/testnet/subscribe', subscribeRoutes);
+router.use('/testnet/swagger', swaggerRoutes);
 
 router.use(notFound);
 router.use(errorHandler);

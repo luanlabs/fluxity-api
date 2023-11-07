@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /token/mint:
+ * /testnet/token/mint:
  *   post:
  *     summary: Mints a new token and transfers the tokens to the specified destination address.
  *     tags: [token]

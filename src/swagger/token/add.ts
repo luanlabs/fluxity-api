@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /token:
+ * /testnet/token:
  *   post:
  *     summary: Adds an ERC20-like token to the list of claimable tokens.
  *     tags: [token]
