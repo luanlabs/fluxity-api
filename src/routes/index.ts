@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.use('/testnet/token', tokenRoutes);
 router.use('/subscribe', subscribeRoutes);
-router.use('/testnet/swagger', swaggerRoutes);
+router.use('/swagger', swaggerRoutes);
 
 router.use(notFound);
 router.use(errorHandler);

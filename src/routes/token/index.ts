@@ -10,7 +10,6 @@ import alreadyMintedRoute from './alreadyMinted';
 const router = express.Router();
 
 router.post('/', authAdmin, addTokenRoute);
-router.post('/native', addTokenRoute);
 router.delete('/', authAdmin, deleteTokenRoute);
 router.get('/already-minted/:user', alreadyMintedRoute);
 router.get('/', getTokensRoute);
