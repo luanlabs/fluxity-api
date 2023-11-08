@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /token:
+ * /testnet/token:
  *   delete:
  *     summary: Deletes a token from the list of claimable tokens.
  *     tags: [token]

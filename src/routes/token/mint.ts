@@ -23,7 +23,8 @@ const mintToken: RequestHandler = async (req, res) => {
 
     const adminAddress = await getAdmin().publicKey();
 
-    const tokens = await Token.find({});
+    const tokens = await Token.find({ symbol: { $ne: 'native' } });
+
     const server = await getServer();
 
     const accountAdmin = await server.getAccount(adminAddress);
@@ -31,9 +32,7 @@ const mintToken: RequestHandler = async (req, res) => {
     for (let i = 0; i < tokens.length; i++) {
       const contract = new Contract(tokens[i].address);
 
-      const sequence = (
-        BigInt(accountAdmin.sequenceNumber()) + BigInt(i)
-      ).toString();
+      const sequence = (BigInt(accountAdmin.sequenceNumber()) + BigInt(i)).toString();
 
       const admin = new Account(accountAdmin.accountId(), sequence);
 

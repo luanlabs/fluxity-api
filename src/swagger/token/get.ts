@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /token:
+ * /testnet/token:
  *   get:
  *     summary: Returns the list of the claimable tokens.
  *     tags: [token]

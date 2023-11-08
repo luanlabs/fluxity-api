@@ -8,7 +8,7 @@ import errorHandler from '../middleware/errorHandler';
 
 const router = express.Router();
 
-router.use('/token', tokenRoutes);
+router.use('/testnet/token', tokenRoutes);
 router.use('/subscribe', subscribeRoutes);
 router.use('/swagger', swaggerRoutes);
 

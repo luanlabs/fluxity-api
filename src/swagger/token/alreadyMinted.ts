@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /token/already-minted/{user}:
+ * /testnet/token/already-minted/{user}:
  *   get:
  *     summary: Returns if user has already minted tokens.
  *     tags: [token]

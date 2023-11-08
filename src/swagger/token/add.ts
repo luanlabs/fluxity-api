@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /token:
+ * /testnet/token:
  *   post:
  *     summary: Adds an ERC20-like token to the list of claimable tokens.
  *     tags: [token]
@@ -15,6 +15,24 @@
  *                 type: string
  *                 required: true
  *                 example : CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H
+ *     security:
+ *       - Authorization : []
+ *
+ * /testnet/token/native:
+ *   post:
+ *     summary: Adds an ERC20 token to the list of claimable tokens.
+ *     tags: [token]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 required: true
+ *                 example : CB64D3G7SM2RTH6JSGG34DDTFTQ5CFDKVDZJZSODMCX4NJ2HV2KN7OHT
  *     security:
  *       - Authorization : []
  *
