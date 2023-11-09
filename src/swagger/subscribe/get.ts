@@ -1,6 +1,11 @@
 /**
  * @swagger
  * components:
+ *   securitySchemes:
+ *     Authorization:
+ *       type: apiKey
+ *       in: header
+ *       name: authorization
  *   schemas:
  *     Subscriber:
  *       type: object
@@ -33,6 +38,8 @@
  *       - Subscribe
  *     summary: Retrieves a list of all subscribers.
  *     description: This endpoint retrieves all the subscribers from the database.
+ *     security:
+ *       - Authorization: [] 
  *     responses:
  *       200:
  *         description: A list of subscribers.
