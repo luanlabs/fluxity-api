@@ -36,8 +36,7 @@ const getEvents = async () => {
       if (eventsXdr.length > 0) {
         for (let i = 0; i < events.result.events.length; i++) {
           const idStream = ToScVal.native(eventsXdr[i].value.xdr);
-          console.log('xdr : ' + idStream);
-          console.log(await getStream(idStream));
+          await getStream(idStream);
         }
       }
 
