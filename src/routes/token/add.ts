@@ -25,23 +25,11 @@ const addTokenRoute: RequestHandler = async (req, res) => {
 
     const getTokenName = simulateTransaction(accountAdmin, contract, 'name');
 
-    const getTokenSymbol = simulateTransaction(
-      accountAdmin,
-      contract,
-      'symbol',
-    );
+    const getTokenSymbol = simulateTransaction(accountAdmin, contract, 'symbol');
 
-    const getTokenDecimals = simulateTransaction(
-      accountAdmin,
-      contract,
-      'decimals',
-    );
+    const getTokenDecimals = simulateTransaction(accountAdmin, contract, 'decimals');
 
-    const result = await Promise.all([
-      getTokenName,
-      getTokenSymbol,
-      getTokenDecimals,
-    ]);
+    const result = await Promise.all([getTokenName, getTokenSymbol, getTokenDecimals]);
 
     const newToken = new Token({
       address: token,

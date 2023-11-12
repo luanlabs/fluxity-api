@@ -15,7 +15,7 @@ const buildMintTransaction = async (
 
   const address = await ToScVal.address(toAddress);
 
-  const mintCall = contract.call('mint', address, ToScVal.i128('10000000000'));
+  const mintCall = contract.call('mint', address, ToScVal.i128(BigInt('10000000000')));
 
   const transaction = await baseTransaction(admin, mintCall);
 
