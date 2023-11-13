@@ -1,9 +1,12 @@
 import { xdr, scValToNative as toNative } from 'soroban-client';
 
-const scValToNative = (event: string) => {
-  const bufEvent = Buffer.from(event, 'base64');
-  const xdrEvent = xdr.ScVal.fromXDR(bufEvent);
+const { ScVal } = xdr;
+
+const fromXDR = (xdr: string) => {
+  const bufEvent = Buffer.from(xdr, 'base64');
+  const xdrEvent = ScVal.fromXDR(bufEvent);
   const nativeEvent = toNative(xdrEvent).toString();
   return nativeEvent;
 };
-export default scValToNative;
+
+export default fromXDR;

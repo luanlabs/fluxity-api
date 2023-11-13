@@ -21,10 +21,10 @@ class ToScVal {
   public static symbol(symbol: string) {
     return scvSymbol(symbol);
   }
-  public static native(event: string) {
+  public static fromXDR(event: string) {
     return scValToNative(event);
   }
-  public static base64(symbol: string) {
+  public static toXDR(symbol: string) {
     return ToScVal.symbol(symbol).toXDR().toString('base64');
   }
 }

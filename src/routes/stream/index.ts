@@ -1,11 +1,11 @@
 import express from 'express';
 
-import getStreamFromId from './getStreamFromId';
-import getStreams from './getStreams';
+import getStreamByIdRoute from './getStreamById';
+import getStreamsRoute from './getStreams';
 
 const router = express.Router();
 
-router.use('/', getStreams);
-router.use('/:id', getStreamFromId);
+router.use('/', getStreamsRoute);
+router.use('/:id', getStreamByIdRoute);
 
 export default router;
