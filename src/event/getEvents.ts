@@ -1,7 +1,7 @@
 import getServer from '../utils/soroban/getServer';
 import getEventsServer from './fetch';
 import ToScVal from '../utils/soroban/scVal';
-import getStream from './getStream';
+import getStreamAndSave from './getStream';
 
 const getEvents = async () => {
   try {
@@ -36,7 +36,7 @@ const getEvents = async () => {
       if (eventsXdr.length > 0) {
         for (let i = 0; i < events.result.events.length; i++) {
           const idStream = ToScVal.native(eventsXdr[i].value.xdr);
-          await getStream(idStream);
+          await getStreamAndSave(idStream);
         }
       }
 
