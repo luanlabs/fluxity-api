@@ -9,7 +9,7 @@ const getStreamsRoute: RequestHandler = async (req, res) => {
 
   const query = createQuery(req.query);
 
-  const streams = await Stream.find(query);
+  let streams = await Stream.find(query);
 
   if (streams) {
     for (let i = 0; i < streams.length; i++) {
@@ -17,9 +17,8 @@ const getStreamsRoute: RequestHandler = async (req, res) => {
     }
   }
 
-  let streamFilter = streams;
   if (status) {
-    streamFilter = streams.filter((stream) => {
+    streams = streams.filter((stream) => {
       return stream.status === status;
     });
   }
@@ -27,7 +26,7 @@ const getStreamsRoute: RequestHandler = async (req, res) => {
   return res.status(200).j({
     status: 'success',
     message: '',
-    result: streamFilter,
+    result: streams,
   });
 };
 export default getStreamsRoute;
