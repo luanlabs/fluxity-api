@@ -39,8 +39,6 @@ const getCreateStreamEvents = async () => {
         },
       });
 
-      console.log(events.result.events);
-
       const eventsXdr = events.result.events;
 
       if (eventsXdr.length > 0) {
