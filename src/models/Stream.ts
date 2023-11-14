@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose';
 
 export enum Status {
-  Pending,
-  Ongoing,
-  Expired,
+  Pending = 'pending',
+  Ongoing = 'ongoing',
+  Expired = 'expired',
 }
 enum Rate {
   Daily = 86400,
@@ -27,6 +27,7 @@ export interface IStream {
   start_date: number;
   token: string;
   withdrawn: string;
+  status?: string;
 }
 
 const Stream = new Schema<IStream>(
@@ -44,6 +45,7 @@ const Stream = new Schema<IStream>(
     start_date: { type: Number, required: true },
     token: { type: String, required: true },
     withdrawn: { type: String, required: true },
+    status: { type: String, required: false },
   },
   { timestamps: true },
 );

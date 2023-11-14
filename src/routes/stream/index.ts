@@ -5,7 +5,7 @@ import getStreamsRoute from './getStreams';
 
 const router = express.Router();
 
-router.use('/', getStreamsRoute);
-router.use('/:id', getStreamByIdRoute);
+router.get('/', getStreamsRoute);
+router.get('/:id', getStreamByIdRoute);
 
 export default router;

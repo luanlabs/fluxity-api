@@ -1,11 +1,19 @@
 import { RequestHandler } from 'express';
 
 import Stream from '../../models/Stream';
+import calculateStreamStatus from '../../utils/soroban/stream/calculateStreamStatus';
 
 const getStreamById: RequestHandler = async (req, res) => {
   const { id } = req.params;
 
-  const stream = await Stream.findOne({ id_stream: id });
+  const stream = await Stream.findOne({ _id: id });
+  console.log(stream);
+
+  if (stream) {
+    const status = calculateStreamStatus(stream.start_date, stream.end_date);
+    stream.status = status;
+  }
+
   if (!stream) {
     return res.status(404).j({
       status: 'error',
