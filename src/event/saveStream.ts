@@ -6,7 +6,7 @@ import getStream from '../utils/soroban/stream/getStream';
 import Stream from '../models/Stream';
 import bigintValuesToNumbers from '../utils/soroban/stream/bigintValuesToNumbers';
 
-const saveNewStram = async (id: string) => {
+const saveNewStream = async (id: string) => {
   try {
     const server = getServer();
     const admin = await server.getAccount(getAdmin().publicKey());
@@ -32,4 +32,4 @@ const saveNewStram = async (id: string) => {
   }
 };
 
-export default saveNewStram;
+export default saveNewStream;

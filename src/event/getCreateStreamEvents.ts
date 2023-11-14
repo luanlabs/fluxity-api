@@ -1,7 +1,9 @@
 import getServer from '../utils/soroban/getServer';
 import getEvents from './getEvents';
 import ToScVal from '../utils/soroban/scVal';
-import saveNewStram from './getStream';
+import saveNewStream from './saveStream';
+import withdrawnStream from './withdrawnStream';
+import cancelledStream from './cancelledStream';
 
 const getCreateStreamEvents = async () => {
   try {
@@ -16,6 +18,8 @@ const getCreateStreamEvents = async () => {
       const contract = String(process.env.CONTRACT_ID);
       const stream = ToScVal.toXDR('STREAM');
       const created = ToScVal.toXDR('CREATED');
+      const cancelled = ToScVal.toXDR('CANCELLED');
+      const withdrawn = ToScVal.toXDR('WITHDRAWN');
 
       const events = await getEvents({
         startLedger: lastUsedLedger.toString(),
@@ -23,7 +27,11 @@ const getCreateStreamEvents = async () => {
           {
             type: 'contract',
             contractIds: [contract],
-            topics: [[stream, created]],
+            topics: [
+              [stream, created],
+              [stream, cancelled],
+              [stream, withdrawn],
+            ],
           },
         ],
         pagination: {
@@ -31,12 +39,20 @@ const getCreateStreamEvents = async () => {
         },
       });
 
+      console.log(events.result.events);
+
       const eventsXdr = events.result.events;
 
       if (eventsXdr.length > 0) {
         for (let i = 0; i < events.result.events.length; i++) {
           const idStream = ToScVal.fromXDR(eventsXdr[i].value.xdr);
-          await saveNewStram(idStream);
+          if (eventsXdr[i].topic[1] === created) {
+            await saveNewStream(idStream);
+          } else if (eventsXdr[i].topic[1] === withdrawn) {
+            await withdrawnStream(idStream);
+          } else if (eventsXdr[i].topic[1] === cancelled) {
+            await cancelledStream(idStream);
+          }
         }
       }
 
