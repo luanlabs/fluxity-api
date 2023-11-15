@@ -4,6 +4,14 @@
  *   get:
  *     summary: Returns the claimable stream.
  *     tags: [stream]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: Id stream
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: string
  *
  *     responses:
  *       200:
