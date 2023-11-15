@@ -1,11 +1,11 @@
 import getServer from '../utils/soroban/getServer';
 import getEvents from './getEvents';
 import ToScVal from '../utils/soroban/scVal';
-import saveNewStream from './saveStream';
-import withdrawnStream from './withdrawnStream';
-import cancelledStream from './cancelledStream';
+import saveNewStream from './saveNewStream';
+import saveStreamWithdrawn from './saveStreamWithdrawn';
+import cancelStream from './cancelStream';
 
-const getCreateStreamEvents = async () => {
+const listenToContractEvents = async () => {
   try {
     const server = getServer();
     let lastUsedLedger = 0;
@@ -41,25 +41,20 @@ const getCreateStreamEvents = async () => {
 
       const eventsXdr = events.result.events;
 
-      if (eventsXdr.length > 0) {
-        for (let i = 0; i < events.result.events.length; i++) {
-          const idStream = ToScVal.fromXDR(eventsXdr[i].value.xdr);
-          if (eventsXdr[i].topic[1] === created) {
-            await saveNewStream(idStream);
-          } else if (eventsXdr[i].topic[1] === withdrawn) {
-            await withdrawnStream(idStream);
-          } else if (eventsXdr[i].topic[1] === cancelled) {
-            await cancelledStream(idStream);
-          }
+      for (let i = 0; i < events.result.events.length; i++) {
+        const streamId = ToScVal.fromXDR(eventsXdr[i].value.xdr);
+
+        if (eventsXdr[i].topic[1] === created) {
+          await saveNewStream(streamId);
+        } else if (eventsXdr[i].topic[1] === withdrawn) {
+          await saveStreamWithdrawn(streamId);
+        } else if (eventsXdr[i].topic[1] === cancelled) {
+          await cancelStream(streamId);
         }
       }
 
       lastUsedLedger = events.result.latestLedger;
     }, 15000);
-
-    return;
-  } catch (e) {
-    return console.log(e);
-  }
+  } catch (e) {}
 };
-export default getCreateStreamEvents;
+export default listenToContractEvents;

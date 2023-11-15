@@ -2,12 +2,12 @@
  * @swagger
  * /testnet/stream/{id}:
  *   get:
- *     summary: Returns the claimable stream.
+ *     summary: Returns streams by id
  *     tags: [stream]
  *     parameters:
  *       - name: id
  *         in: path
- *         description: Id stream
+ *         description: Stream Id
  *         required: true
  *         schema:
  *           type: string

@@ -45,7 +45,6 @@ const Stream = new Schema<IStream>(
     start_date: { type: Number, required: true },
     token: { type: String, required: true },
     withdrawn: { type: String, required: true },
-    status: { type: String, required: false },
   },
   { timestamps: true },
 );

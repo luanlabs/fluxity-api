@@ -9,11 +9,6 @@ const getStreamById: RequestHandler = async (req, res) => {
 
     const stream = await Stream.findOne({ _id: id });
 
-    if (stream) {
-      const status = calculateStreamStatus(stream.start_date, stream.end_date);
-      stream.status = status;
-    }
-
     if (!stream) {
       return res.status(404).j({
         status: 'error',
@@ -22,10 +17,14 @@ const getStreamById: RequestHandler = async (req, res) => {
       });
     }
 
+    const streamWithStatus = stream.toObject();
+    const status = calculateStreamStatus(stream.start_date, stream.end_date);
+    streamWithStatus.status = status;
+
     return res.status(200).j({
       status: 'success',
       message: 'Get stream by id',
-      result: stream,
+      result: streamWithStatus,
     });
   } catch (e) {
     return res.status(500).j({

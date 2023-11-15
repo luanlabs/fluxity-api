@@ -8,7 +8,7 @@ const authAdmin: RequestHandler = (req, res, next) => {
       message: 'Authorization failed',
       result: {},
     });
-  } else if (authorization === process.env.ADMIN_AUTH_KEY) {
+  } else if (authorization === process.env.ADMIN_PASSWORD) {
     next();
   } else {
     return res.status(403).json({

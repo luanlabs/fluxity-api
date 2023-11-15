@@ -1,3 +1,5 @@
+import request from '../utils/request';
+
 interface IFilter {
   type: string;
   contractIds: string[];
@@ -10,26 +12,23 @@ interface IEvent {
 }
 
 const getEvents = async (params: IEvent) => {
-  let status = true;
-  while (status) {
-    try {
-      const rpcUrl = String(process.env.TESTNET_FUTURENET_RPC_URL);
+  try {
+    const rpcUrl = String(process.env.TESTNET_FUTURENET_RPC_URL);
 
-      const request = {
-        jsonrpc: '2.0',
-        id: 8675309,
-        method: 'getEvents',
-        params,
-      };
-      const response = await fetch(rpcUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request),
-      });
-      const jsonResponse = await response.json();
-      status = false;
-      return jsonResponse;
-    } catch {}
-  }
+    const requestBody = {
+      jsonrpc: '2.0',
+      id: 8675309,
+      method: 'getEvents',
+      params,
+    };
+
+    const config = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+    };
+
+    return await request(rpcUrl, config);
+  } catch {}
 };
 export default getEvents;

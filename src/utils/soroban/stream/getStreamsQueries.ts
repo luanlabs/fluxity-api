@@ -1,6 +1,6 @@
 import { ParsedQs } from 'qs';
 
-const createQuery = (params: ParsedQs) => {
+const getStreamsQueries = (params: ParsedQs) => {
   const { sender, receiver, token } = params;
 
   const query: Record<string, string> = {};
@@ -19,4 +19,4 @@ const createQuery = (params: ParsedQs) => {
 
   return query;
 };
-export default createQuery;
+export default getStreamsQueries;

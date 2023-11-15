@@ -1,21 +1,21 @@
 import { RequestHandler } from 'express';
 
 import Stream from '../../models/Stream';
-import createQuery from '../../utils/soroban/stream/createQuery';
+import getStreamsQueries from '../../utils/soroban/stream/getStreamsQueries';
 import calculateStreamStatus from '../../utils/soroban/stream/calculateStreamStatus';
 
 const getStreamsRoute: RequestHandler = async (req, res) => {
   try {
     const { status } = req.query;
 
-    const query = createQuery(req.query);
+    const query = getStreamsQueries(req.query);
 
-    let streams = await Stream.find(query);
+    const streamAll = await Stream.find(query);
 
-    if (streams) {
-      for (let i = 0; i < streams.length; i++) {
-        streams[i].status = calculateStreamStatus(streams[i].start_date, streams[i].end_date);
-      }
+    let streams = streamAll.map((stream) => stream.toObject());
+
+    for (let i = 0; i < streams.length; i++) {
+      streams[i].status = calculateStreamStatus(streams[i].start_date, streams[i].end_date);
     }
 
     if (status) {

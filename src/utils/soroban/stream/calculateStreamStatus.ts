@@ -1,15 +1,13 @@
 import { Status } from '../../../models/Stream';
 
 const calculateStreamStatus = (startDate: number, endDate: number): Status => {
-  const dateNow = Number(String(new Date().getTime()).slice(0, 10));
-  if (startDate > dateNow) {
+  const currentDate = Math.floor(Date.now() / 1000);
+  if (startDate > currentDate) {
     return Status.Pending;
-  } else if (startDate <= dateNow && endDate > dateNow) {
+  } else if (startDate <= currentDate && endDate > currentDate) {
     return Status.Ongoing;
-  } else if (endDate < dateNow) {
-    return Status.Expired;
   } else {
-    return Status.Ongoing;
+    return Status.Expired;
   }
 };
 export default calculateStreamStatus;

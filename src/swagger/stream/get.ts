@@ -2,7 +2,7 @@
  * @swagger
  * /testnet/stream:
  *   get:
- *     summary: Returns the list of the claimable streams.
+ *     summary: Returns a list of streams
  *     tags: [stream]
  *     parameters:
  *       - name: status

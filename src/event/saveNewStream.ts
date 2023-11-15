@@ -25,11 +25,7 @@ const saveNewStream = async (id: string) => {
 
     const newStream = new Stream(streamDetails);
     await newStream.save();
-
-    return newStream;
-  } catch (e) {
-    return console.log(e.message);
-  }
+  } catch (e) {}
 };
 
 export default saveNewStream;
