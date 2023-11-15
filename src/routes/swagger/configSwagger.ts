@@ -17,7 +17,7 @@ const configSwagger = () => {
         },
       ],
     },
-    apis: ['./src/swagger/token/*.ts'],
+    apis: ['./src/swagger/**/*.ts'],
   };
   return options;
 };
