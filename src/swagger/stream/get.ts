@@ -41,6 +41,14 @@
  *         schema:
  *           type: string
  *
+ *       - name: address
+ *         in: query
+ *         description: If this parameter is entered, the sender and receiver parameters are not functional
+ *         required: false
+ *         explode: true
+ *         schema:
+ *           type: string
+ *
  *
  *     responses:
  *
