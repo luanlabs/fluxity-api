@@ -20,7 +20,7 @@ const getStreamsRoute: RequestHandler = async (req, res) => {
 
     if (status) {
       streams = streams.filter((stream) => {
-        return stream.status === status;
+        return stream.status === status.toString().toLowerCase();
       });
     }
 
