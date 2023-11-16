@@ -3,7 +3,7 @@ import getEvents from './getEvents';
 import ToScVal from '../utils/soroban/scVal';
 import saveNewStream from './saveNewStream';
 import saveStreamWithdrawn from './saveStreamWithdrawn';
-import cancelStream from './cancelStream';
+import saveStreamCancelled from './saveStreamCancelled';
 
 const listenToContractEvents = async () => {
   try {
@@ -42,7 +42,7 @@ const listenToContractEvents = async () => {
       if (events) {
         const eventsXdr = events.result.events;
 
-        for (let i = 0; i < events.result.events.length; i++) {
+        for (let i = 0; i < events.result.events.length; ++i) {
           const streamId = ToScVal.fromXDR(eventsXdr[i].value.xdr);
 
           if (eventsXdr[i].topic[1] === created) {
@@ -50,7 +50,7 @@ const listenToContractEvents = async () => {
           } else if (eventsXdr[i].topic[1] === withdrawn) {
             await saveStreamWithdrawn(streamId);
           } else if (eventsXdr[i].topic[1] === cancelled) {
-            await cancelStream(streamId);
+            await saveStreamCancelled(streamId);
           }
         }
 

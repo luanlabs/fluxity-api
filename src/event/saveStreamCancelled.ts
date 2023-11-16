@@ -6,7 +6,7 @@ import getStream from '../utils/soroban/stream/getStream';
 import Stream from '../models/Stream';
 import saveNewStream from './saveNewStream';
 
-const cancelStream = async (id: string) => {
+const saveStreamCancelled = async (id: string) => {
   const server = getServer();
   const admin = await server.getAccount(getAdmin().publicKey());
   const contract = new Contract(String(process.env.CONTRACT_ID));
@@ -22,4 +22,4 @@ const cancelStream = async (id: string) => {
   }
 };
 
-export default cancelStream;
+export default saveStreamCancelled;
