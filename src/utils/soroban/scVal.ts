@@ -1,51 +1,31 @@
-import { xdr, Address } from "soroban-client";
+import { xdr, Address } from 'soroban-client';
 
-const bigNumberFromBytes = (...bytes: number[]): bigint => {
-  bytes[0] &= 0x7f;
+import numberToScVal from './numberToScval';
+import scValToNative from './scValToNative';
 
-  let b = BigInt(0);
-
-  for (const byte of bytes) {
-    b <<= BigInt(8);
-    b |= BigInt(byte);
-  }
-
-  return b * BigInt(1);
-};
-
-const numberToScVal = (number: string) => {
-  const amount = BigInt(number);
-  let hexAmount = amount.toString(16);
-
-  if (hexAmount.length % 2) {
-    hexAmount = `0${hexAmount}`;
-  }
-
-  const buf = Buffer.from(hexAmount, "hex");
-  const padded = Buffer.alloc(16);
-  buf.copy(padded, padded.length - buf.length);
-
-  const hi = new xdr.Int64([
-    Number(bigNumberFromBytes(...padded.subarray(4, 8))),
-    Number(bigNumberFromBytes(...padded.subarray(0, 4))),
-  ]);
-
-  const lo = new xdr.Uint64([
-    Number(bigNumberFromBytes(...padded.subarray(12, 16))),
-    Number(bigNumberFromBytes(...padded.subarray(8, 12))),
-  ]);
-
-  const amountSc = xdr.ScVal.scvI128(new xdr.Int128Parts({ lo, hi }));
-
-  return amountSc;
-};
+const { scvU32, scvU64, scvSymbol } = xdr.ScVal;
 
 class ToScVal {
-  public static i128(number: string) {
-    return numberToScVal(number);
+  public static i128(value: bigint) {
+    return numberToScVal(value);
+  }
+  public static u32(number: number) {
+    return scvU32(number);
   }
   public static address(address: string) {
     return Address.fromString(address).toScVal();
+  }
+  public static u64(number: string) {
+    return scvU64(xdr.Uint64.fromString(number));
+  }
+  public static symbol(symbol: string) {
+    return scvSymbol(symbol);
+  }
+  public static fromXDR(event: string) {
+    return scValToNative(event);
+  }
+  public static toXDR(symbol: string) {
+    return ToScVal.symbol(symbol).toXDR().toString('base64');
   }
 }
 

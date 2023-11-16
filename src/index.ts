@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import db from './db';
 import router from './routes';
 import jsonResponse from './middleware/jsonResponse';
+import listenToContractEvents from './event/listenToContractEvents';
 
 dotenv.config();
 
@@ -25,6 +26,8 @@ db(uriDB, nameDB);
 app.use(compression());
 app.use(helmet());
 app.disable('x-powered-by');
+
+listenToContractEvents();
 
 app.use(cors());
 app.use(bodyParser.json());
