@@ -7,25 +7,23 @@ import Stream from '../models/Stream';
 import bigintValuesToNumbers from '../utils/soroban/stream/bigintValuesToNumbers';
 
 const saveNewStream = async (id: string) => {
-  try {
-    const server = getServer();
-    const admin = await server.getAccount(getAdmin().publicKey());
-    const contract = new Contract(String(process.env.CONTRACT_ID));
-    const stream = await getStream(admin, contract, id);
+  const server = getServer();
+  const admin = await server.getAccount(getAdmin().publicKey());
+  const contract = new Contract(String(process.env.CONTRACT_ID));
 
-    const existingStream = await Stream.findOne({ _id: id });
+  const existingStream = await Stream.findOne({ _id: id });
 
-    if (existingStream) {
-      return;
-    }
+  if (existingStream) {
+    return;
+  }
 
-    const streamDetails = bigintValuesToNumbers(stream);
+  const stream = await getStream(admin, contract, id);
+  const streamDetails = bigintValuesToNumbers(stream);
 
-    streamDetails._id = String(id);
+  streamDetails._id = String(id);
 
-    const newStream = new Stream(streamDetails);
-    await newStream.save();
-  } catch (e) {}
+  const newStream = new Stream(streamDetails);
+  await newStream.save();
 };
 
 export default saveNewStream;
