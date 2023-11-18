@@ -1,7 +1,8 @@
 import { RequestHandler } from 'express';
+
 import saveStreamWithdrawn from '../../event/saveStreamWithdrawn';
 
-const withdrawnStream: RequestHandler = async (req, res) => {
+const withdrawStreamRoute: RequestHandler = async (req, res) => {
   try {
     const { id } = req.body;
 
@@ -9,7 +10,7 @@ const withdrawnStream: RequestHandler = async (req, res) => {
 
     return res.status(200).j({
       status: 'success',
-      message: 'Change withdrawn stream to db',
+      message: 'Successfully saved the stream on the DB',
       result: {},
     });
   } catch (e) {
@@ -21,4 +22,4 @@ const withdrawnStream: RequestHandler = async (req, res) => {
   }
 };
 
-export default withdrawnStream;
+export default withdrawStreamRoute;

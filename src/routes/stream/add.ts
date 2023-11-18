@@ -1,13 +1,14 @@
 import { RequestHandler } from 'express';
+
 import saveNewStream from '../../event/saveNewStream';
 
-const addStream: RequestHandler = async (req, res) => {
+const addStreamRoute: RequestHandler = async (req, res) => {
   try {
     const { id } = req.body;
 
     await saveNewStream(id);
 
-    return res.status(200).j({
+    return res.status(201).j({
       status: 'success',
       message: 'Save stream to db',
       result: {},
@@ -21,4 +22,4 @@ const addStream: RequestHandler = async (req, res) => {
   }
 };
 
-export default addStream;
+export default addStreamRoute;

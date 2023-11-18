@@ -1,7 +1,8 @@
 import { RequestHandler } from 'express';
+
 import saveStreamCancelled from '../../event/saveStreamCancelled';
 
-const cancellStream: RequestHandler = async (req, res) => {
+const cancelStreamRoute: RequestHandler = async (req, res) => {
   try {
     const { id } = req.body;
 
@@ -9,7 +10,7 @@ const cancellStream: RequestHandler = async (req, res) => {
 
     return res.status(200).j({
       status: 'success',
-      message: 'Change cancelled stream to db',
+      message: 'Successfully saved the cancelled stream on the DB',
       result: {},
     });
   } catch (e) {
@@ -21,4 +22,4 @@ const cancellStream: RequestHandler = async (req, res) => {
   }
 };
 
-export default cancellStream;
+export default cancelStreamRoute;
