@@ -2,7 +2,7 @@
  * @swagger
  * /testnet/stream:
  *   put:
- *     summary: Saved the withdraw stream on the DB
+ *     summary: Saves a new withdrawn amount of the stream on the DB.
  *     tags: [stream]
  *     requestBody:
  *       required: true
@@ -51,8 +51,4 @@
  *                   result:
  *                     type: object
  *                     example: {}
- *
- *
- *
- *
  */

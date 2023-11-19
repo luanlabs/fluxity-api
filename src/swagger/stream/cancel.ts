@@ -2,7 +2,7 @@
  * @swagger
  * /testnet/stream:
  *   delete:
- *     summary: Saved the cancelled stream on the DB.
+ *     summary: Changes the status of a stream to cancelleded on the DB.
  *     tags: [stream]
  *     requestBody:
  *       required: true
@@ -51,8 +51,4 @@
  *                   result:
  *                     type: object
  *                     example: {}
- *
- *
- *
- *
  */

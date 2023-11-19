@@ -2,7 +2,7 @@
  * @swagger
  * /testnet/stream:
  *   post:
- *     summary: Add stream to the list streams.
+ *     summary: Adds a newly created stream to the DB.
  *     tags: [stream]
  *     requestBody:
  *       required: true
@@ -18,7 +18,7 @@
  *
  *
  *     responses:
- *       200:
+ *       201:
  *         description: Save stream to db
  *         content:
  *           application/json:
@@ -51,8 +51,4 @@
  *                   result:
  *                     type: object
  *                     example: {}
- *
- *
- *
- *
  */
