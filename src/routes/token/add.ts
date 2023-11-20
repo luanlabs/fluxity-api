@@ -8,7 +8,7 @@ import getAdmin from '../../utils/soroban/getAdmin';
 
 const addTokenRoute: RequestHandler = async (req, res) => {
   try {
-    const { token, image } = req.body;
+    const { token, logo } = req.body;
 
     const existingToken = await Token.findOne({ address: token });
     if (existingToken) {
@@ -36,7 +36,7 @@ const addTokenRoute: RequestHandler = async (req, res) => {
       name: result[0],
       symbol: result[1],
       decimals: result[2],
-      image: image,
+      logo,
     });
 
     await newToken.save();

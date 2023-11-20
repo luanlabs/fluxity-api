@@ -5,6 +5,7 @@ import getServer from '../utils/soroban/getServer';
 import getStream from '../utils/soroban/stream/getStream';
 import Stream from '../models/Stream';
 import bigintValuesToNumbers from '../utils/soroban/stream/bigintValuesToNumbers';
+import Token from '../models/Token';
 
 const saveNewStream = async (id: string) => {
   try {
@@ -21,7 +22,10 @@ const saveNewStream = async (id: string) => {
 
     const streamDetails = bigintValuesToNumbers(stream);
 
+    const token = await Token.findOne({ address: streamDetails.token });
+
     streamDetails._id = String(id);
+    streamDetails.token = token;
 
     const newStream = new Stream(streamDetails);
     await newStream.save();

@@ -25,7 +25,7 @@ export interface IStream {
   receiver: string;
   sender: string;
   start_date: number;
-  token: string;
+  token: Schema.Types.ObjectId;
   withdrawn: string;
   status?: string;
 }
@@ -43,7 +43,7 @@ const Stream = new Schema<IStream>(
     receiver: { type: String, required: true },
     sender: { type: String, required: true },
     start_date: { type: Number, required: true },
-    token: { type: String, required: true },
+    token: { type: Schema.Types.ObjectId, ref: 'Token', required: true },
     withdrawn: { type: String, required: true },
   },
   { timestamps: true },

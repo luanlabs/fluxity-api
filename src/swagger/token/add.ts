@@ -15,7 +15,7 @@
  *                 type: string
  *                 required: true
  *                 example : CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H
- *               image:
+ *               logo:
  *                 type: string
  *                 required: true
  *                 example : /public/images/assets/fusdc.svg
@@ -45,7 +45,7 @@
  *                     symbol: fDAI,
  *                     name: FakeDAI,
  *                     decimals: 7,
- *                     image: /public/images/assets/fdai.svg,
+ *                     logo: /public/images/assets/fdai.svg,
  *                     _id: 6539a4b453971c96d697f9c0,
  *                     __v: 0
  *                   }
