@@ -5,6 +5,7 @@ export interface IToken {
   symbol: string;
   name: string;
   decimals: string;
+  image: string;
 }
 
 const Token = new Schema<IToken>({
@@ -12,6 +13,7 @@ const Token = new Schema<IToken>({
   symbol: { type: String, required: true, unique: true },
   name: { type: String, required: true, unique: true },
   decimals: { type: String, required: true, unique: false },
+  image: { type: String, required: true, unique: true },
 });
 
 export default model<IToken>('Token', Token);
