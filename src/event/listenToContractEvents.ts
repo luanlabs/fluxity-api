@@ -1,9 +1,11 @@
+import Ledger from '../models/Ledger';
 import getServer from '../utils/soroban/getServer';
 import getEvents from './getEvents';
 import ToScVal from '../utils/soroban/scVal';
 import saveNewStream from './saveNewStream';
 import saveStreamWithdrawn from './saveStreamWithdrawn';
 import saveStreamCancelled from './saveStreamCancelled';
+import calculateLastUsedLedger from '../utils/soroban/stream/calculateLastUsedLedger';
 
 const listenToContractEvents = async () => {
   try {
@@ -12,7 +14,7 @@ const listenToContractEvents = async () => {
     setInterval(async () => {
       if (lastUsedLedger === 0) {
         const { sequence } = await server.getLatestLedger();
-        lastUsedLedger = sequence - 6;
+        lastUsedLedger = await calculateLastUsedLedger(sequence);
       }
 
       const contract = String(process.env.CONTRACT_ID);
@@ -55,6 +57,16 @@ const listenToContractEvents = async () => {
         }
 
         lastUsedLedger = events.result.latestLedger;
+
+        const updateLastLedger = await Ledger.findByIdAndUpdate('0', { last: lastUsedLedger });
+
+        if (!updateLastLedger) {
+          const ledger = new Ledger({
+            _id: '0',
+            last: lastUsedLedger,
+          });
+          await ledger.save();
+        }
       }
     }, 15000);
   } catch (e) {}

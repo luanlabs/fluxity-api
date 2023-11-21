@@ -9,32 +9,30 @@ import Token from '../models/Token';
 import saveToken from '../utils/token/saveToken';
 
 const saveNewStream = async (id: string) => {
-  try {
-    const server = getServer();
-    const admin = await server.getAccount(getAdmin().publicKey());
-    const contract = new Contract(String(process.env.CONTRACT_ID));
-    const stream = await getStream(admin, contract, id);
+  const server = getServer();
+  const admin = await server.getAccount(getAdmin().publicKey());
+  const contract = new Contract(String(process.env.CONTRACT_ID));
 
-    const existingStream = await Stream.findOne({ _id: id });
+  const existingStream = await Stream.findOne({ _id: id });
 
-    if (existingStream) {
-      return;
-    }
+  if (existingStream) {
+    return;
+  }
 
-    const streamDetails = bigintValuesToNumbers(stream);
+  const stream = await getStream(admin, contract, id);
+  const streamDetails = bigintValuesToNumbers(stream);
 
-    let token = await Token.findOne({ address: streamDetails.token });
+  let token = await Token.findOne({ address: streamDetails.token });
 
-    if (!token) {
-      token = await saveToken(streamDetails.token);
-    }
+  if (!token) {
+    token = await saveToken(streamDetails.token);
+  }
 
-    streamDetails._id = String(id);
-    streamDetails.token = token._id;
+  streamDetails._id = String(id);
+  streamDetails.token = token._id;
 
-    const newStream = new Stream(streamDetails);
-    await newStream.save();
-  } catch (e) {}
+  const newStream = new Stream(streamDetails);
+  await newStream.save();
 };
 
 export default saveNewStream;
