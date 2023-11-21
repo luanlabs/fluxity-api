@@ -1,10 +1,7 @@
 import { RequestHandler } from 'express';
-import { Contract } from 'soroban-client';
 
 import Token from '../../models/Token';
-import simulateTransaction from '../../utils/soroban/token/simulateTransaction';
-import getServer from '../../utils/soroban/getServer';
-import getAdmin from '../../utils/soroban/getAdmin';
+import saveToken from '../../utils/token/saveToken';
 
 const addTokenRoute: RequestHandler = async (req, res) => {
   try {
@@ -19,27 +16,7 @@ const addTokenRoute: RequestHandler = async (req, res) => {
       });
     }
 
-    const server = getServer();
-    const accountAdmin = await server.getAccount(getAdmin().publicKey());
-    const contract = new Contract(token);
-
-    const getTokenName = simulateTransaction(accountAdmin, contract, 'name');
-
-    const getTokenSymbol = simulateTransaction(accountAdmin, contract, 'symbol');
-
-    const getTokenDecimals = simulateTransaction(accountAdmin, contract, 'decimals');
-
-    const result = await Promise.all([getTokenName, getTokenSymbol, getTokenDecimals]);
-
-    const newToken = new Token({
-      address: token,
-      name: result[0],
-      symbol: result[1],
-      decimals: result[2],
-      logo,
-    });
-
-    await newToken.save();
+    const newToken = await saveToken(token, logo);
 
     return res.status(201).j({
       status: 'success',
