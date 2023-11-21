@@ -4,7 +4,7 @@ import getServer from '../soroban/getServer';
 import simulateTransaction from '../soroban/token/simulateTransaction';
 import Token from '../../models/Token';
 
-const saveToken = async (token: string, logo: string | undefined) => {
+const saveToken = async (token: string, logo?: string) => {
   const server = getServer();
   const accountAdmin = await server.getAccount(getAdmin().publicKey());
   const contract = new Contract(token);

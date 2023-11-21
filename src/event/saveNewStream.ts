@@ -26,11 +26,11 @@ const saveNewStream = async (id: string) => {
     let token = await Token.findOne({ address: streamDetails.token });
 
     if (!token) {
-      token = await saveToken(streamDetails.token, undefined);
+      token = await saveToken(streamDetails.token);
     }
 
     streamDetails._id = String(id);
-    streamDetails.token = token;
+    streamDetails.token = token._id;
 
     const newStream = new Stream(streamDetails);
     await newStream.save();
