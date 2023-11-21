@@ -79,7 +79,15 @@
  *                     receiver: "GDK3NJDFD3DG3OO5ZLSSSM56L7ULYKHVUH7UEWV3N5WQBMG4NP72A2O2",
  *                     sender: "GBLBJBTC2URCWUTIXY42W7M5GAZ2NIKTS4QF77BHHWHSBKKSPS2DTOHA",
  *                     start_date: 1699956257,
- *                     token: "CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H",
+ *                     token: {
+ *                         _id: 6539a4b453971c96d697f9c0,
+ *                         address: CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H,
+ *                         symbol: fDAI,
+ *                         name: FakeDAI,
+ *                         decimals: 7,
+ *                         logo: /public/images/assets/fdai.svg,
+ *                         __v: 0
+ *                     },
  *                     withdrawn: "0",
  *                     createdAt: "2023-11-14T10:25:26.494Z",
  *                     updatedAt: "2023-11-14T10:25:26.494Z",

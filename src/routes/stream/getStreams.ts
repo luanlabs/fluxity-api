@@ -10,7 +10,7 @@ const getStreamsRoute: RequestHandler = async (req, res) => {
 
     const query = getStreamsQueries(req.query);
 
-    const streamAll = await Stream.find(query);
+    const streamAll = await Stream.find(query).populate('token').exec();
 
     let streams = streamAll.map((stream) => stream.toObject());
 
