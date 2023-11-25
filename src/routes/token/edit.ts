@@ -4,7 +4,8 @@ import Token from '../../models/Token';
 
 const editTokenRoute: RequestHandler = async (req, res) => {
   try {
-    const { token, logo } = req.body;
+    const { logo } = req.body;
+    const { token } = req.params;
 
     const existingToken = await Token.findOne({ address: token });
     if (!existingToken) {
@@ -16,7 +17,7 @@ const editTokenRoute: RequestHandler = async (req, res) => {
     }
 
     if (!logo) {
-      return res.status(412).j({
+      return res.status(400).j({
         status: 'error',
         message: 'Logo is invalid',
         result: {},

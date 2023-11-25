@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post('/', authAdmin, addTokenRoute);
 router.delete('/', authAdmin, deleteTokenRoute);
-router.put('/', authAdmin, editTokenRoute);
+router.put('/:token', authAdmin, editTokenRoute);
 router.get('/already-minted/:user', alreadyMintedRoute);
 router.get('/', getTokensRoute);
 router.post('/mint', mintTokenRoute);

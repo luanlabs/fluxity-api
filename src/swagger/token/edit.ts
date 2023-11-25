@@ -1,9 +1,18 @@
 /**
  * @swagger
- * /testnet/token:
+ * /testnet/token/{token}:
  *   put:
- *     summary: Changing the token logo from the list of claimable tokens.
+ *     summary: Changes the logo of a token.
  *     tags: [token]
+ *     parameters:
+ *       - name: token
+ *         in: path
+ *         description: Token id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: string
+ * 
  *     requestBody:
  *       required: true
  *       content:
@@ -11,10 +20,6 @@
  *           schema:
  *             type: object
  *             properties:
- *               token:
- *                 type: string
- *                 required: true
- *                 example : CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H
  *               logo:
  *                 type: string
  *                 required: true
@@ -66,7 +71,7 @@
  *                   type: object
  *                   example: {}
  *
- *       412:
+ *       400:
  *         description: Logo is invalid
  *         content:
  *           application/json:
