@@ -1,12 +1,12 @@
 import { Schema, model } from 'mongoose';
 
 export interface ILedger {
-  _id: string;
+  id: string;
   last: string;
 }
 
 const Ledger = new Schema<ILedger>({
-  _id: { type: String, required: true, unique: true },
+  id: { type: String, required: true, unique: true },
   last: { type: String, required: true, unique: true },
 });
 

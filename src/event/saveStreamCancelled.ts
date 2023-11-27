@@ -12,10 +12,7 @@ const saveStreamCancelled = async (id: string) => {
   const contract = new Contract(String(process.env.CONTRACT_ID));
   const stream = await getStream(admin, contract, id);
 
-  const updateStream = await Stream.findOneAndUpdate(
-    { _id: id },
-    { is_cancelled: stream.is_cancelled },
-  );
+  const updateStream = await Stream.findOneAndUpdate({ id }, { is_cancelled: stream.is_cancelled });
 
   if (!updateStream) {
     await saveNewStream(id);

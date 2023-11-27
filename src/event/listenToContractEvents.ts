@@ -58,11 +58,14 @@ const listenToContractEvents = async () => {
 
         lastUsedLedger = events.result.latestLedger;
 
-        const updateLastLedger = await Ledger.findByIdAndUpdate('0', { last: lastUsedLedger });
+        const updateLastLedger = await Ledger.findOneAndUpdate(
+          { id: '0' },
+          { last: lastUsedLedger },
+        );
 
         if (!updateLastLedger) {
           const ledger = new Ledger({
-            _id: '0',
+            id: '0',
             last: lastUsedLedger,
           });
           await ledger.save();

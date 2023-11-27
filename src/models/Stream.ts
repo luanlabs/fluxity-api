@@ -14,7 +14,7 @@ enum Rate {
 }
 
 export interface IStream {
-  _id: string;
+  id: string;
   amount: string;
   cancellable_date: number;
   cliff_date: number;
@@ -32,7 +32,7 @@ export interface IStream {
 
 const Stream = new Schema<IStream>(
   {
-    _id: { type: String, required: true, unique: true },
+    id: { type: String, required: true, unique: true },
     amount: { type: String, required: true },
     cancellable_date: { type: Number, required: true },
     cliff_date: { type: Number, required: true },
