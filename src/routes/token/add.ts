@@ -16,7 +16,7 @@ const addTokenRoute: RequestHandler = async (req, res) => {
       });
     }
 
-    const newToken = await saveToken(token, logo);
+    const newToken = await saveToken(token, logo, true);
 
     return res.status(201).j({
       status: 'success',

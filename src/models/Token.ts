@@ -6,6 +6,7 @@ export interface IToken {
   name: string;
   decimals: string;
   logo?: string;
+  claimable: boolean;
 }
 
 const Token = new Schema<IToken>({
@@ -14,6 +15,7 @@ const Token = new Schema<IToken>({
   name: { type: String, required: true, unique: true },
   decimals: { type: String, required: true, unique: false },
   logo: { type: String, required: false, unique: true },
+  claimable: { type: Boolean, required: true, unique: false, default: false },
 });
 
 export default model<IToken>('Token', Token);
