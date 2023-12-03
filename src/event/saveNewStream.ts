@@ -13,7 +13,7 @@ const saveNewStream = async (id: string) => {
   const admin = await server.getAccount(getAdmin().publicKey());
   const contract = new Contract(String(process.env.CONTRACT_ID));
 
-  const existingStream = await Stream.findOne({ _id: id });
+  const existingStream = await Stream.findOne({ id });
 
   if (existingStream) {
     return;
@@ -28,7 +28,7 @@ const saveNewStream = async (id: string) => {
     token = await saveToken(streamDetails.token);
   }
 
-  streamDetails._id = String(id);
+  streamDetails.id = String(id);
   streamDetails.token = token._id;
 
   const newStream = new Stream(streamDetails);

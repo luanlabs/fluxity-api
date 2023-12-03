@@ -15,7 +15,7 @@ const saveStreamWithdrawn = async (id: string) => {
   const streamDetails = bigintValuesToNumbers(stream);
 
   const updateStream = await Stream.findOneAndUpdate(
-    { _id: id },
+    { id },
     { withdrawn: streamDetails.withdrawn },
   );
 

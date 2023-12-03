@@ -23,7 +23,7 @@ const mintToken: RequestHandler = async (req, res) => {
 
     const adminAddress = await getAdmin().publicKey();
 
-    const tokens = await Token.find({ symbol: { $ne: 'native' } });
+    const tokens = await Token.find({ claimable: true, symbol: { $ne: 'native' } });
 
     const server = await getServer();
 

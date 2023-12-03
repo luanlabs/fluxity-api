@@ -68,7 +68,8 @@
  *                 result:
  *                   type: object
  *                   example: [{
- *                     _id: "24",
+ *                     _id: 6539a4b453971c96d697f9c0,
+ *                     id: "24",
  *                     amount: "119000000",
  *                     cancellable_date: 1699956257,
  *                     cliff_date: 1699956257,

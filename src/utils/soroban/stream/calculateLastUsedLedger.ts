@@ -1,7 +1,7 @@
 import Ledger from '../../../models/Ledger';
 
 const calculateLastUsedLedger = async (sequence: number) => {
-  const lastSavedLedger = await Ledger.findOne({ _id: '0' });
+  const lastSavedLedger = await Ledger.findOne({ id: '0' });
 
   if (!lastSavedLedger) {
     return sequence - 6;
