@@ -1,8 +1,8 @@
-import Ledger from '../models/Ledger';
-import getServer from '../utils/soroban/getServer';
 import getEvents from './getEvents';
-import ToScVal from '../utils/soroban/scVal';
+import Ledger from '../models/Ledger';
 import saveNewStream from './saveNewStream';
+import ToScVal from '../utils/soroban/scVal';
+import getServer from '../utils/soroban/getServer';
 import saveStreamWithdrawn from './saveStreamWithdrawn';
 import saveStreamCancelled from './saveStreamCancelled';
 import calculateLastUsedLedger from '../utils/soroban/stream/calculateLastUsedLedger';
@@ -10,14 +10,18 @@ import calculateLastUsedLedger from '../utils/soroban/stream/calculateLastUsedLe
 const listenToContractEvents = async () => {
   try {
     const server = getServer();
+
     let lastUsedLedger = 0;
+
     setInterval(async () => {
       if (lastUsedLedger === 0) {
         const { sequence } = await server.getLatestLedger();
+
         lastUsedLedger = await calculateLastUsedLedger(sequence);
       }
 
       const contract = String(process.env.CONTRACT_ID);
+
       const stream = ToScVal.toXDR('STREAM');
       const created = ToScVal.toXDR('CREATED');
       const cancelled = ToScVal.toXDR('CANCELLED');

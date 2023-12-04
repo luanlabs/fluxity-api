@@ -1,12 +1,12 @@
 import { Contract } from 'soroban-client';
 
+import Token from '../models/Token';
+import Stream from '../models/Stream';
+import saveToken from '../utils/token/saveToken';
 import getAdmin from '../utils/soroban/getAdmin';
 import getServer from '../utils/soroban/getServer';
 import getStream from '../utils/soroban/stream/getStream';
-import Stream from '../models/Stream';
 import bigintValuesToNumbers from '../utils/soroban/stream/bigintValuesToNumbers';
-import Token from '../models/Token';
-import saveToken from '../utils/token/saveToken';
 
 const saveNewStream = async (id: string) => {
   const server = getServer();
@@ -28,10 +28,11 @@ const saveNewStream = async (id: string) => {
     token = await saveToken(streamDetails.token);
   }
 
-  streamDetails.id = String(id);
+  streamDetails.id = id;
   streamDetails.token = token._id;
 
   const newStream = new Stream(streamDetails);
+
   await newStream.save();
 };
 

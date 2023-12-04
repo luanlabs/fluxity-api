@@ -7,7 +7,7 @@ const getStreamById: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const stream = await Stream.findOne({ _id: id }).populate('token').exec();
+    const stream = await Stream.findOne({ id }).populate('token').exec();
 
     if (!stream) {
       return res.status(404).j({

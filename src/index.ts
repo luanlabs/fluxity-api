@@ -1,9 +1,9 @@
 import cors from 'cors';
+import helmet from 'helmet';
 import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import compression from 'compression';
-import helmet from 'helmet';
 
 import db from './db';
 import router from './routes';
