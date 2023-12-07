@@ -14,7 +14,7 @@ const Token = new Schema<IToken>({
   symbol: { type: String, required: true, unique: true },
   name: { type: String, required: true, unique: true },
   decimals: { type: String, required: true, unique: false },
-  logo: { type: String, required: false, unique: true },
+  logo: { type: String, required: false, unique: false },
   claimable: { type: Boolean, required: true, unique: false, default: false },
 });
 
