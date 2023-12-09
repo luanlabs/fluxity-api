@@ -47,6 +47,8 @@ const mintToken: RequestHandler = async (req, res) => {
     });
     await newAlreadyMinted.save();
 
+    log.info({ message: 'AlreadMinted save successfully', value: newAlreadyMinted });
+
     return res.status(200).j({
       status: 'success',
       message: 'Tokens minted successfully',

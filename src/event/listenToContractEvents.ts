@@ -67,12 +67,16 @@ const listenToContractEvents = async () => {
           { last: lastUsedLedger },
         );
 
+        log.info({ message: 'Update lastUsedLedger successful', value: updateLastLedger });
+
         if (!updateLastLedger) {
           const ledger = new Ledger({
             id: '0',
             last: lastUsedLedger,
           });
           await ledger.save();
+
+          log.info({ message: 'Save lastUsedLedger successful', value: ledger });
         }
       }
     }, 15000);

@@ -45,6 +45,8 @@ const addSubscriber: RequestHandler = async (req, res) => {
     // Save the subscriber to the database
     const savedSubscriber = await newSubscriber.save();
 
+    log.info({ message: 'Subscriber save successfully', value: savedSubscriber });
+
     await sendEmail(
       eAddress,
       `Thank you for joining Fluxity's waitlist!`,
