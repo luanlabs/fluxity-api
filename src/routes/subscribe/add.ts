@@ -3,6 +3,7 @@ import { RequestHandler } from 'express';
 import Subscriber from '../../models/Subscriber';
 import validateEmail from '../../utils/validateEmail';
 import sendEmail from '../../utils/sendEmail';
+import log from '../../logger';
 
 const addSubscriber: RequestHandler = async (req, res) => {
   try {
@@ -64,6 +65,8 @@ const addSubscriber: RequestHandler = async (req, res) => {
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error) {
+    log.error({ message: error.message });
+
     return res.status(500).j({
       status: 'error',
       message: error.message,

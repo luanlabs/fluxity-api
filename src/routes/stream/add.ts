@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 
 import saveNewStream from '../../event/saveNewStream';
+import log from '../../logger';
 
 const addStreamRoute: RequestHandler = async (req, res) => {
   try {
@@ -14,6 +15,8 @@ const addStreamRoute: RequestHandler = async (req, res) => {
       result: {},
     });
   } catch (e) {
+    log.error({ message: e.message });
+
     return res.status(500).j({
       status: 'error',
       message: e.message,

@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 
 import Stream from '../../models/Stream';
 import calculateStreamStatus from '../../utils/soroban/stream/calculateStreamStatus';
+import log from '../../logger';
 
 const getStreamById: RequestHandler = async (req, res) => {
   try {
@@ -27,6 +28,8 @@ const getStreamById: RequestHandler = async (req, res) => {
       result: streamWithStatus,
     });
   } catch (e) {
+    log.error({ message: e.message });
+
     return res.status(500).j({
       status: 'error',
       message: e.message,

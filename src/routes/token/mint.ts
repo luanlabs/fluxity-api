@@ -7,6 +7,7 @@ import AlreadyMinted from '../../models/AlreadyMinted';
 import finalizeTransaction from '../../utils/token/finalizeTransaction';
 import getServer from '../../utils/soroban/getServer';
 import getAdmin from '../../utils/soroban/getAdmin';
+import log from '../../logger';
 
 const mintToken: RequestHandler = async (req, res) => {
   try {
@@ -52,6 +53,8 @@ const mintToken: RequestHandler = async (req, res) => {
       result: tokens,
     });
   } catch (e) {
+    log.error({ message: e.message });
+
     return res.status(500).j({
       status: 'error',
       message: e.message,

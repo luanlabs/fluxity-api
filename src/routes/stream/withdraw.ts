@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 
 import saveStreamWithdrawn from '../../event/saveStreamWithdrawn';
+import log from '../../logger';
 
 const withdrawStreamRoute: RequestHandler = async (req, res) => {
   try {
@@ -14,6 +15,8 @@ const withdrawStreamRoute: RequestHandler = async (req, res) => {
       result: {},
     });
   } catch (e) {
+    log.error({ message: e.message });
+
     return res.status(500).j({
       status: 'error',
       message: e.message,

@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
+import log from '../../logger';
 
 const getTokensRoute: RequestHandler = async (req, res) => {
   try {
@@ -11,6 +12,8 @@ const getTokensRoute: RequestHandler = async (req, res) => {
       result: tokens,
     });
   } catch (e) {
+    log.error({ message: e.message });
+
     return res.status(500).j({
       status: 'error',
       message: e.message,
