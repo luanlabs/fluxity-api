@@ -6,6 +6,7 @@ import getServer from '../utils/soroban/getServer';
 import saveStreamWithdrawn from './saveStreamWithdrawn';
 import saveStreamCancelled from './saveStreamCancelled';
 import calculateLastUsedLedger from '../utils/soroban/stream/calculateLastUsedLedger';
+import log from '../logger';
 
 const listenToContractEvents = async () => {
   try {
@@ -16,7 +17,6 @@ const listenToContractEvents = async () => {
     setInterval(async () => {
       if (lastUsedLedger === 0) {
         const { sequence } = await server.getLatestLedger();
-
         lastUsedLedger = await calculateLastUsedLedger(sequence);
       }
 
@@ -28,7 +28,7 @@ const listenToContractEvents = async () => {
       const withdrawn = ToScVal.toXDR('WITHDRAWN');
 
       const events = await getEvents({
-        startLedger: lastUsedLedger.toString(),
+        startLedger: lastUsedLedger,
         filters: [
           {
             type: 'contract',
@@ -41,7 +41,7 @@ const listenToContractEvents = async () => {
           },
         ],
         pagination: {
-          limit: 100,
+          limit: 1440,
         },
       });
 
@@ -76,6 +76,8 @@ const listenToContractEvents = async () => {
         }
       }
     }, 15000);
-  } catch (e) {}
+  } catch (e) {
+    log.error({ message: e.message });
+  }
 };
 export default listenToContractEvents;
