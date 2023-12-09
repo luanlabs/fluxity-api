@@ -3,20 +3,33 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const log = bunyan.createLogger({
-  name: 'fluxity-app',
-  level: bunyan.TRACE,
-  src: true,
-  streams: [
-    {
-      level: bunyan.TRACE,
-      stream: process.stdout,
-    },
+let level = bunyan.TRACE;
+let streams = [
+  {
+    level: bunyan.TRACE,
+    stream: process.stdout,
+  },
+  {
+    level: bunyan.WARN,
+    path: process.env.LOG_FILE_PATH,
+  },
+];
+
+if (process.env.NODE_ENV == 'production') {
+  level = bunyan.WARN;
+  streams = [
     {
       level: bunyan.WARN,
       path: process.env.LOG_FILE_PATH,
     },
-  ],
+  ];
+}
+
+export const log = bunyan.createLogger({
+  name: 'fluxity-app',
+  level,
+  src: true,
+  streams,
 });
 
 export default log;
