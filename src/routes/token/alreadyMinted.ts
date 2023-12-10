@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 
 import AlreadyMinted from '../../models/AlreadyMinted';
+import log from '../../logger';
 
 const alreadyMintedRoute: RequestHandler = async (req, res) => {
   try {
@@ -21,6 +22,8 @@ const alreadyMintedRoute: RequestHandler = async (req, res) => {
       result: { minted: false },
     });
   } catch (e) {
+    log.error({ message: e.message });
+
     return res.status(500).j({
       status: 'error',
       message: e.message,

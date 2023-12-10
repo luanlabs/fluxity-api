@@ -3,6 +3,7 @@ import getAdmin from '../soroban/getAdmin';
 import getServer from '../soroban/getServer';
 import simulateTransaction from '../soroban/token/simulateTransaction';
 import Token from '../../models/Token';
+import log from '../../logger';
 
 const saveToken = async (token: string, logo?: string, claimable?: boolean) => {
   const server = getServer();
@@ -27,6 +28,8 @@ const saveToken = async (token: string, logo?: string, claimable?: boolean) => {
   });
 
   await newToken.save();
+
+  log.info({ message: 'Token save successfully', value: newToken });
 
   return newToken;
 };

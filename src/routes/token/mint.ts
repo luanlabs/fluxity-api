@@ -7,6 +7,7 @@ import AlreadyMinted from '../../models/AlreadyMinted';
 import finalizeTransaction from '../../utils/token/finalizeTransaction';
 import getServer from '../../utils/soroban/getServer';
 import getAdmin from '../../utils/soroban/getAdmin';
+import log from '../../logger';
 
 const mintToken: RequestHandler = async (req, res) => {
   try {
@@ -46,12 +47,16 @@ const mintToken: RequestHandler = async (req, res) => {
     });
     await newAlreadyMinted.save();
 
+    log.info({ message: 'AlreadMinted save successfully', value: newAlreadyMinted });
+
     return res.status(200).j({
       status: 'success',
       message: 'Tokens minted successfully',
       result: tokens,
     });
   } catch (e) {
+    log.error({ message: e.message });
+
     return res.status(500).j({
       status: 'error',
       message: e.message,

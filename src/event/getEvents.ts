@@ -1,3 +1,4 @@
+import log from '../logger';
 import request from '../utils/request';
 
 interface IFilter {
@@ -6,7 +7,7 @@ interface IFilter {
   topics: string[][];
 }
 interface IEvent {
-  startLedger: string;
+  startLedger: number;
   filters?: IFilter[];
   pagination?: object;
 }
@@ -29,6 +30,8 @@ const getEvents = async (params: IEvent) => {
     };
 
     return await request(rpcUrl, config);
-  } catch {}
+  } catch (e) {
+    log.error({ message: e.message });
+  }
 };
 export default getEvents;

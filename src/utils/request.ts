@@ -1,3 +1,5 @@
+import log from '../logger';
+
 const request = async (url: string, config?: RequestInit) => {
   let status = true;
   while (status) {
@@ -6,12 +8,14 @@ const request = async (url: string, config?: RequestInit) => {
       const data = await response.json();
 
       if (response.status >= 400) {
+        log.warn({ message: { data, response } });
         throw { data, response };
       }
 
       status = false;
       return data;
     } catch (error) {
+      log.error({ message: error.message });
       throw error;
     }
   }

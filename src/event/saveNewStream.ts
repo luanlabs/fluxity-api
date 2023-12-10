@@ -7,6 +7,7 @@ import getAdmin from '../utils/soroban/getAdmin';
 import getServer from '../utils/soroban/getServer';
 import getStream from '../utils/soroban/stream/getStream';
 import bigintValuesToNumbers from '../utils/soroban/stream/bigintValuesToNumbers';
+import log from '../logger';
 
 const saveNewStream = async (id: string) => {
   const server = getServer();
@@ -34,6 +35,8 @@ const saveNewStream = async (id: string) => {
   const newStream = new Stream(streamDetails);
 
   await newStream.save();
+
+  log.info({ message: 'Save new stream successful', value: newStream });
 };
 
 export default saveNewStream;

@@ -9,7 +9,7 @@ const calculateLastUsedLedger = async (sequence: number) => {
 
   const oldLedger = sequence - 1440;
 
-  if (Number(lastSavedLedger.last) <= oldLedger) {
+  if (Number(lastSavedLedger.last) <= oldLedger || Number(lastSavedLedger.last) > sequence) {
     return sequence - 1438;
   }
 

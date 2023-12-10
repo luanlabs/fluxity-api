@@ -6,6 +6,7 @@ import getStream from '../utils/soroban/stream/getStream';
 import Stream from '../models/Stream';
 import bigintValuesToNumbers from '../utils/soroban/stream/bigintValuesToNumbers';
 import saveNewStream from './saveNewStream';
+import log from '../logger';
 
 const saveStreamWithdrawn = async (id: string) => {
   const server = getServer();
@@ -18,6 +19,8 @@ const saveStreamWithdrawn = async (id: string) => {
     { id },
     { withdrawn: streamDetails.withdrawn },
   );
+
+  log.info({ message: 'Save withdrawn stream successful', value: updateStream });
 
   if (!updateStream) {
     await saveNewStream(id);

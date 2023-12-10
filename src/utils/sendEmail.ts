@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import log from '../logger';
 
 // Function to send an email
 const sendEmail = async (to: string, subject: string, text: string) => {
@@ -23,6 +24,7 @@ const sendEmail = async (to: string, subject: string, text: string) => {
     // Send the email
     await transporter.sendMail(mailOptions);
   } catch (error) {
+    log.error({ message: error.message });
     throw error;
   }
 };

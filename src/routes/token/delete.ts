@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
+import log from '../../logger';
 
 const deleteTokenRoute: RequestHandler = async (req, res) => {
   try {
@@ -17,12 +18,16 @@ const deleteTokenRoute: RequestHandler = async (req, res) => {
 
     const tokenDeleted = await Token.findOneAndDelete({ address: token });
 
+    log.info({ message: 'Token deleted successfully', value: tokenDeleted });
+
     return res.status(200).j({
       status: 'success',
       message: 'Token deleted successfully',
       result: tokenDeleted,
     });
   } catch (e) {
+    log.error({ message: e.message });
+
     return res.status(500).j({
       status: 'error',
       message: e.message,
