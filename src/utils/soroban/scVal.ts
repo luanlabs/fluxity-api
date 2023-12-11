@@ -2,6 +2,7 @@ import { xdr, Address } from 'soroban-client';
 
 import numberToScVal from './numberToScval';
 import scValToNative from './scValToNative';
+import toXdrValue from './stream/createStreamValues';
 
 const { scvU32, scvU64, scvSymbol } = xdr.ScVal;
 
@@ -26,6 +27,9 @@ class ToScVal {
   }
   public static toXDR(symbol: string) {
     return ToScVal.symbol(symbol).toXDR().toString('base64');
+  }
+  public static toXdrValueStream(address: string, token: string) {
+    return toXdrValue(address, token);
   }
 }
 
