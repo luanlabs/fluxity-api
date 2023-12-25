@@ -1,4 +1,4 @@
-import { xdr, scValToNative as toNative } from 'soroban-client';
+import { xdr, scValToNative as toNative } from 'stellar-sdk';
 
 const { ScVal } = xdr;
 

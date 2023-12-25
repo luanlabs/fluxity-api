@@ -1,4 +1,4 @@
-import { Account, Contract } from 'soroban-client';
+import { Account, Contract } from 'stellar-sdk';
 
 import ToScVal from '../scVal';
 import getServer from '../../soroban/getServer';
@@ -7,11 +7,12 @@ import getAdmin from '../getAdmin';
 
 const buildMintTransaction = async (
   admin: Account,
-  contract: Contract,
+  token: string,
   toAddress: string,
 ): Promise<string> => {
   const server = getServer();
   const adminAccount = getAdmin();
+  const contract = new Contract(token);
 
   const address = await ToScVal.address(toAddress);
 

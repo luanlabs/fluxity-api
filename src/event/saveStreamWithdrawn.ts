@@ -1,4 +1,4 @@
-import { Contract } from 'soroban-client';
+import { Contract } from 'stellar-sdk';
 
 import getAdmin from '../utils/soroban/getAdmin';
 import getServer from '../utils/soroban/getServer';

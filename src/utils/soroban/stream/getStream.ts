@@ -1,4 +1,4 @@
-import { Account, Contract, scValToNative } from 'soroban-client';
+import { Account, Contract, scValToNative } from 'stellar-sdk';
 
 import ToScVal from '../scVal';
 import getServer from '../getServer';
