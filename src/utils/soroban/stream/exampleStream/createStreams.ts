@@ -1,11 +1,10 @@
-import { Account, scValToNative, SorobanRpc } from 'stellar-sdk';
+import { Account, SorobanRpc } from 'stellar-sdk';
 
 import { IToken } from '../../../../models/Token';
 import buildStreamTransaction from './buildStreamTransaction';
 import finalizeTransaction from '../../finalizeTransaction';
 import getServer from '../../getServer';
 import getAdmin from '../../getAdmin';
-import saveNewStream from '../../../../event/saveNewStream';
 import buildApproveTransaction from './buildApproveTransaction';
 import log from '../../../../logger';
 
@@ -35,7 +34,8 @@ const createStreams = async (tokens: IToken[], address: string) => {
           finalizeStream.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
           finalizeStream.returnValue
         ) {
-          await saveNewStream(scValToNative(finalizeStream.returnValue).toString());
+          // await saveNewStream(scValToNative(finalizeStream.returnValue).toString());
+          log.info({ message: 'Create stream for address : ' + address });
         }
       }
     }
