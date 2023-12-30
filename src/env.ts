@@ -1,5 +1,5 @@
-const checkSetEnvVariable = () => {
-  const envVariables = [
+const checkIfEnvsAreSet = () => {
+  const envs = [
     'DB_URI',
     'DB_NAME',
     'PORT',
@@ -14,12 +14,18 @@ const checkSetEnvVariable = () => {
     'LOG_FILE_PATH',
   ];
 
-  for (let i = 0; i < envVariables.length; i++) {
-    if (!process.env[envVariables[i]]) {
-      console.log('The env variables are not defined');
-      process.exit(1);
+  let status = false;
+
+  for (let i = 0; i < envs.length; i++) {
+    if (!process.env[envs[i]]) {
+      console.log(envs[i] + ' are not defined');
+      status = true;
     }
+  }
+
+  if (status) {
+    process.exit(1);
   }
 };
 
-export default checkSetEnvVariable;
+export default checkIfEnvsAreSet;

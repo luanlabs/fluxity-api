@@ -19,7 +19,7 @@ const saveNewStream = async (id: string) => {
   if (existingStream) {
     return;
   }
-  console.log(id);
+
   const stream = await getStream(admin, contract, id);
   const streamDetails = bigintValuesToNumbers(stream);
 

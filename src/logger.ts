@@ -1,7 +1,10 @@
 import bunyan from 'bunyan';
 import dotenv from 'dotenv';
+import checkIfEnvsAreSet from './env';
 
 dotenv.config();
+
+checkIfEnvsAreSet();
 
 let level = bunyan.TRACE;
 let streams = [
@@ -27,8 +30,8 @@ if (process.env.NODE_ENV == 'production') {
 
 export const log = bunyan.createLogger({
   name: 'fluxity-app',
-  level,
   src: true,
+  level,
   streams,
 });
 
