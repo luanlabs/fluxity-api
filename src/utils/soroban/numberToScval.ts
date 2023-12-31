@@ -1,4 +1,4 @@
-import { xdr } from 'soroban-client';
+import { xdr } from 'stellar-sdk';
 
 const bigIntToI128 = (bn: bigint): Buffer => {
   let hex = BigInt(bn).toString(16).replace(/^-/, '');
@@ -25,7 +25,7 @@ const bigIntToI128 = (bn: bigint): Buffer => {
   return Buffer.from(u8);
 };
 
-const bigNumberFromBytes = (signed: boolean, ...bytes: (string | number | bigint)[]): BigInt => {
+const bigNumberFromBytes = (signed: boolean, ...bytes: (string | number | bigint)[]): bigint => {
   let sign = 1;
   if (signed && bytes[0] === 0x80) {
     sign = -1;

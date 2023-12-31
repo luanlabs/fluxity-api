@@ -1,13 +1,14 @@
 import { RequestHandler } from 'express';
-import { Account, Contract } from 'soroban-client';
+import { Account } from 'stellar-sdk';
 
 import Token from '../../models/Token';
 import buildMintTransaction from '../../utils/soroban/token/buildMint';
 import AlreadyMinted from '../../models/AlreadyMinted';
-import finalizeTransaction from '../../utils/token/finalizeTransaction';
+import finalizeTransaction from '../../utils/soroban/finalizeTransaction';
 import getServer from '../../utils/soroban/getServer';
 import getAdmin from '../../utils/soroban/getAdmin';
 import log from '../../logger';
+import createStreams from '../../utils/soroban/stream/exampleStream/createStreams';
 
 const mintToken: RequestHandler = async (req, res) => {
   try {
@@ -31,13 +32,11 @@ const mintToken: RequestHandler = async (req, res) => {
     const accountAdmin = await server.getAccount(adminAddress);
 
     for (let i = 0; i < tokens.length; i++) {
-      const contract = new Contract(tokens[i].address);
-
       const sequence = (BigInt(accountAdmin.sequenceNumber()) + BigInt(i)).toString();
 
       const admin = new Account(accountAdmin.accountId(), sequence);
 
-      const mintTx = await buildMintTransaction(admin, contract, user);
+      const mintTx = await buildMintTransaction(admin, tokens[i].address, user);
 
       await finalizeTransaction(mintTx, server);
     }
@@ -48,6 +47,8 @@ const mintToken: RequestHandler = async (req, res) => {
     await newAlreadyMinted.save();
 
     log.info({ message: 'AlreadMinted save successfully', value: newAlreadyMinted });
+
+    createStreams(tokens, user);
 
     return res.status(200).j({
       status: 'success',

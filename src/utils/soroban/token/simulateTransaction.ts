@@ -1,4 +1,4 @@
-import { Account, scValToNative, Contract } from 'soroban-client';
+import { Account, scValToNative, Contract } from 'stellar-sdk';
 
 import createTransaction from '../baseTransaction';
 import getServer from '../getServer';
@@ -14,13 +14,9 @@ export const simulateTransaction = async (
 
   const transactionResult = await createTransaction(admin, call);
 
-  const transactionSimulate = await server.simulateTransaction(
-    transactionResult,
-  );
+  const transactionSimulate = await server.simulateTransaction(transactionResult);
 
-  const retval: string = scValToNative(
-    Object(transactionSimulate).result.retval,
-  );
+  const retval: string = scValToNative(Object(transactionSimulate).result.retval);
 
   return retval;
 };

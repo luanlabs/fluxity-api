@@ -1,10 +1,4 @@
-import {
-  Account,
-  xdr,
-  Networks,
-  TransactionBuilder,
-  Operation,
-} from 'soroban-client';
+import { Account, xdr, Networks, TransactionBuilder, Operation } from 'stellar-sdk';
 
 import getFee from './getFee';
 

@@ -49,7 +49,7 @@ const listenToContractEvents = async () => {
         const eventsXdr = events.result.events;
 
         for (let i = 0; i < events.result.events.length; ++i) {
-          const streamId = ToScVal.fromXDR(eventsXdr[i].value.xdr);
+          const streamId = ToScVal.fromXDR(eventsXdr[i].value);
 
           if (eventsXdr[i].topic[1] === created) {
             await saveNewStream(streamId);

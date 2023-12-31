@@ -1,4 +1,4 @@
-import { Contract } from 'soroban-client';
+import { Contract } from 'stellar-sdk';
 
 import Token from '../models/Token';
 import Stream from '../models/Stream';
