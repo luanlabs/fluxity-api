@@ -11,7 +11,7 @@ const toXdrValue = (address: string, token: string) => {
   const cliffDate = startDate;
   const cancellableDate = endDate;
   const sender = getAdmin().publicKey();
-  const amount = BigInt('7000000000');
+  const amount = BigInt(Number(process.env.AMOUNT_STREAM) * 10000000);
 
   return scvMap([
     new addToMap({
