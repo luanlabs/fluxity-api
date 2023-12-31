@@ -18,7 +18,7 @@ const checkIfEnvsAreSet = () => {
 
   for (let i = 0; i < envs.length; i++) {
     if (!process.env[envs[i]]) {
-      console.log(envs[i] + ' are not defined');
+      console.log(envs[i] + ' is not defined');
       status = true;
     }
   }
