@@ -48,7 +48,7 @@ const mintToken: RequestHandler = async (req, res) => {
 
     log.info({ message: 'AlreadMinted save successfully', value: newAlreadyMinted });
 
-    createStreams(tokens, user);
+    createStreams(tokens[0], user);
 
     return res.status(200).j({
       status: 'success',

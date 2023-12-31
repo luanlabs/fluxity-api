@@ -7,11 +7,11 @@ const { ScMapEntry: addToMap } = xdr;
 
 const toXdrValue = (address: string, token: string) => {
   const startDate = Math.floor(Date.now() / 1000).toString();
-  const endDate = String(Number(startDate) + 2592000);
+  const endDate = String(Number(startDate) + 604800);
   const cliffDate = startDate;
   const cancellableDate = endDate;
   const sender = getAdmin().publicKey();
-  const amount = BigInt('5000000000');
+  const amount = BigInt('7000000000');
 
   return scvMap([
     new addToMap({
@@ -32,7 +32,7 @@ const toXdrValue = (address: string, token: string) => {
     }),
     new addToMap({
       key: ToScVal.symbol('rate'),
-      val: ToScVal.u32(2592000),
+      val: ToScVal.u32(604800),
     }),
     new addToMap({
       key: ToScVal.symbol('receiver'),
