@@ -1,7 +1,7 @@
 import { Account, Contract } from 'stellar-sdk';
 
 import ToScVal from '../scVal';
-import getServer from '../../soroban/getServer';
+import getTestNetServer from '../getTestNetServer';
 import baseTransaction from '../baseTransaction';
 import getAdmin from '../getAdmin';
 
@@ -10,7 +10,7 @@ const buildMintTransaction = async (
   token: string,
   toAddress: string,
 ): Promise<string> => {
-  const server = getServer();
+  const server = getTestNetServer();
   const adminAccount = getAdmin();
   const contract = new Contract(token);
 

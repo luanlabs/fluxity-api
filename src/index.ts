@@ -8,7 +8,7 @@ import compression from 'compression';
 import db from './db';
 import router from './routes';
 import jsonResponse from './middleware/jsonResponse';
-import listenToContractEvents from './event/listenToContractEvents';
+import listenToTestNetContractEvents from './event/listenToTestNetContractEvents';
 import { log } from './logger';
 
 dotenv.config();
@@ -28,7 +28,7 @@ app.use(compression());
 app.use(helmet());
 app.disable('x-powered-by');
 
-listenToContractEvents();
+listenToTestNetContractEvents();
 
 app.use(cors());
 app.use(bodyParser.json());

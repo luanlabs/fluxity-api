@@ -1,7 +1,7 @@
 import { Account, Contract } from 'stellar-sdk';
 
 import ToScVal from '../../scVal';
-import getServer from '../../getServer';
+import getTestNetServer from '../../getTestNetServer';
 import baseTransaction from '../../baseTransaction';
 import getAdmin from '../../getAdmin';
 
@@ -10,9 +10,9 @@ const buildStreamTransaction = async (
   toAddress: string,
   token: string,
 ): Promise<string> => {
-  const server = getServer();
+  const server = getTestNetServer();
   const adminAccount = getAdmin();
-  const contract = new Contract(String(process.env.CONTRACT_ID));
+  const contract = new Contract(String(process.env.TESTNET_CONTRACT_ID));
 
   const params = ToScVal.toXdrValueStream(toAddress, token);
 

@@ -8,8 +8,9 @@ import log from '../../logger';
 const getStreamsRoute: RequestHandler = async (req, res) => {
   try {
     const { status } = req.query;
+    const network = req.originalUrl.split('/')[1];
 
-    const query = getStreamsQueries(req.query);
+    const query = getStreamsQueries(req.query, network);
 
     const streamAll = await Stream.find(query).populate('token').exec();
 

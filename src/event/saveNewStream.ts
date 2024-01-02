@@ -1,20 +1,15 @@
-import { Contract } from 'stellar-sdk';
-
 import Token from '../models/Token';
 import Stream from '../models/Stream';
 import saveToken from '../utils/token/saveToken';
-import getAdmin from '../utils/soroban/getAdmin';
-import getServer from '../utils/soroban/getServer';
 import getStream from '../utils/soroban/stream/getStream';
 import bigintValuesToNumbers from '../utils/soroban/stream/bigintValuesToNumbers';
 import log from '../logger';
+import getConfig from '../utils/soroban/getConfig';
 
-const saveNewStream = async (id: string) => {
-  const server = getServer();
-  const admin = await server.getAccount(getAdmin().publicKey());
-  const contract = new Contract(String(process.env.CONTRACT_ID));
+const saveNewStream = async (id: string, network: string) => {
+  const { contract, admin } = await getConfig(network);
 
-  const existingStream = await Stream.findOne({ id });
+  const existingStream = await Stream.findOne({ id, network });
 
   if (existingStream) {
     return;
@@ -26,7 +21,7 @@ const saveNewStream = async (id: string) => {
   let token = await Token.findOne({ address: streamDetails.token });
 
   if (!token) {
-    token = await saveToken(streamDetails.token);
+    token = await saveToken(streamDetails.token, network);
   }
 
   streamDetails.id = id;

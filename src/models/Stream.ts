@@ -28,11 +28,12 @@ export interface IStream {
   token: Schema.Types.ObjectId;
   withdrawn: string;
   status?: string;
+  network: 'mainnet' | 'testnet';
 }
 
 const Stream = new Schema<IStream>(
   {
-    id: { type: String, required: true, unique: true },
+    id: { type: String, required: true },
     amount: { type: String, required: true },
     cancellable_date: { type: Number, required: true },
     cliff_date: { type: Number, required: true },
@@ -45,6 +46,7 @@ const Stream = new Schema<IStream>(
     start_date: { type: Number, required: true },
     token: { type: Schema.Types.ObjectId, ref: 'Token', required: true },
     withdrawn: { type: String, required: true },
+    network: { type: String, required: false, default: 'mainnet' },
   },
   { timestamps: true },
 );

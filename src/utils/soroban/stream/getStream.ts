@@ -1,11 +1,11 @@
 import { Account, Contract, scValToNative } from 'stellar-sdk';
 
 import ToScVal from '../scVal';
-import getServer from '../getServer';
+import getTestNetServer from '../getTestNetServer';
 import baseTransaction from '../baseTransaction';
 
 const getStream = async (admin: Account, contract: Contract, id: string) => {
-  const server = getServer();
+  const server = getTestNetServer();
 
   const call = contract.call('get_stream', ToScVal.u64(id));
 

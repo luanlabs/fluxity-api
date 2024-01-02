@@ -7,6 +7,7 @@ export interface IToken {
   decimals: string;
   logo?: string;
   claimable: boolean;
+  network: 'mainnet' | 'testnet';
 }
 
 const Token = new Schema<IToken>({
@@ -16,6 +17,7 @@ const Token = new Schema<IToken>({
   decimals: { type: String, required: true, unique: false },
   logo: { type: String, required: false, unique: false },
   claimable: { type: Boolean, required: true, unique: false, default: false },
+  network: { type: String, required: false, unique: false, default: 'mainnet' },
 });
 
 export default model<IToken>('Token', Token);

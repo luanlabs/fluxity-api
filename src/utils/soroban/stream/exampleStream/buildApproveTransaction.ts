@@ -1,17 +1,17 @@
 import { Account, Contract } from 'stellar-sdk';
 
 import ToScVal from '../../scVal';
-import getServer from '../../getServer';
+import getTestNetServer from '../../getTestNetServer';
 import baseTransaction from '../../baseTransaction';
 import getAdmin from '../../getAdmin';
 
 const buildApproveTransaction = async (admin: Account, token: string): Promise<string> => {
-  const server = getServer();
+  const server = getTestNetServer();
   const adminAccount = getAdmin();
   const contract = new Contract(token);
 
   const from = ToScVal.address(adminAccount.publicKey());
-  const spender = ToScVal.address(String(process.env.CONTRACT_ID));
+  const spender = ToScVal.address(String(process.env.TESTNET_CONTRACT_ID));
   const amountScVal = ToScVal.i128(BigInt(Number(process.env.CLAIM_STREAM_AMOUNT) * 10 ** 7));
   const { sequence } = await server.getLatestLedger();
   const expirationLedger = ToScVal.u32(sequence + 1000);
