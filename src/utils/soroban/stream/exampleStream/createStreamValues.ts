@@ -1,17 +1,18 @@
 import { xdr } from 'stellar-sdk';
 import ToScVal from '../../scVal';
 import getAdmin from '../../getAdmin';
+import { rates } from '../rates';
 
 const { scvMap } = xdr.ScVal;
 const { ScMapEntry: addToMap } = xdr;
 
 const toXdrValue = (address: string, token: string) => {
   const startDate = Math.floor(Date.now() / 1000).toString();
-  const endDate = String(Number(startDate) + 2592000);
+  const endDate = String(Number(startDate) + rates.weekly);
   const cliffDate = startDate;
   const cancellableDate = endDate;
   const sender = getAdmin().publicKey();
-  const amount = BigInt('5000000000');
+  const amount = BigInt(Number(process.env.CLAIM_STREAM_AMOUNT) * 10 ** 7);
 
   return scvMap([
     new addToMap({
@@ -32,7 +33,7 @@ const toXdrValue = (address: string, token: string) => {
     }),
     new addToMap({
       key: ToScVal.symbol('rate'),
-      val: ToScVal.u32(2592000),
+      val: ToScVal.u32(rates.weekly),
     }),
     new addToMap({
       key: ToScVal.symbol('receiver'),

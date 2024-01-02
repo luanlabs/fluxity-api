@@ -8,35 +8,33 @@ import getAdmin from '../../getAdmin';
 import buildApproveTransaction from './buildApproveTransaction';
 import log from '../../../../logger';
 
-const createStreams = async (tokens: IToken[], address: string) => {
+const createStreams = async (token: IToken, address: string) => {
   try {
     const adminAddress = await getAdmin().publicKey();
     const server = await getServer();
     const accountAdmin = await server.getAccount(adminAddress);
 
-    for (let i = 0; i < tokens.length; i++) {
-      const sequence = BigInt(accountAdmin.sequenceNumber()) + BigInt(i * 2);
-      const admin = new Account(accountAdmin.accountId(), sequence.toString());
+    const sequence = BigInt(accountAdmin.sequenceNumber());
+    const admin = new Account(accountAdmin.accountId(), sequence.toString());
 
-      const approveTx = await buildApproveTransaction(admin, tokens[i].address);
-      const finalizeApprove = await finalizeTransaction(approveTx, server);
+    const approveTx = await buildApproveTransaction(admin, token.address);
+    const finalizeApprove = await finalizeTransaction(approveTx, server);
+
+    if (
+      finalizeApprove.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
+      finalizeApprove.returnValue
+    ) {
+      const admin = new Account(accountAdmin.accountId(), (sequence + BigInt(1)).toString());
+
+      const streamTx = await buildStreamTransaction(admin, address, token.address);
+      const finalizeStream = await finalizeTransaction(streamTx, server);
 
       if (
-        finalizeApprove.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
-        finalizeApprove.returnValue
+        finalizeStream.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
+        finalizeStream.returnValue
       ) {
-        const admin = new Account(accountAdmin.accountId(), (sequence + BigInt(1)).toString());
-
-        const streamTx = await buildStreamTransaction(admin, address, tokens[i].address);
-        const finalizeStream = await finalizeTransaction(streamTx, server);
-
-        if (
-          finalizeStream.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
-          finalizeStream.returnValue
-        ) {
-          // await saveNewStream(scValToNative(finalizeStream.returnValue).toString());
-          log.info({ message: 'Create stream for address : ' + address });
-        }
+        // await saveNewStream(scValToNative(finalizeStream.returnValue).toString());
+        log.info({ message: 'Create stream for address : ' + address });
       }
     }
   } catch (e) {

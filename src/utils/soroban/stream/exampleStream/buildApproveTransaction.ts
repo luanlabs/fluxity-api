@@ -12,7 +12,7 @@ const buildApproveTransaction = async (admin: Account, token: string): Promise<s
 
   const from = ToScVal.address(adminAccount.publicKey());
   const spender = ToScVal.address(String(process.env.CONTRACT_ID));
-  const amountScVal = ToScVal.i128(BigInt('5000000000'));
+  const amountScVal = ToScVal.i128(BigInt(Number(process.env.CLAIM_STREAM_AMOUNT) * 10 ** 7));
   const { sequence } = await server.getLatestLedger();
   const expirationLedger = ToScVal.u32(sequence + 1000);
 
