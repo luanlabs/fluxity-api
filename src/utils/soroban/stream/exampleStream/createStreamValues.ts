@@ -1,7 +1,7 @@
 import { xdr } from 'stellar-sdk';
 import ToScVal from '../../scVal';
 import getAdmin from '../../getAdmin';
-import { rates } from '../rates';
+import rates from '../rates';
 
 const { scvMap } = xdr.ScVal;
 const { ScMapEntry: addToMap } = xdr;
