@@ -1,18 +1,9 @@
 /**
  * @swagger
- * /testnet/token/{token}:
- *   put:
- *     summary: Changes the logo of a token.
- *     tags: [token]
- *     parameters:
- *       - name: token
- *         in: path
- *         description: Token id
- *         required: true
- *         schema:
- *           type: string
- *           format: string
- * 
+ * /mainnet/token:
+ *   post:
+ *     summary: Adds an ERC20-like token to the list of claimable tokens.
+ *     tags: [token (mainnet)]
  *     requestBody:
  *       required: true
  *       content:
@@ -20,17 +11,22 @@
  *           schema:
  *             type: object
  *             properties:
+ *               token:
+ *                 type: string
+ *                 required: true
+ *                 example : CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H
  *               logo:
  *                 type: string
  *                 required: true
- *                 example : /public/images/assets/fdai.svg
+ *                 example : /public/images/assets/fusdc.svg
  *
  *     security:
  *       - Authorization : []
  *
+ *
  *     responses:
  *       200:
- *         description: Token changed logo successfully
+ *         description: Token has been saved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -41,38 +37,23 @@
  *                   example: success
  *                 message:
  *                   type: string
- *                   example: Token changed logo successfully
+ *                   example: Token has been saved successfully
  *                 result:
  *                   type: object
  *                   example: {
- *                     _id: 6539a4b453971c96d697f9c0,
  *                     address: CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H,
  *                     symbol: fDAI,
  *                     name: FakeDAI,
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
+ *                     _id: 6539a4b453971c96d697f9c0,
+ *                     claimable: false,
+ *                     network: mainnet,
  *                     __v: 0
  *                   }
  *
- *       404:
- *         description: Token dose not exist on the database
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: error
- *                 message:
- *                   type: string
- *                   example: Token dose not exist
- *                 result:
- *                   type: object
- *                   example: {}
- *
  *       400:
- *         description: Logo is invalid
+ *         description: Token already exists in the database
  *         content:
  *           application/json:
  *             schema:
@@ -83,7 +64,7 @@
  *                   example: error
  *                 message:
  *                   type: string
- *                   example: Logo is invalid
+ *                   example: Token already exists
  *                 result:
  *                   type: object
  *                   example: {}
@@ -134,10 +115,9 @@
  *                     example: error
  *                   message:
  *                     type: string
- *                     example: Token Invalid ...
+ *                     example: Failed to save the token
  *                   result:
  *                     type: object
-
  *                     example: {}
  *
  *

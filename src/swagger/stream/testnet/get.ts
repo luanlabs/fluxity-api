@@ -1,19 +1,57 @@
 /**
  * @swagger
- * /testnet/stream/{id}:
+ * /testnet/stream:
  *   get:
- *     summary: Returns streams by id
- *     tags: [stream]
+ *     summary: Returns a list of streams
+ *     tags: [stream (testnet)]
  *     parameters:
- *       - name: id
- *         in: path
- *         description: Stream Id
- *         required: true
+ *       - name: status
+ *         in: query
+ *         description: Status values
+ *         required: false
+ *         explode: true
  *         schema:
  *           type: string
- *           format: string
+ *           enum:
+ *             - pending
+ *             - ongoing
+ *             - expired
+ *
+ *       - name: sender
+ *         in: query
+ *         description: Sender address
+ *         required: false
+ *         explode: true
+ *         schema:
+ *           type: string
+ *
+ *       - name: receiver
+ *         in: query
+ *         description: Receiver address
+ *         required: false
+ *         explode: true
+ *         schema:
+ *           type: string
+ *
+ *       - name: token
+ *         in: query
+ *         description: Token contract address
+ *         required: false
+ *         explode: true
+ *         schema:
+ *           type: string
+ *
+ *       - name: address
+ *         in: query
+ *         description: If this parameter is entered, the sender and receiver parameters are not functional
+ *         required: false
+ *         explode: true
+ *         schema:
+ *           type: string
+ *
  *
  *     responses:
+ *
  *       200:
  *         description: Stream has been received successfully
  *         content:
@@ -26,10 +64,10 @@
  *                   example: success
  *                 message:
  *                   type: string
- *                   example: Get stream by id
+ *                   example:
  *                 result:
  *                   type: object
- *                   example: {
+ *                   example: [{
  *                     _id: 6539a4b453971c96d697f9c0,
  *                     id: "24",
  *                     amount: "119000000",
@@ -49,32 +87,17 @@
  *                         name: FakeDAI,
  *                         decimals: 7,
  *                         logo: /public/images/assets/fdai.svg,
+ *                         calimable: true,
+ *                         network: testnet,
  *                         __v: 0
  *                     },
  *                     withdrawn: "0",
+ *                     network: testnet,
  *                     createdAt: "2023-11-14T10:25:26.494Z",
  *                     updatedAt: "2023-11-14T10:25:26.494Z",
  *                     __v: 0,
  *                     status: "ongoing"
- *                   }
- *
- *       404:
- *         description: Stream dose not exist on the database
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: error
- *                 message:
- *                   type: string
- *                   example: There is no stream with this id
- *                 result:
- *                   type: object
- *                   example: {}
- *
+ *                   },]
  *
  *       500:
  *         description: Internal server error

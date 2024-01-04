@@ -3,7 +3,7 @@
  * /testnet/token/mint:
  *   post:
  *     summary: Mints a new token and transfers the tokens to the specified destination address.
- *     tags: [token]
+ *     tags: [token (testnet)]
  *     requestBody:
  *       required: true
  *       content:
@@ -38,6 +38,8 @@
  *                     name: FakeDAI,
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
+ *                     claimable: true,
+ *                     network: testnet,
  *                     __v: 0
  *                   },]
  *

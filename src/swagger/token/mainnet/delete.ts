@@ -1,9 +1,9 @@
 /**
  * @swagger
- * /testnet/token:
- *   post:
- *     summary: Adds an ERC20-like token to the list of claimable tokens.
- *     tags: [token]
+ * /mainnet/token:
+ *   delete:
+ *     summary: Deletes a token from the list of claimable tokens.
+ *     tags: [token (mainnet)]
  *     requestBody:
  *       required: true
  *       content:
@@ -15,18 +15,13 @@
  *                 type: string
  *                 required: true
  *                 example : CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H
- *               logo:
- *                 type: string
- *                 required: true
- *                 example : /public/images/assets/fusdc.svg
  *
  *     security:
  *       - Authorization : []
  *
- *
  *     responses:
  *       200:
- *         description: Token has been saved successfully
+ *         description: Token has been deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -37,21 +32,23 @@
  *                   example: success
  *                 message:
  *                   type: string
- *                   example: Token has been saved successfully
+ *                   example: Token deleted successfully
  *                 result:
  *                   type: object
  *                   example: {
+ *                     _id: 6539a4b453971c96d697f9c0,
  *                     address: CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H,
  *                     symbol: fDAI,
  *                     name: FakeDAI,
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
- *                     _id: 6539a4b453971c96d697f9c0,
+ *                     claimable: false,
+ *                     network: mainnet,
  *                     __v: 0
  *                   }
  *
- *       400:
- *         description: Token already exists in the database
+ *       404:
+ *         description: Token dose not exist on the database
  *         content:
  *           application/json:
  *             schema:
@@ -62,7 +59,7 @@
  *                   example: error
  *                 message:
  *                   type: string
- *                   example: Token already exists
+ *                   example: Token dose not exist
  *                 result:
  *                   type: object
  *                   example: {}
@@ -113,7 +110,7 @@
  *                     example: error
  *                   message:
  *                     type: string
- *                     example: Failed to save the token
+ *                     example: Token Invalid ...
  *                   result:
  *                     type: object
  *                     example: {}
