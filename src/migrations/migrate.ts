@@ -6,7 +6,6 @@ const migrate = async () => {
   try {
     await tokenUp();
     await streamUp();
-    log.info({ message: 'Migration applied successfully' });
   } catch (error) {
     log.error({ message: 'Migration failed:', error });
   }
