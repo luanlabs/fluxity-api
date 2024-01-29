@@ -12,7 +12,7 @@ const saveStreamCancelled = async (id: string, network: Network) => {
 
   const updateStream = await Stream.findOneAndUpdate(
     { id, network },
-    { is_cancelled: stream.is_cancelled },
+    { is_cancelled: stream.is_cancelled, withdrawn: stream.withdrawn },
   );
 
   log.info({ message: 'Save cancell stream successful', value: updateStream });

@@ -7,7 +7,7 @@ export interface IToken {
   name: string;
   decimals: string;
   logo?: string;
-  claimable: boolean;
+  claimable?: boolean;
   network: Network;
 }
 

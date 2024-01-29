@@ -5,7 +5,7 @@ import log from '../../logger';
 
 const editTokenRoute: RequestHandler = async (req, res) => {
   try {
-    const { logo } = req.body;
+    const { logo, claimable } = req.body;
     const { token } = req.params;
     const { network } = res;
 
@@ -18,15 +18,10 @@ const editTokenRoute: RequestHandler = async (req, res) => {
       });
     }
 
-    if (!logo) {
-      return res.status(400).j({
-        status: 'error',
-        message: 'Logo is invalid',
-        result: {},
-      });
-    }
-
-    const tokenEdited = await Token.findOneAndUpdate({ address: token, network }, { logo });
+    const tokenEdited = await Token.findOneAndUpdate(
+      { address: token, network },
+      { logo, claimable },
+    );
 
     log.info({ message: 'Token changed logo successfully', value: tokenEdited });
 
