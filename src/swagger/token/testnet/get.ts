@@ -3,7 +3,7 @@
  * /testnet/token:
  *   get:
  *     summary: Returns the list of the claimable tokens.
- *     tags: [token]
+ *     tags: [token (testnet)]
  *
  *     responses:
  *       200:
@@ -28,6 +28,8 @@
  *                     name: FakeDAI,
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
+ *                     claimable: true,
+ *                     network: testnet,
  *                     __v: 0
  *                   },]
  *

@@ -3,7 +3,7 @@
  * /testnet/stream:
  *   post:
  *     summary: Adds a newly created stream to the DB.
- *     tags: [stream]
+ *     tags: [stream (testnet)]
  *     requestBody:
  *       required: true
  *       content:

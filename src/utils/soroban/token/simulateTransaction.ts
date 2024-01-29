@@ -1,14 +1,15 @@
 import { Account, scValToNative, Contract } from 'stellar-sdk';
 
 import createTransaction from '../baseTransaction';
-import getServer from '../getServer';
+import getConfig from '../getConfig';
 
 export const simulateTransaction = async (
   admin: Account,
   contract: Contract,
   functionName: string,
+  network: string,
 ): Promise<string> => {
-  const server = getServer();
+  const { server } = await getConfig(network);
 
   const call = contract.call(functionName);
 

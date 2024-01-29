@@ -1,18 +1,18 @@
 import { Account, Contract } from 'stellar-sdk';
 
 import ToScVal from '../../scVal';
-import getServer from '../../getServer';
 import baseTransaction from '../../baseTransaction';
 import getAdmin from '../../getAdmin';
+import getConfig from '../../getConfig';
 
 const buildStreamTransaction = async (
   admin: Account,
   toAddress: string,
   token: string,
 ): Promise<string> => {
-  const server = getServer();
+  const { server, contract: contractId } = await getConfig('testnet');
   const adminAccount = getAdmin();
-  const contract = new Contract(String(process.env.CONTRACT_ID));
+  const contract = new Contract(contractId.address().toString());
 
   const params = ToScVal.toXdrValueStream(toAddress, token);
 

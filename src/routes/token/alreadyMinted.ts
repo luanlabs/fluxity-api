@@ -6,6 +6,15 @@ import log from '../../logger';
 const alreadyMintedRoute: RequestHandler = async (req, res) => {
   try {
     const { user } = req.params;
+    const { network } = res;
+
+    if (network == 'mainnet') {
+      return res.status(400).j({
+        status: 'error',
+        message: 'Already Minted just in testnet network',
+        result: {},
+      });
+    }
 
     const isUserAlreadyMinted = await AlreadyMinted.findOne({ address: user });
     if (isUserAlreadyMinted) {

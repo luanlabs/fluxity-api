@@ -3,15 +3,15 @@ import { Account, SorobanRpc } from 'stellar-sdk';
 import { IToken } from '../../../../models/Token';
 import buildStreamTransaction from './buildStreamTransaction';
 import finalizeTransaction from '../../finalizeTransaction';
-import getServer from '../../getServer';
 import getAdmin from '../../getAdmin';
 import buildApproveTransaction from './buildApproveTransaction';
 import log from '../../../../logger';
+import getConfig from '../../getConfig';
 
 const createStreams = async (token: IToken, address: string) => {
   try {
     const adminAddress = await getAdmin().publicKey();
-    const server = await getServer();
+    const { server } = await getConfig('testnet');
     const accountAdmin = await server.getAccount(adminAddress);
 
     const sequence = BigInt(accountAdmin.sequenceNumber());
@@ -19,7 +19,6 @@ const createStreams = async (token: IToken, address: string) => {
 
     const approveTx = await buildApproveTransaction(admin, token.address);
     const finalizeApprove = await finalizeTransaction(approveTx, server);
-
     if (
       finalizeApprove.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
       finalizeApprove.returnValue
@@ -28,7 +27,6 @@ const createStreams = async (token: IToken, address: string) => {
 
       const streamTx = await buildStreamTransaction(admin, address, token.address);
       const finalizeStream = await finalizeTransaction(streamTx, server);
-
       if (
         finalizeStream.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
         finalizeStream.returnValue

@@ -1,9 +1,13 @@
 import { ParsedQs } from 'qs';
 
-const getStreamsQueries = (params: ParsedQs) => {
+const getStreamsQueries = (params: ParsedQs, network: string) => {
   const { sender, receiver, token, address } = params;
 
   const query: Record<string, string | object> = {};
+
+  if (network && typeof network === 'string') {
+    query['network'] = network;
+  }
 
   if (token && typeof token === 'string') {
     query['token'] = token.toUpperCase();

@@ -1,21 +1,21 @@
 import { Contract } from 'stellar-sdk';
 
 import getAdmin from '../soroban/getAdmin';
-import getServer from '../soroban/getServer';
 import simulateTransaction from '../soroban/token/simulateTransaction';
 import Token from '../../models/Token';
 import log from '../../logger';
+import getConfig from '../soroban/getConfig';
 
-const saveToken = async (token: string, logo?: string, claimable?: boolean) => {
-  const server = getServer();
+const saveToken = async (token: string, network: string, logo?: string, claimable?: boolean) => {
+  const { server } = await getConfig(network);
   const accountAdmin = await server.getAccount(getAdmin().publicKey());
   const contract = new Contract(token);
 
-  const getTokenName = simulateTransaction(accountAdmin, contract, 'name');
+  const getTokenName = simulateTransaction(accountAdmin, contract, 'name', network);
 
-  const getTokenSymbol = simulateTransaction(accountAdmin, contract, 'symbol');
+  const getTokenSymbol = simulateTransaction(accountAdmin, contract, 'symbol', network);
 
-  const getTokenDecimals = simulateTransaction(accountAdmin, contract, 'decimals');
+  const getTokenDecimals = simulateTransaction(accountAdmin, contract, 'decimals', network);
 
   const result = await Promise.all([getTokenName, getTokenSymbol, getTokenDecimals]);
 
@@ -26,6 +26,7 @@ const saveToken = async (token: string, logo?: string, claimable?: boolean) => {
     decimals: result[2],
     logo,
     claimable,
+    network,
   });
 
   await newToken.save();

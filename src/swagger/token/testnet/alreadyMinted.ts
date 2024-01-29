@@ -3,7 +3,7 @@
  * /testnet/token/already-minted/{user}:
  *   get:
  *     summary: Returns if user has already minted tokens.
- *     tags: [token]
+ *     tags: [token (testnet)]
  *     parameters:
  *       - name: user
  *         in: path

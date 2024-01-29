@@ -6,8 +6,9 @@ import log from '../../logger';
 const addStreamRoute: RequestHandler = async (req, res) => {
   try {
     const { id } = req.body;
+    const { network } = res;
 
-    await saveNewStream(id);
+    await saveNewStream(id, network);
 
     return res.status(201).j({
       status: 'success',

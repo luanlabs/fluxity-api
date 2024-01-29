@@ -2,7 +2,7 @@ import { xdr, Address } from 'stellar-sdk';
 
 import numberToScVal from './numberToScval';
 import scValToNative from './scValToNative';
-import toXdrValue from './stream/exampleStream/createStreamValues';
+import toXdrValue from './stream/createMintStream/createStreamValues';
 
 const { scvU32, scvU64, scvSymbol } = xdr.ScVal;
 

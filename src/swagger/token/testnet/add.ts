@@ -1,9 +1,9 @@
 /**
  * @swagger
  * /testnet/token:
- *   delete:
- *     summary: Deletes a token from the list of claimable tokens.
- *     tags: [token]
+ *   post:
+ *     summary: Adds an ERC20-like token to the list of claimable tokens.
+ *     tags: [token (testnet)]
  *     requestBody:
  *       required: true
  *       content:
@@ -15,13 +15,18 @@
  *                 type: string
  *                 required: true
  *                 example : CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H
+ *               logo:
+ *                 type: string
+ *                 required: true
+ *                 example : /public/images/assets/fusdc.svg
  *
  *     security:
  *       - Authorization : []
  *
+ *
  *     responses:
  *       200:
- *         description: Token has been deleted successfully
+ *         description: Token has been saved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -32,21 +37,23 @@
  *                   example: success
  *                 message:
  *                   type: string
- *                   example: Token deleted successfully
+ *                   example: Token has been saved successfully
  *                 result:
  *                   type: object
  *                   example: {
- *                     _id: 6539a4b453971c96d697f9c0,
  *                     address: CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H,
  *                     symbol: fDAI,
  *                     name: FakeDAI,
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
+ *                     _id: 6539a4b453971c96d697f9c0,
+ *                     claimable: true,
+ *                     network: testnet,
  *                     __v: 0
  *                   }
  *
- *       404:
- *         description: Token dose not exist on the database
+ *       400:
+ *         description: Token already exists in the database
  *         content:
  *           application/json:
  *             schema:
@@ -57,7 +64,7 @@
  *                   example: error
  *                 message:
  *                   type: string
- *                   example: Token dose not exist
+ *                   example: Token already exists
  *                 result:
  *                   type: object
  *                   example: {}
@@ -108,7 +115,7 @@
  *                     example: error
  *                   message:
  *                     type: string
- *                     example: Token Invalid ...
+ *                     example: Failed to save the token
  *                   result:
  *                     type: object
  *                     example: {}

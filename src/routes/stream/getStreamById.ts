@@ -7,8 +7,9 @@ import log from '../../logger';
 const getStreamById: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
+    const { network } = res;
 
-    const stream = await Stream.findOne({ id }).populate('token').exec();
+    const stream = await Stream.findOne({ id, network }).populate('token').exec();
 
     if (!stream) {
       return res.status(404).j({

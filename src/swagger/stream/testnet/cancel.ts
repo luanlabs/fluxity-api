@@ -1,9 +1,9 @@
 /**
  * @swagger
  * /testnet/stream:
- *   put:
- *     summary: Saves a new withdrawn amount of the stream on the DB.
- *     tags: [stream]
+ *   delete:
+ *     summary: Changes the status of a stream to cancelleded on the DB.
+ *     tags: [stream (testnet)]
  *     requestBody:
  *       required: true
  *       content:
@@ -19,7 +19,7 @@
  *
  *     responses:
  *       200:
- *         description: Successfully saved the stream on the DB
+ *         description: Successfully saved the cancelled stream on the DB
  *         content:
  *           application/json:
  *             schema:
@@ -30,7 +30,7 @@
  *                   example: success
  *                 message:
  *                   type: string
- *                   example: Successfully saved the stream on the DB
+ *                   example: Successfully saved the cancelled stream on the DB
  *                 result:
  *                     type: object
  *                     example: {}
@@ -47,7 +47,7 @@
  *                     example: error
  *                   message:
  *                     type: string
- *                     example: Failed to save the withdraw stream
+ *                     example: Failed to save the cancelled stream
  *                   result:
  *                     type: object
  *                     example: {}

@@ -5,14 +5,23 @@ import Token from '../../models/Token';
 import buildMintTransaction from '../../utils/soroban/token/buildMint';
 import AlreadyMinted from '../../models/AlreadyMinted';
 import finalizeTransaction from '../../utils/soroban/finalizeTransaction';
-import getServer from '../../utils/soroban/getServer';
 import getAdmin from '../../utils/soroban/getAdmin';
 import log from '../../logger';
-import createStreams from '../../utils/soroban/stream/exampleStream/createStreams';
+import createStreams from '../../utils/soroban/stream/createMintStream/createStreams';
+import getConfig from '../../utils/soroban/getConfig';
 
 const mintToken: RequestHandler = async (req, res) => {
   try {
     const { user } = req.body;
+    const { network } = res;
+
+    if (network == 'mainnet') {
+      return res.status(400).j({
+        status: 'error',
+        message: 'Token mint just in testnet network',
+        result: {},
+      });
+    }
 
     const isUserAlreadyMinted = await AlreadyMinted.findOne({ address: user });
     if (isUserAlreadyMinted) {
@@ -27,7 +36,7 @@ const mintToken: RequestHandler = async (req, res) => {
 
     const tokens = await Token.find({ claimable: true, symbol: { $ne: 'native' } });
 
-    const server = await getServer();
+    const { server } = await getConfig('testnet');
 
     const accountAdmin = await server.getAccount(adminAddress);
 

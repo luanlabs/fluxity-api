@@ -2,15 +2,15 @@ import getEvents from './getEvents';
 import Ledger from '../models/Ledger';
 import saveNewStream from './saveNewStream';
 import ToScVal from '../utils/soroban/scVal';
-import getServer from '../utils/soroban/getServer';
 import saveStreamWithdrawn from './saveStreamWithdrawn';
 import saveStreamCancelled from './saveStreamCancelled';
 import calculateLastUsedLedger from '../utils/soroban/stream/calculateLastUsedLedger';
 import log from '../logger';
+import getConfig from '../utils/soroban/getConfig';
 
-const listenToContractEvents = async () => {
+const listenToMainNetContractEvents = async () => {
   try {
-    const server = getServer();
+    const { server, contract } = await getConfig('mainnet');
 
     let lastUsedLedger = 0;
 
@@ -20,30 +20,31 @@ const listenToContractEvents = async () => {
         lastUsedLedger = await calculateLastUsedLedger(sequence);
       }
 
-      const contract = String(process.env.CONTRACT_ID);
-
       const stream = ToScVal.toXDR('STREAM');
       const created = ToScVal.toXDR('CREATED');
       const cancelled = ToScVal.toXDR('CANCELLED');
       const withdrawn = ToScVal.toXDR('WITHDRAWN');
 
-      const events = await getEvents({
-        startLedger: lastUsedLedger,
-        filters: [
-          {
-            type: 'contract',
-            contractIds: [contract],
-            topics: [
-              [stream, created],
-              [stream, cancelled],
-              [stream, withdrawn],
-            ],
+      const events = await getEvents(
+        {
+          startLedger: lastUsedLedger,
+          filters: [
+            {
+              type: 'contract',
+              contractIds: [contract.address().toString()],
+              topics: [
+                [stream, created],
+                [stream, cancelled],
+                [stream, withdrawn],
+              ],
+            },
+          ],
+          pagination: {
+            limit: 1440,
           },
-        ],
-        pagination: {
-          limit: 1440,
         },
-      });
+        'mainnet',
+      );
 
       if (events) {
         const eventsXdr = events.result.events;
@@ -52,11 +53,11 @@ const listenToContractEvents = async () => {
           const streamId = ToScVal.fromXDR(eventsXdr[i].value);
 
           if (eventsXdr[i].topic[1] === created) {
-            await saveNewStream(streamId);
+            await saveNewStream(streamId, 'mainnet');
           } else if (eventsXdr[i].topic[1] === withdrawn) {
-            await saveStreamWithdrawn(streamId);
+            await saveStreamWithdrawn(streamId, 'mainnet');
           } else if (eventsXdr[i].topic[1] === cancelled) {
-            await saveStreamCancelled(streamId);
+            await saveStreamCancelled(streamId, 'mainnet');
           }
         }
 
@@ -84,4 +85,4 @@ const listenToContractEvents = async () => {
     log.error({ message: e.message });
   }
 };
-export default listenToContractEvents;
+export default listenToMainNetContractEvents;

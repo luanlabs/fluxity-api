@@ -7,8 +7,9 @@ const editTokenRoute: RequestHandler = async (req, res) => {
   try {
     const { logo } = req.body;
     const { token } = req.params;
+    const { network } = res;
 
-    const existingToken = await Token.findOne({ address: token });
+    const existingToken = await Token.findOne({ address: token, network });
     if (!existingToken) {
       return res.status(404).j({
         status: 'error',
@@ -25,7 +26,7 @@ const editTokenRoute: RequestHandler = async (req, res) => {
       });
     }
 
-    const tokenEdited = await Token.findOneAndUpdate({ address: token }, { logo });
+    const tokenEdited = await Token.findOneAndUpdate({ address: token, network }, { logo });
 
     log.info({ message: 'Token changed logo successfully', value: tokenEdited });
 

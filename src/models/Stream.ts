@@ -1,11 +1,12 @@
 import { Schema, model } from 'mongoose';
+import { Network } from '../types/networkType';
 
 export enum Status {
   Pending = 'pending',
   Ongoing = 'ongoing',
   Expired = 'expired',
 }
-enum Rate {
+export enum Rate {
   Daily = 86400,
   Weekly = 604800,
   Monthly = 2592000,
@@ -28,11 +29,12 @@ export interface IStream {
   token: Schema.Types.ObjectId;
   withdrawn: string;
   status?: string;
+  network: Network;
 }
 
 const Stream = new Schema<IStream>(
   {
-    id: { type: String, required: true, unique: true },
+    id: { type: String, required: true },
     amount: { type: String, required: true },
     cancellable_date: { type: Number, required: true },
     cliff_date: { type: Number, required: true },
@@ -45,6 +47,7 @@ const Stream = new Schema<IStream>(
     start_date: { type: Number, required: true },
     token: { type: Schema.Types.ObjectId, ref: 'Token', required: true },
     withdrawn: { type: String, required: true },
+    network: { type: String, required: true },
   },
   { timestamps: true },
 );
