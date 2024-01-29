@@ -8,7 +8,7 @@ import log from '../../logger';
 const getStreamsRoute: RequestHandler = async (req, res) => {
   try {
     const { status } = req.query;
-    const network = req.originalUrl.split('/')[1];
+    const { network } = res;
 
     const query = getStreamsQueries(req.query, network);
 

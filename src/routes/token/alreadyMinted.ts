@@ -6,7 +6,7 @@ import log from '../../logger';
 const alreadyMintedRoute: RequestHandler = async (req, res) => {
   try {
     const { user } = req.params;
-    const network = req.originalUrl.split('/')[1];
+    const { network } = res;
 
     if (network == 'mainnet') {
       return res.status(400).j({

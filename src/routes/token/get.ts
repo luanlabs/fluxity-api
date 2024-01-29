@@ -5,7 +5,7 @@ import log from '../../logger';
 
 const getTokensRoute: RequestHandler = async (req, res) => {
   try {
-    const network = req.originalUrl.split('/')[1];
+    const { network } = res;
 
     const tokens = await Token.find({ network });
     return res.status(200).j({

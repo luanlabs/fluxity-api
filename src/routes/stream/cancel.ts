@@ -6,7 +6,7 @@ import log from '../../logger';
 const cancelStreamRoute: RequestHandler = async (req, res) => {
   try {
     const { id } = req.body;
-    const network = req.originalUrl.split('/')[1];
+    const { network } = res;
 
     await saveStreamCancelled(id, network);
 

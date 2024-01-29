@@ -2,15 +2,15 @@ import getEvents from './getEvents';
 import Ledger from '../models/Ledger';
 import saveNewStream from './saveNewStream';
 import ToScVal from '../utils/soroban/scVal';
-import getMainNetServer from '../utils/soroban/getMainNetServer';
 import saveStreamWithdrawn from './saveStreamWithdrawn';
 import saveStreamCancelled from './saveStreamCancelled';
 import calculateLastUsedLedger from '../utils/soroban/stream/calculateLastUsedLedger';
 import log from '../logger';
+import getConfig from '../utils/soroban/getConfig';
 
 const listenToMainNetContractEvents = async () => {
   try {
-    const server = getMainNetServer();
+    const { server, contract } = await getConfig('mainnet');
 
     let lastUsedLedger = 0;
 
@@ -20,30 +20,31 @@ const listenToMainNetContractEvents = async () => {
         lastUsedLedger = await calculateLastUsedLedger(sequence);
       }
 
-      const contract = String(process.env.MAINNET_CONTRACT_ID);
-
       const stream = ToScVal.toXDR('STREAM');
       const created = ToScVal.toXDR('CREATED');
       const cancelled = ToScVal.toXDR('CANCELLED');
       const withdrawn = ToScVal.toXDR('WITHDRAWN');
 
-      const events = await getEvents({
-        startLedger: lastUsedLedger,
-        filters: [
-          {
-            type: 'contract',
-            contractIds: [contract],
-            topics: [
-              [stream, created],
-              [stream, cancelled],
-              [stream, withdrawn],
-            ],
+      const events = await getEvents(
+        {
+          startLedger: lastUsedLedger,
+          filters: [
+            {
+              type: 'contract',
+              contractIds: [contract.address().toString()],
+              topics: [
+                [stream, created],
+                [stream, cancelled],
+                [stream, withdrawn],
+              ],
+            },
+          ],
+          pagination: {
+            limit: 1440,
           },
-        ],
-        pagination: {
-          limit: 1440,
         },
-      });
+        'mainnet',
+      );
 
       if (events) {
         const eventsXdr = events.result.events;

@@ -5,15 +5,15 @@ import Token from '../../models/Token';
 import buildMintTransaction from '../../utils/soroban/token/buildMint';
 import AlreadyMinted from '../../models/AlreadyMinted';
 import finalizeTransaction from '../../utils/soroban/finalizeTransaction';
-import getTestNetServer from '../../utils/soroban/getTestNetServer';
 import getAdmin from '../../utils/soroban/getAdmin';
 import log from '../../logger';
-import createStreams from '../../utils/soroban/stream/exampleStream/createStreams';
+import createStreams from '../../utils/soroban/stream/createMintStream/createStreams';
+import getConfig from '../../utils/soroban/getConfig';
 
 const mintToken: RequestHandler = async (req, res) => {
   try {
     const { user } = req.body;
-    const network = req.originalUrl.split('/')[1];
+    const { network } = res;
 
     if (network == 'mainnet') {
       return res.status(400).j({
@@ -36,7 +36,7 @@ const mintToken: RequestHandler = async (req, res) => {
 
     const tokens = await Token.find({ claimable: true, symbol: { $ne: 'native' } });
 
-    const server = await getTestNetServer();
+    const { server } = await getConfig('testnet');
 
     const accountAdmin = await server.getAccount(adminAddress);
 

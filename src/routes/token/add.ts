@@ -7,7 +7,7 @@ import log from '../../logger';
 const addTokenRoute: RequestHandler = async (req, res) => {
   try {
     const { token, logo } = req.body;
-    const network = req.originalUrl.split('/')[1];
+    const { network } = res;
 
     const existingToken = await Token.findOne({ address: token });
     if (existingToken) {
@@ -18,9 +18,9 @@ const addTokenRoute: RequestHandler = async (req, res) => {
       });
     }
 
-    let claimable = true;
-    if (network == 'mainnet') {
-      claimable = false;
+    let claimable = false;
+    if (network === 'testnet') {
+      claimable = true;
     }
 
     const newToken = await saveToken(token, network, logo, claimable);

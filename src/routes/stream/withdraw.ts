@@ -6,7 +6,7 @@ import log from '../../logger';
 const withdrawStreamRoute: RequestHandler = async (req, res) => {
   try {
     const { id } = req.body;
-    const network = req.originalUrl.split('/')[1];
+    const { network } = res;
 
     await saveStreamWithdrawn(id, network);
 

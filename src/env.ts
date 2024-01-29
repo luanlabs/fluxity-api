@@ -14,6 +14,7 @@ const checkIfEnvsAreSet = () => {
     'MAINNET_CONTRACT_ID',
     'NODE_ENV',
     'LOG_FILE_PATH',
+    'CLAIM_STREAM_AMOUNT',
   ];
 
   let status = false;

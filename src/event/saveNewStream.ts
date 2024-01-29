@@ -5,8 +5,9 @@ import getStream from '../utils/soroban/stream/getStream';
 import bigintValuesToNumbers from '../utils/soroban/stream/bigintValuesToNumbers';
 import log from '../logger';
 import getConfig from '../utils/soroban/getConfig';
+import { Network } from '../types/networkType';
 
-const saveNewStream = async (id: string, network: string) => {
+const saveNewStream = async (id: string, network: Network) => {
   const { contract, admin } = await getConfig(network);
 
   const existingStream = await Stream.findOne({ id, network });
@@ -15,7 +16,7 @@ const saveNewStream = async (id: string, network: string) => {
     return;
   }
 
-  const stream = await getStream(admin, contract, id);
+  const stream = await getStream(admin, contract, id, network);
   const streamDetails = bigintValuesToNumbers(stream);
 
   let token = await Token.findOne({ address: streamDetails.token });
@@ -26,6 +27,7 @@ const saveNewStream = async (id: string, network: string) => {
 
   streamDetails.id = id;
   streamDetails.token = token._id;
+  streamDetails.network = network;
 
   const newStream = new Stream(streamDetails);
 

@@ -6,8 +6,9 @@ import log from '../../logger';
 const deleteTokenRoute: RequestHandler = async (req, res) => {
   try {
     const { token } = req.body;
+    const { network } = res;
 
-    const existingToken = await Token.findOne({ address: token });
+    const existingToken = await Token.findOne({ address: token, network });
     if (!existingToken) {
       return res.status(404).j({
         status: 'error',
@@ -16,7 +17,7 @@ const deleteTokenRoute: RequestHandler = async (req, res) => {
       });
     }
 
-    const tokenDeleted = await Token.findOneAndDelete({ address: token });
+    const tokenDeleted = await Token.findOneAndDelete({ address: token, network });
 
     log.info({ message: 'Token deleted successfully', value: tokenDeleted });
 

@@ -1,5 +1,7 @@
 import log from '../logger';
+import { Network } from '../types/networkType';
 import request from '../utils/request';
+import getConfig from '../utils/soroban/getConfig';
 
 interface IFilter {
   type: string;
@@ -12,9 +14,9 @@ interface IEvent {
   pagination?: object;
 }
 
-const getEvents = async (params: IEvent) => {
+const getEvents = async (params: IEvent, network: Network) => {
   try {
-    const rpcUrl = String(process.env.TESTNET_FUTURENET_RPC_URL);
+    const { server: rpcUrl } = await getConfig(network);
 
     const requestBody = {
       jsonrpc: '2.0',
@@ -29,7 +31,7 @@ const getEvents = async (params: IEvent) => {
       body: JSON.stringify(requestBody),
     };
 
-    return await request(rpcUrl, config);
+    return await request(rpcUrl.serverURL._string, config);
   } catch (e) {
     log.error({ message: e.message });
   }

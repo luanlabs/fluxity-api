@@ -1,13 +1,13 @@
 import { Contract } from 'stellar-sdk';
 
 import getAdmin from '../soroban/getAdmin';
-import getTestNetServer from '../soroban/getTestNetServer';
 import simulateTransaction from '../soroban/token/simulateTransaction';
 import Token from '../../models/Token';
 import log from '../../logger';
+import getConfig from '../soroban/getConfig';
 
 const saveToken = async (token: string, network: string, logo?: string, claimable?: boolean) => {
-  const server = getTestNetServer();
+  const { server } = await getConfig(network);
   const accountAdmin = await server.getAccount(getAdmin().publicKey());
   const contract = new Contract(token);
 
