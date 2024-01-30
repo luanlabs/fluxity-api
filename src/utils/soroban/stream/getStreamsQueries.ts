@@ -1,13 +1,12 @@
 import { ParsedQs } from 'qs';
+import { Network } from '../../../types/networkType';
 
-const getStreamsQueries = (params: ParsedQs, network: string) => {
+const getStreamsQueries = (params: ParsedQs, network: Network) => {
   const { sender, receiver, token, address } = params;
 
   const query: Record<string, string | object> = {};
 
-  if (network && typeof network === 'string') {
-    query['network'] = network;
-  }
+  query['network'] = network;
 
   if (token && typeof token === 'string') {
     query['token'] = token.toUpperCase();
