@@ -22,8 +22,12 @@
  *             properties:
  *               logo:
  *                 type: string
- *                 required: true
+ *                 required: false
  *                 example : /public/images/assets/fdai.svg
+ *               claimable:
+ *                 type: string
+ *                 required: false
+ *                 example : true
  *
  *     security:
  *       - Authorization : []

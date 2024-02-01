@@ -17,8 +17,13 @@
  *                 example : CBBDKFZZPWJQADUXHS3CCIXYRYVKK2SOPIOUDNA5SWXRC7B7APZN3I3H
  *               logo:
  *                 type: string
- *                 required: true
+ *                 required: false
  *                 example : /public/images/assets/fusdc.svg
+ *               claimable:
+ *                 type: string
+ *                 required: false
+ *                 example : true
+ *
  *
  *     security:
  *       - Authorization : []
