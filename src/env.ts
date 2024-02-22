@@ -1,4 +1,4 @@
-import envEnforcer from 'enforcer-env';
+import envil from 'envil';
 
 const checkIfEnvsAreSet = () => {
   const envs = [
@@ -20,7 +20,7 @@ const checkIfEnvsAreSet = () => {
     'CLAIM_TOKEN_AMOUNT',
   ];
 
-  envEnforcer(envs);
+  envil(envs);
 };
 
 export default checkIfEnvsAreSet;
