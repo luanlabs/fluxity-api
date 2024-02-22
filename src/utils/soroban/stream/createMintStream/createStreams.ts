@@ -3,16 +3,14 @@ import { Account, SorobanRpc } from 'stellar-sdk';
 import { IToken } from '../../../../models/Token';
 import buildStreamTransaction from './buildStreamTransaction';
 import finalizeTransaction from '../../finalizeTransaction';
-import getAdmin from '../../getAdmin';
 import buildApproveTransaction from './buildApproveTransaction';
 import log from '../../../../logger';
 import getConfig from '../../getConfig';
+import { network } from '../../../../constant/network';
 
 const createStreams = async (token: IToken, address: string) => {
   try {
-    const adminAddress = await getAdmin().publicKey();
-    const { server } = await getConfig('testnet');
-    const accountAdmin = await server.getAccount(adminAddress);
+    const { server, admin: accountAdmin } = await getConfig(network.Testnet);
 
     const sequence = BigInt(accountAdmin.sequenceNumber());
     const admin = new Account(accountAdmin.accountId(), sequence.toString());

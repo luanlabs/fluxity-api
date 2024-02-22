@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler } from 'express';
 
 const errorHandler: ErrorRequestHandler = (err, req, res, _) => {

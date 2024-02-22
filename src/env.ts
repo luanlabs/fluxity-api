@@ -1,3 +1,5 @@
+import envEnforcer from 'enforcer-env';
+
 const checkIfEnvsAreSet = () => {
   const envs = [
     'DB_URI',
@@ -15,20 +17,10 @@ const checkIfEnvsAreSet = () => {
     'NODE_ENV',
     'LOG_FILE_PATH',
     'CLAIM_STREAM_AMOUNT',
+    'CLAIM_TOKEN_AMOUNT',
   ];
 
-  let status = false;
-
-  for (let i = 0; i < envs.length; i++) {
-    if (!process.env[envs[i]]) {
-      console.log(envs[i] + ' is not defined');
-      status = true;
-    }
-  }
-
-  if (status) {
-    process.exit(1);
-  }
+  envEnforcer(envs);
 };
 
 export default checkIfEnvsAreSet;

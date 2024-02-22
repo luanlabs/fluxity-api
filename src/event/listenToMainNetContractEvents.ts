@@ -7,10 +7,11 @@ import saveStreamCancelled from './saveStreamCancelled';
 import calculateLastUsedLedger from '../utils/soroban/stream/calculateLastUsedLedger';
 import log from '../logger';
 import getConfig from '../utils/soroban/getConfig';
+import { network } from '../constant/network';
 
 const listenToMainNetContractEvents = async () => {
   try {
-    const { server, contract } = await getConfig('mainnet');
+    const { server, contract } = await getConfig(network.Mainnet);
 
     let lastUsedLedger = 0;
 
@@ -43,7 +44,7 @@ const listenToMainNetContractEvents = async () => {
             limit: 1440,
           },
         },
-        'mainnet',
+        network.Mainnet,
       );
 
       if (events) {
@@ -53,11 +54,11 @@ const listenToMainNetContractEvents = async () => {
           const streamId = ToScVal.fromXDR(eventsXdr[i].value);
 
           if (eventsXdr[i].topic[1] === created) {
-            await saveNewStream(streamId, 'mainnet');
+            await saveNewStream(streamId, network.Mainnet);
           } else if (eventsXdr[i].topic[1] === withdrawn) {
-            await saveStreamWithdrawn(streamId, 'mainnet');
+            await saveStreamWithdrawn(streamId, network.Mainnet);
           } else if (eventsXdr[i].topic[1] === cancelled) {
-            await saveStreamCancelled(streamId, 'mainnet');
+            await saveStreamCancelled(streamId, network.Mainnet);
           }
         }
 
