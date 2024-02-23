@@ -39,7 +39,7 @@ export interface IStream extends ICreateStream {
   updatedAt: Date;
 }
 
-const Stream = new Schema<IStream>(
+const Stream = new Schema<ICreateStream>(
   {
     id: { type: String, required: true },
     amount: { type: String, required: true },
@@ -59,4 +59,4 @@ const Stream = new Schema<IStream>(
   { timestamps: true },
 );
 
-export default model<IStream>('Stream', Stream);
+export default model<ICreateStream>('Stream', Stream);
