@@ -28,8 +28,8 @@ class ToScVal {
   public static toXDR(symbol: string) {
     return ToScVal.symbol(symbol).toXDR().toString('base64');
   }
-  public static toXdrValueStream(address: string, token: string) {
-    return toXdrValue(address, token);
+  public static async toXdrValueStream(address: string, token: string) {
+    return await toXdrValue(address, token);
   }
 }
 

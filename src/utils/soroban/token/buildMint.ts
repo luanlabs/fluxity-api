@@ -3,14 +3,14 @@ import { Account, Contract } from 'stellar-sdk';
 import ToScVal from '../scVal';
 import baseTransaction from '../baseTransaction';
 import getConfig from '../getConfig';
-import { network } from '../../../constant/network';
+import { Networks } from '../../../constant/network';
 
 const buildMintTransaction = async (
   admin: Account,
   token: string,
   toAddress: string,
 ): Promise<string> => {
-  const { server, adminSecretKey } = await getConfig(network.Testnet);
+  const { server, adminSecretKey } = await getConfig(Networks.Testnet);
   const contract = new Contract(token);
 
   const address = await ToScVal.address(toAddress);

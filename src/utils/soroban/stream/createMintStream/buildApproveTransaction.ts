@@ -3,10 +3,10 @@ import { Account, Contract } from 'stellar-sdk';
 import ToScVal from '../../scVal';
 import baseTransaction from '../../baseTransaction';
 import getConfig from '../../getConfig';
-import { network } from '../../../../constant/network';
+import { Networks } from '../../../../constant/network';
 
 const buildApproveTransaction = async (admin: Account, token: string): Promise<string> => {
-  const { server, contract: contractId, adminSecretKey } = await getConfig(network.Testnet);
+  const { server, contract: contractId, adminSecretKey } = await getConfig(Networks.Testnet);
   const contract = new Contract(token);
   const from = ToScVal.address(adminSecretKey.publicKey());
   const spender = ToScVal.address(contractId.address().toString());

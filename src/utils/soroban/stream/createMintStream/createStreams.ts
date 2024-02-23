@@ -6,11 +6,11 @@ import finalizeTransaction from '../../finalizeTransaction';
 import buildApproveTransaction from './buildApproveTransaction';
 import log from '../../../../logger';
 import getConfig from '../../getConfig';
-import { network } from '../../../../constant/network';
+import { Networks } from '../../../../constant/network';
 
 const createStreams = async (token: IToken, address: string) => {
   try {
-    const { server, admin: accountAdmin } = await getConfig(network.Testnet);
+    const { server, admin: accountAdmin } = await getConfig(Networks.Testnet);
 
     const sequence = BigInt(accountAdmin.sequenceNumber());
     const admin = new Account(accountAdmin.accountId(), sequence.toString());
@@ -29,7 +29,6 @@ const createStreams = async (token: IToken, address: string) => {
         finalizeStream.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
         finalizeStream.returnValue
       ) {
-        // await saveNewStream(scValToNative(finalizeStream.returnValue).toString());
         log.info({ message: 'Create stream for address : ' + address });
       }
     }

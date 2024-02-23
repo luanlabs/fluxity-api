@@ -1,4 +1,5 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
+
 import { Network } from '../types/networkType';
 
 export enum Status {
@@ -14,7 +15,7 @@ export enum Rate {
   Annually = 31536000,
 }
 
-export interface IStream {
+export interface ICreateStream {
   id: string;
   amount: string;
   cancellable_date: number;
@@ -30,6 +31,12 @@ export interface IStream {
   withdrawn: string;
   status?: string;
   network: Network;
+}
+
+export interface IStream extends ICreateStream {
+  _id: mongoose.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const Stream = new Schema<IStream>(

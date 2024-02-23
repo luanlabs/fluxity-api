@@ -1,6 +1,6 @@
 import { Account, xdr, Networks, TransactionBuilder, Operation } from 'stellar-sdk';
 import getConfig from './getConfig';
-import { network } from '../../constant/network';
+import { Networks as network } from '../../constant/network';
 
 const baseTransaction = async (
   admin: Account,
