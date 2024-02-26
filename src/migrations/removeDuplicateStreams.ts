@@ -1,7 +1,7 @@
 import Stream, { IStream } from '../models/Stream';
 
 const removeDuplicateStreams = async (streams: IStream[]) => {
-  const x = streams.reduce((prev, curr) => {
+  const latestStream = streams.reduce((prev, curr) => {
     if (curr.updatedAt > prev.updatedAt) {
       return curr;
     }
@@ -9,7 +9,7 @@ const removeDuplicateStreams = async (streams: IStream[]) => {
     return prev;
   }, streams[0]);
 
-  await Stream.deleteMany({ _id: { $ne: x._id }, id: x.id });
+  await Stream.deleteMany({ _id: { $ne: latestStream._id }, id: latestStream.id });
 };
 
 export default removeDuplicateStreams;
