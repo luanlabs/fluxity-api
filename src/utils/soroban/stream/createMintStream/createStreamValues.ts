@@ -9,13 +9,13 @@ const { scvMap } = xdr.ScVal;
 const { ScMapEntry: addToMap } = xdr;
 
 const toXdrValue = async (address: string, token: string) => {
-  const { adminSecretKey } = await getConfig(Networks.Testnet);
+  const { adminKeypair } = await getConfig(Networks.Testnet);
 
   const startDate = Math.floor(Date.now() / 1000).toString();
   const endDate = String(Number(startDate) + Rate.Weekly);
   const cliffDate = startDate;
   const cancellableDate = endDate;
-  const sender = adminSecretKey.publicKey();
+  const sender = adminKeypair.publicKey();
   const amount = BigInt(Number(process.env.CLAIM_STREAM_AMOUNT) * 10 ** 7);
 
   return scvMap([

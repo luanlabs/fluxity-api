@@ -6,9 +6,9 @@ import getConfig from '../../getConfig';
 import { Networks } from '../../../../constant/network';
 
 const buildApproveTransaction = async (admin: Account, token: string): Promise<string> => {
-  const { server, contract: contractId, adminSecretKey } = await getConfig(Networks.Testnet);
+  const { server, contract: contractId, adminKeypair } = await getConfig(Networks.Testnet);
   const contract = new Contract(token);
-  const from = ToScVal.address(adminSecretKey.publicKey());
+  const from = ToScVal.address(adminKeypair.publicKey());
   const spender = ToScVal.address(contractId.address().toString());
   const amountScVal = ToScVal.i128(BigInt(Number(process.env.CLAIM_STREAM_AMOUNT) * 10 ** 7));
   const { sequence } = await server.getLatestLedger();
@@ -19,7 +19,7 @@ const buildApproveTransaction = async (admin: Account, token: string): Promise<s
   const transaction = await baseTransaction(admin, approveCall);
 
   const transactionPrepare = await server.prepareTransaction(transaction);
-  transactionPrepare.sign(adminSecretKey);
+  transactionPrepare.sign(adminKeypair);
 
   const response = await server.sendTransaction(transactionPrepare);
 

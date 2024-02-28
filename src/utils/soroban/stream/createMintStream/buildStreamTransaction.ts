@@ -10,7 +10,7 @@ const buildStreamTransaction = async (
   toAddress: string,
   token: string,
 ): Promise<string> => {
-  const { server, contract: contractId, adminSecretKey } = await getConfig(Networks.Testnet);
+  const { server, contract: contractId, adminKeypair } = await getConfig(Networks.Testnet);
   const contract = new Contract(contractId.address().toString());
 
   const params = await ToScVal.toXdrValueStream(toAddress, token);
@@ -20,7 +20,7 @@ const buildStreamTransaction = async (
   const transaction = await baseTransaction(admin, streamCall);
 
   const transactionPrepare = await server.prepareTransaction(transaction);
-  transactionPrepare.sign(adminSecretKey);
+  transactionPrepare.sign(adminKeypair);
 
   const response = await server.sendTransaction(transactionPrepare);
   return response.hash;
