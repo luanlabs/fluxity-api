@@ -1,12 +1,12 @@
 import { Account, xdr, Networks, TransactionBuilder, Operation } from 'stellar-sdk';
-
-import getFee from './getFee';
+import getConfig from './getConfig';
+import { Networks as Network } from '../../constant/network';
 
 const baseTransaction = async (
   admin: Account,
   call: xdr.Operation<Operation.InvokeHostFunction>,
 ) => {
-  const fee = getFee();
+  const { fee } = await getConfig(Network.Testnet);
 
   let transaction = await new TransactionBuilder(admin, {
     fee,

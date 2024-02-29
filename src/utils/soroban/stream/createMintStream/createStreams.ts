@@ -3,16 +3,14 @@ import { Account, SorobanRpc } from 'stellar-sdk';
 import { IToken } from '../../../../models/Token';
 import buildStreamTransaction from './buildStreamTransaction';
 import finalizeTransaction from '../../finalizeTransaction';
-import getAdmin from '../../getAdmin';
 import buildApproveTransaction from './buildApproveTransaction';
 import log from '../../../../logger';
 import getConfig from '../../getConfig';
+import { Networks } from '../../../../constant/network';
 
 const createStreams = async (token: IToken, address: string) => {
   try {
-    const adminAddress = await getAdmin().publicKey();
-    const { server } = await getConfig('testnet');
-    const accountAdmin = await server.getAccount(adminAddress);
+    const { server, admin: accountAdmin } = await getConfig(Networks.Testnet);
 
     const sequence = BigInt(accountAdmin.sequenceNumber());
     const admin = new Account(accountAdmin.accountId(), sequence.toString());
@@ -31,7 +29,6 @@ const createStreams = async (token: IToken, address: string) => {
         finalizeStream.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
         finalizeStream.returnValue
       ) {
-        // await saveNewStream(scValToNative(finalizeStream.returnValue).toString());
         log.info({ message: 'Create stream for address : ' + address });
       }
     }
