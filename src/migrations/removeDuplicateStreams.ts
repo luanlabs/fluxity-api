@@ -1,6 +1,6 @@
-import Stream, { IStream } from '../models/Stream';
+import Stream, { ICreateStream } from '../models/Stream';
 
-const removeDuplicateStreams = async (streams: IStream[]) => {
+const removeDuplicateStreams = async (streams: ICreateStream[]) => {
   const latestStream = streams.reduce((prev, curr) => {
     if (curr.updatedAt > prev.updatedAt) {
       return curr;

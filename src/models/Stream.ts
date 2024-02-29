@@ -16,6 +16,7 @@ export enum Rate {
 }
 
 export interface ICreateStream {
+  _id: mongoose.Types.ObjectId;
   id: string;
   amount: string;
   cancellable_date: number;
@@ -31,10 +32,6 @@ export interface ICreateStream {
   withdrawn: string;
   status?: string;
   network: Network;
-}
-
-export interface IStream extends ICreateStream {
-  _id: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
