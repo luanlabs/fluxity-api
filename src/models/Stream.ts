@@ -56,4 +56,6 @@ const Stream = new Schema<ICreateStream>(
   { timestamps: true },
 );
 
+Stream.index({ id: 1, network: 1 }, { unique: true });
+
 export default model<ICreateStream>('Stream', Stream);
