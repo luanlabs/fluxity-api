@@ -7,7 +7,7 @@ export interface ILedger {
 
 const Ledger = new Schema<ILedger>({
   id: { type: String, required: true, unique: true },
-  last: { type: String, required: true, unique: true },
+  last: { type: String, required: true },
 });
 
 export default model<ILedger>('Ledger', Ledger);

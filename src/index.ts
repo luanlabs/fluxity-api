@@ -10,6 +10,7 @@ import router from './routes';
 import jsonResponse from './middleware/jsonResponse';
 import listenToTestNetContractEvents from './event/listenToTestNetContractEvents';
 import { log } from './logger';
+import listenToMainNetContractEvents from './event/listenToMainNetContractEvents';
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(compression());
 app.use(helmet());
 app.disable('x-powered-by');
 
+listenToMainNetContractEvents();
 listenToTestNetContractEvents();
 
 app.use(cors());
