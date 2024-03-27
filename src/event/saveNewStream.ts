@@ -35,8 +35,12 @@ const saveNewStream = async (id: string, network: Network) => {
     await newStream.save();
 
     log.info({ message: 'Save new stream successful', value: newStream });
-  } catch {
-    log.info({ message: 'Save new stream not successful (duplicate stream)' });
+  } catch (e) {
+    if (e.code == 'ECONNRESET') {
+      saveNewStream(id, network);
+    } else {
+      log.error({ message: e.message });
+    }
   }
 };
 
