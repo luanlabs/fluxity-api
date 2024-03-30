@@ -20,6 +20,7 @@ export interface ICreateStream {
   id: string;
   amount: string;
   cancellable_date: number;
+  cancelled_date: number;
   cliff_date: number;
   end_date: number;
   is_cancelled: boolean;
@@ -41,6 +42,7 @@ const Stream = new Schema<ICreateStream>(
     id: { type: String, required: true },
     amount: { type: String, required: true },
     cancellable_date: { type: Number, required: true },
+    cancelled_date: { type: Number, required: true },
     cliff_date: { type: Number, required: true },
     end_date: { type: Number, required: true },
     is_cancelled: { type: Boolean, required: true },

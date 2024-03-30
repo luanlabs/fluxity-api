@@ -34,6 +34,7 @@
  *                     id: "24",
  *                     amount: "119000000",
  *                     cancellable_date: 1699956257,
+ *                     cancelled_date: 1699955557,
  *                     cliff_date: 1699956257,
  *                     end_date: 1700042657,
  *                     is_cancelled: false,
