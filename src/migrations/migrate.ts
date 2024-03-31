@@ -1,5 +1,5 @@
 import log from '../logger';
-import streamUp from './remove_duplicate_stream';
+import streamUp from './add_stream';
 
 const migrate = async () => {
   try {

@@ -64,7 +64,12 @@ const listenToTestNetContractEvents = async () => {
 
       const updateLastLedger = await Ledger.findOneAndUpdate({ id: '0' }, { last: lastUsedLedger });
 
-      log.info({ message: 'Update lastUsedLedger successful', value: updateLastLedger });
+      if (updateLastLedger) {
+        log.info({
+          message: 'Update lastUsedLedger (Testnet) successful',
+          value: updateLastLedger,
+        });
+      }
 
       if (!updateLastLedger) {
         const ledger = new Ledger({
@@ -73,12 +78,13 @@ const listenToTestNetContractEvents = async () => {
         });
         await ledger.save();
 
-        log.info({ message: 'Save lastUsedLedger successful', value: ledger });
+        log.info({ message: 'Save lastUsedLedger (Testnet) successful', value: ledger });
       }
     }
   } catch (e) {
     log.error({ message: e.message });
   }
+
   await new Promise((resolve) => setTimeout(resolve, 15000));
   listenToTestNetContractEvents();
 };

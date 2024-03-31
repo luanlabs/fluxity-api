@@ -15,73 +15,73 @@ const listenToMainNetContractEvents = async () => {
 
     let lastUsedLedger = 0;
 
-    setInterval(async () => {
-      if (lastUsedLedger === 0) {
-        const { sequence } = await server.getLatestLedger();
-        lastUsedLedger = await calculateLastUsedLedger(sequence);
-      }
+    if (lastUsedLedger === 0) {
+      const { sequence } = await server.getLatestLedger();
+      lastUsedLedger = await calculateLastUsedLedger(sequence);
+    }
 
-      const stream = ToScVal.toXDR('STREAM');
-      const created = ToScVal.toXDR('CREATED');
-      const cancelled = ToScVal.toXDR('CANCELLED');
-      const withdrawn = ToScVal.toXDR('WITHDRAWN');
+    const stream = ToScVal.toXDR('STREAM');
+    const created = ToScVal.toXDR('CREATED');
+    const cancelled = ToScVal.toXDR('CANCELLED');
+    const withdrawn = ToScVal.toXDR('WITHDRAWN');
 
-      const events = await getEvents(
-        {
-          startLedger: lastUsedLedger,
-          filters: [
-            {
-              type: 'contract',
-              contractIds: [contract.address().toString()],
-              topics: [
-                [stream, created],
-                [stream, cancelled],
-                [stream, withdrawn],
-              ],
-            },
-          ],
-          pagination: {
-            limit: 1440,
+    const events = await getEvents(
+      {
+        startLedger: lastUsedLedger,
+        filters: [
+          {
+            type: 'contract',
+            contractIds: [contract.address().toString()],
+            topics: [
+              [stream, created],
+              [stream, cancelled],
+              [stream, withdrawn],
+            ],
           },
+        ],
+        pagination: {
+          limit: 1440,
         },
-        Networks.Mainnet,
-      );
+      },
+      Networks.Mainnet,
+    );
 
-      if (events) {
-        const eventsXdr = events.result.events;
+    if (events) {
+      const eventsXdr = events.result.events;
 
-        for (let i = 0; i < events.result.events.length; ++i) {
-          const streamId = ToScVal.fromXDR(eventsXdr[i].value);
+      for (let i = 0; i < events.result.events.length; ++i) {
+        const streamId = ToScVal.fromXDR(eventsXdr[i].value);
 
-          if (eventsXdr[i].topic[1] === created) {
-            await saveNewStream(streamId, Networks.Mainnet);
-          } else if (eventsXdr[i].topic[1] === withdrawn) {
-            await saveStreamWithdrawn(streamId, Networks.Mainnet);
-          } else if (eventsXdr[i].topic[1] === cancelled) {
-            await saveStreamCancelled(streamId, Networks.Mainnet);
-          }
-        }
-
-        lastUsedLedger = events.result.latestLedger;
-
-        const updateLastLedger = await Ledger.findOneAndUpdate(
-          { id: '0' },
-          { last: lastUsedLedger },
-        );
-
-        log.info({ message: 'Update lastUsedLedger successful', value: updateLastLedger });
-
-        if (!updateLastLedger) {
-          const ledger = new Ledger({
-            id: '0',
-            last: lastUsedLedger,
-          });
-          await ledger.save();
-
-          log.info({ message: 'Save lastUsedLedger successful', value: ledger });
+        if (eventsXdr[i].topic[1] === created) {
+          await saveNewStream(streamId, Networks.Mainnet);
+        } else if (eventsXdr[i].topic[1] === withdrawn) {
+          await saveStreamWithdrawn(streamId, Networks.Mainnet);
+        } else if (eventsXdr[i].topic[1] === cancelled) {
+          await saveStreamCancelled(streamId, Networks.Mainnet);
         }
       }
-    }, 15000);
+
+      lastUsedLedger = events.result.latestLedger;
+
+      const updateLastLedger = await Ledger.findOneAndUpdate({ id: '1' }, { last: lastUsedLedger });
+
+      if (updateLastLedger) {
+        log.info({
+          message: 'Update lastUsedLedger (Mainnet) successful',
+          value: updateLastLedger,
+        });
+      }
+
+      if (!updateLastLedger) {
+        const ledger = new Ledger({
+          id: '1',
+          last: lastUsedLedger,
+        });
+        await ledger.save();
+
+        log.info({ message: 'Save lastUsedLedger (Mainnet) successful', value: ledger });
+      }
+    }
   } catch (e) {
     log.error({ message: e.message });
   }

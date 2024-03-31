@@ -8,32 +8,40 @@ import getConfig from '../utils/soroban/getConfig';
 import { Network } from '../types/networkType';
 
 const saveNewStream = async (id: string, network: Network) => {
-  const { contract, admin } = await getConfig(network);
+  try {
+    const { contract, admin } = await getConfig(network);
 
-  const existingStream = await Stream.findOne({ id, network });
+    const existingStream = await Stream.findOne({ id, network });
 
-  if (existingStream) {
-    return;
+    if (existingStream) {
+      return;
+    }
+
+    const stream = await getStream(admin, contract, id, network);
+    const streamDetails = bigintValuesToNumbers(stream);
+
+    let token = await Token.findOne({ address: streamDetails.token });
+
+    if (!token) {
+      token = await saveToken(streamDetails.token, network);
+    }
+
+    streamDetails.id = id;
+    streamDetails.token = token._id;
+    streamDetails.network = network;
+
+    const newStream = new Stream(streamDetails);
+
+    await newStream.save();
+
+    log.info({ message: 'Save new stream successful', value: newStream });
+  } catch (e) {
+    if (e.code == 'ECONNRESET') {
+      saveNewStream(id, network);
+    } else {
+      log.error({ message: e.message });
+    }
   }
-
-  const stream = await getStream(admin, contract, id, network);
-  const streamDetails = bigintValuesToNumbers(stream);
-
-  let token = await Token.findOne({ address: streamDetails.token });
-
-  if (!token) {
-    token = await saveToken(streamDetails.token, network);
-  }
-
-  streamDetails.id = id;
-  streamDetails.token = token._id;
-  streamDetails.network = network;
-
-  const newStream = new Stream(streamDetails);
-
-  await newStream.save();
-
-  log.info({ message: 'Save new stream successful', value: newStream });
 };
 
 export default saveNewStream;
