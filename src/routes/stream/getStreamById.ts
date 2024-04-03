@@ -20,7 +20,7 @@ const getStreamById: RequestHandler = async (req, res) => {
     }
 
     const streamWithStatus = stream.toObject();
-    const status = calculateStreamStatus(stream.start_date, stream.end_date);
+    const status = calculateStreamStatus(stream.start_date, stream.end_date, stream.cancelled_date);
     streamWithStatus.status = status;
 
     return res.status(200).j({
