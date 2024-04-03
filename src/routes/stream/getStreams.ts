@@ -17,7 +17,11 @@ const getStreamsRoute: RequestHandler = async (req, res) => {
     let streams = streamAll.map((stream) => stream.toObject());
 
     for (let i = 0; i < streams.length; i++) {
-      streams[i].status = calculateStreamStatus(streams[i].start_date, streams[i].end_date);
+      streams[i].status = calculateStreamStatus(
+        streams[i].start_date,
+        streams[i].end_date,
+        streams[i].cancelled_date,
+      );
     }
 
     if (status) {
