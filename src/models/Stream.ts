@@ -5,7 +5,8 @@ import { Network } from '../types/networkType';
 export enum Status {
   Pending = 'pending',
   Ongoing = 'ongoing',
-  Expired = 'expired',
+  Cancelled = 'cancelled',
+  Completed = 'completed',
 }
 export enum Rate {
   Daily = 86400,

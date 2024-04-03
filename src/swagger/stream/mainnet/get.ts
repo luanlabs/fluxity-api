@@ -15,7 +15,8 @@
  *           enum:
  *             - pending
  *             - ongoing
- *             - expired
+ *             - cancelled
+ *             - completed
  *
  *       - name: sender
  *         in: query
