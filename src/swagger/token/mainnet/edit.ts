@@ -28,6 +28,10 @@
  *                 type: string
  *                 required: false
  *                 example : true
+ *               important:
+ *                 type: string
+ *                 required: false
+ *                 example : true
  *
  *     security:
  *       - Authorization : []
@@ -56,6 +60,7 @@
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
  *                     claimable: false,
+ *                     important: true,
  *                     network: mainnet,
  *                     __v: 0
  *                   }

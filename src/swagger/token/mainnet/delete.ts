@@ -43,6 +43,7 @@
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
  *                     claimable: false,
+ *                     important: true,
  *                     network: mainnet,
  *                     __v: 0
  *                   }
