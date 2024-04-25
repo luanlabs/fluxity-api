@@ -5,7 +5,7 @@ import log from '../../logger';
 
 const editTokenRoute: RequestHandler = async (req, res) => {
   try {
-    const { logo, claimable, important } = req.body;
+    const { logo, claimable } = req.body;
     const { token } = req.params;
     const { network } = res;
 
@@ -20,7 +20,7 @@ const editTokenRoute: RequestHandler = async (req, res) => {
 
     const tokenEdited = await Token.findOneAndUpdate(
       { address: token, network },
-      { logo, claimable, important },
+      { logo, claimable },
     );
 
     log.info({ message: 'Token changed successfully', value: tokenEdited });

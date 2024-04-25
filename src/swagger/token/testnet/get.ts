@@ -29,7 +29,6 @@
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
  *                     claimable: true,
- *                     important: false,
  *                     network: testnet,
  *                     __v: 0
  *                   },]

@@ -23,10 +23,6 @@
  *                 type: string
  *                 required: false
  *                 example : true
- *               important:
- *                 type: string
- *                 required: false
- *                 example : true
  *
  *
  *     security:
@@ -57,7 +53,6 @@
  *                     logo: /public/images/assets/fdai.svg,
  *                     _id: 6539a4b453971c96d697f9c0,
  *                     claimable: false,
- *                     important: true,
  *                     network: mainnet,
  *                     __v: 0
  *                   }

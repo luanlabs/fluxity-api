@@ -6,13 +6,7 @@ import log from '../../logger';
 import getConfig from '../soroban/getConfig';
 import { Network } from '../../types/networkType';
 
-const saveToken = async (
-  token: string,
-  network: Network,
-  logo?: string,
-  claimable?: boolean,
-  important?: boolean,
-) => {
+const saveToken = async (token: string, network: Network, logo?: string, claimable?: boolean) => {
   const { admin } = await getConfig(network);
   const contract = new Contract(token);
 
@@ -31,7 +25,6 @@ const saveToken = async (
     decimals: result[2],
     logo,
     claimable,
-    important,
     network,
   });
 

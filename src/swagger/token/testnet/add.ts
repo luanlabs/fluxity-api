@@ -52,7 +52,6 @@
  *                     logo: /public/images/assets/fdai.svg,
  *                     _id: 6539a4b453971c96d697f9c0,
  *                     claimable: true,
- *                     important: false,
  *                     network: testnet,
  *                     __v: 0
  *                   }
