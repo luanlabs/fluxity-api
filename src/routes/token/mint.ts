@@ -6,7 +6,7 @@ import buildMintTransaction from '../../utils/soroban/token/buildMint';
 import AlreadyMinted from '../../models/AlreadyMinted';
 import finalizeTransaction from '../../utils/soroban/finalizeTransaction';
 import log from '../../logger';
-import createStreams from '../../utils/soroban/stream/createMintStream/createStreams';
+import createStreams from '../../utils/soroban/lockup/createMintStream/createStreams';
 import getConfig from '../../utils/soroban/getConfig';
 
 const mintToken: RequestHandler = async (req, res) => {
@@ -36,6 +36,14 @@ const mintToken: RequestHandler = async (req, res) => {
 
     const tokens = await Token.find({ claimable: true, symbol: { $ne: 'native' } });
 
+    if (!tokens.length) {
+      return res.status(404).j({
+        status: 'error',
+        message: 'Token claimable not found',
+        result: {},
+      });
+    }
+
     const accountAdmin = await server.getAccount(adminAddress);
 
     for (let i = 0; i < tokens.length; i++) {
@@ -44,8 +52,9 @@ const mintToken: RequestHandler = async (req, res) => {
       const admin = new Account(accountAdmin.accountId(), sequence);
 
       const mintTx = await buildMintTransaction(admin, tokens[i].address, user);
-
+      console.log(1);
       await finalizeTransaction(mintTx, server);
+      console.log(2);
     }
 
     const newAlreadyMinted = new AlreadyMinted({

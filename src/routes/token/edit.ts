@@ -23,11 +23,11 @@ const editTokenRoute: RequestHandler = async (req, res) => {
       { logo, claimable },
     );
 
-    log.info({ message: 'Token changed logo successfully', value: tokenEdited });
+    log.info({ message: 'Token changed successfully', value: tokenEdited });
 
     return res.status(200).j({
       status: 'success',
-      message: 'Token changed logo successfully',
+      message: 'Token changed successfully',
       result: tokenEdited,
     });
   } catch (e) {

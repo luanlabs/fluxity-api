@@ -1,10 +1,10 @@
 import getEvents from './getEvents';
 import Ledger from '../models/Ledger';
-import saveNewStream from './saveNewStream';
+import saveNewLockup from './saveNewLockup';
 import ToScVal from '../utils/soroban/scVal';
-import saveStreamWithdrawn from './saveStreamWithdrawn';
-import saveStreamCancelled from './saveStreamCancelled';
-import calculateLastUsedLedger from '../utils/soroban/stream/calculateLastUsedLedger';
+import saveLockupWithdrawn from './saveLockupWithdrawn';
+import saveLockupCancelled from './saveLockupCancelled';
+import calculateLastUsedLedger from '../utils/soroban/lockup/calculateLastUsedLedger';
 import log from '../logger';
 import getConfig from '../utils/soroban/getConfig';
 import { Networks } from '../constant/network';
@@ -20,7 +20,7 @@ const listenToMainNetContractEvents = async () => {
       lastUsedLedger = await calculateLastUsedLedger(sequence);
     }
 
-    const stream = ToScVal.toXDR('STREAM');
+    const lockup = ToScVal.toXDR('LOCKUP');
     const created = ToScVal.toXDR('CREATED');
     const cancelled = ToScVal.toXDR('CANCELLED');
     const withdrawn = ToScVal.toXDR('WITHDRAWN');
@@ -33,9 +33,9 @@ const listenToMainNetContractEvents = async () => {
             type: 'contract',
             contractIds: [contract.address().toString()],
             topics: [
-              [stream, created],
-              [stream, cancelled],
-              [stream, withdrawn],
+              [lockup, created],
+              [lockup, cancelled],
+              [lockup, withdrawn],
             ],
           },
         ],
@@ -50,14 +50,14 @@ const listenToMainNetContractEvents = async () => {
       const eventsXdr = events.result.events;
 
       for (let i = 0; i < events.result.events.length; ++i) {
-        const streamId = ToScVal.fromXDR(eventsXdr[i].value);
+        const lockupId = ToScVal.fromXDR(eventsXdr[i].value);
 
         if (eventsXdr[i].topic[1] === created) {
-          await saveNewStream(streamId, Networks.Mainnet);
+          await saveNewLockup(lockupId, Networks.Mainnet);
         } else if (eventsXdr[i].topic[1] === withdrawn) {
-          await saveStreamWithdrawn(streamId, Networks.Mainnet);
+          await saveLockupWithdrawn(lockupId, Networks.Mainnet);
         } else if (eventsXdr[i].topic[1] === cancelled) {
-          await saveStreamCancelled(streamId, Networks.Mainnet);
+          await saveLockupCancelled(lockupId, Networks.Mainnet);
         }
       }
 

@@ -1,7 +1,7 @@
 import express from 'express';
 
 import tokenRoutes from './token';
-import streamRoutes from './stream';
+import lockupRoutes from './lockup';
 import subscribeRoutes from './subscribe';
 import swaggerRoutes from './swagger';
 import notFound from '../middleware/notFound';
@@ -11,7 +11,7 @@ import networkHandler from '../middleware/networkHandler';
 const router = express.Router();
 
 router.use('/:network/token', networkHandler, tokenRoutes);
-router.use('/:network/stream', networkHandler, streamRoutes);
+router.use('/:network/lockup', networkHandler, lockupRoutes);
 router.use('/subscribe', subscribeRoutes);
 router.use('/swagger', swaggerRoutes);
 

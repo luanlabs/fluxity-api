@@ -1,9 +1,9 @@
 import log from '../logger';
-import streamUp from './add_stream';
+import lockupUp from './add_lockup';
 
 const migrate = async () => {
   try {
-    await streamUp();
+    await lockupUp();
   } catch (error) {
     log.error({ message: 'Migration failed:', error });
   }
