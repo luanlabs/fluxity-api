@@ -10,7 +10,7 @@ const baseTransaction = async (
 
   let transaction = await new TransactionBuilder(admin, {
     fee,
-    networkPassphrase: Networks.FUTURENET,
+    networkPassphrase: Networks.TESTNET,
   });
 
   transaction = transaction.addOperation(call);
