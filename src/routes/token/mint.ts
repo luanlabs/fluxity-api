@@ -52,9 +52,8 @@ const mintToken: RequestHandler = async (req, res) => {
       const admin = new Account(accountAdmin.accountId(), sequence);
 
       const mintTx = await buildMintTransaction(admin, tokens[i].address, user);
-      console.log(1);
+
       await finalizeTransaction(mintTx, server);
-      console.log(2);
     }
 
     const newAlreadyMinted = new AlreadyMinted({
