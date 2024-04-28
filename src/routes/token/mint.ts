@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-import { Account } from 'stellar-sdk';
 
 import Token from '../../models/Token';
 import buildMintTransaction from '../../utils/soroban/token/buildMint';
@@ -30,9 +29,8 @@ const mintToken: RequestHandler = async (req, res) => {
         result: {},
       });
     }
-    const { server, adminKeypair } = await getConfig(network);
 
-    const adminAddress = await adminKeypair.publicKey();
+    const { server, admin: admin } = await getConfig(network);
 
     const tokens = await Token.find({ claimable: true, symbol: { $ne: 'native' } });
 
@@ -44,13 +42,7 @@ const mintToken: RequestHandler = async (req, res) => {
       });
     }
 
-    const accountAdmin = await server.getAccount(adminAddress);
-
     for (let i = 0; i < tokens.length; i++) {
-      const sequence = (BigInt(accountAdmin.sequenceNumber()) + BigInt(i)).toString();
-
-      const admin = new Account(accountAdmin.accountId(), sequence);
-
       const mintTx = await buildMintTransaction(admin, tokens[i].address, user);
 
       await finalizeTransaction(mintTx, server);

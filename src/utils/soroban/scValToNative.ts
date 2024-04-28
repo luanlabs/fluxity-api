@@ -1,4 +1,4 @@
-import { xdr, scValToNative as toNative } from 'stellar-sdk';
+import { xdr, scValToNative as toNative } from '@stellar/stellar-sdk';
 
 const { ScVal } = xdr;
 

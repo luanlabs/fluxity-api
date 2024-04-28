@@ -1,4 +1,4 @@
-import { xdr } from 'stellar-sdk';
+import { xdr } from '@stellar/stellar-sdk';
 
 import { Rate } from '../../../../models/Lockup';
 import { Networks } from '../../../../constant/network';

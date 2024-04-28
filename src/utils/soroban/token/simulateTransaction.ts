@@ -1,4 +1,4 @@
-import { Account, scValToNative, Contract } from 'stellar-sdk';
+import { Account, scValToNative, Contract } from '@stellar/stellar-sdk';
 
 import createTransaction from '../baseTransaction';
 import getConfig from '../getConfig';

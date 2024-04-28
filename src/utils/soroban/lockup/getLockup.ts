@@ -1,4 +1,4 @@
-import { Account, Contract, scValToNative } from 'stellar-sdk';
+import { Account, Contract, scValToNative } from '@stellar/stellar-sdk';
 
 import ToScVal from '../scVal';
 import baseTransaction from '../baseTransaction';

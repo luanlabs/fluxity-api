@@ -1,4 +1,4 @@
-import { xdr, Address } from 'stellar-sdk';
+import { xdr, Address } from '@stellar/stellar-sdk';
 
 import numberToScVal from './numberToScval';
 import scValToNative from './scValToNative';

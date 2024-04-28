@@ -1,4 +1,4 @@
-import { Contract } from 'stellar-sdk';
+import { Contract } from '@stellar/stellar-sdk';
 
 import simulateTransaction from '../soroban/token/simulateTransaction';
 import Token from '../../models/Token';
