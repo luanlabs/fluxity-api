@@ -27,8 +27,11 @@ const saveToken = async (token: string, network: Network, logo?: string, claimab
     claimable,
     network,
   });
-
-  await newToken.save();
+  try {
+    await newToken.save();
+  } catch (e) {
+    log.info({ message: e.message });
+  }
 
   log.info({ message: 'Token save successfully', value: newToken });
 
