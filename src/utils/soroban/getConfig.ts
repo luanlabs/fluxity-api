@@ -1,4 +1,4 @@
-import { Contract, Keypair, SorobanRpc } from 'stellar-sdk';
+import { Contract, Keypair, SorobanRpc } from '@stellar/stellar-sdk';
 
 import { Network } from '../../types/networkType';
 

@@ -1,4 +1,4 @@
-import { Account, xdr, Networks, TransactionBuilder, Operation } from 'stellar-sdk';
+import { Account, xdr, Networks, TransactionBuilder, Operation } from '@stellar/stellar-sdk';
 import getConfig from './getConfig';
 import { Networks as Network } from '../../constant/network';
 

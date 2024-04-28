@@ -1,4 +1,4 @@
-import { SorobanRpc } from 'stellar-sdk';
+import { SorobanRpc } from '@stellar/stellar-sdk';
 import log from '../../logger';
 
 const finalizeTransaction = async (hash: string, server: SorobanRpc.Server) => {

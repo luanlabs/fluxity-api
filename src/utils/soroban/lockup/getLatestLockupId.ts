@@ -1,4 +1,4 @@
-import { scValToBigInt } from 'stellar-sdk';
+import { scValToBigInt } from '@stellar/stellar-sdk';
 
 import getConfig from '../getConfig';
 import baseTransaction from '../baseTransaction';
