@@ -14,7 +14,7 @@ const buildStreamTransaction = async (
 
   const params = await ToScVal.toXdrValueStream(toAddress, token);
 
-  const streamCall = contract.call('create_stream', params);
+  const streamCall = contract.call('create_lockup', params);
 
   const transaction = await baseTransaction(admin, streamCall);
 
@@ -22,6 +22,7 @@ const buildStreamTransaction = async (
   transactionPrepare.sign(adminKeypair);
 
   const response = await server.sendTransaction(transactionPrepare);
+
   return response.hash;
 };
 

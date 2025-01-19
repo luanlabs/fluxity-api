@@ -33,7 +33,7 @@ const getEvents = async (params: IEvent, network: Network) => {
 
     return await request(rpcUrl.serverURL._string, config);
   } catch (e) {
-    log.error({ message: e.message });
+    log.error(e.message);
   }
 };
 export default getEvents;

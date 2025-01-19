@@ -5,7 +5,7 @@ const migrate = async () => {
   try {
     await lockupUp();
   } catch (error) {
-    log.error({ message: 'Migration failed:', error });
+    log.error(`Migration failed message: ${error.message} `);
   }
 };
 

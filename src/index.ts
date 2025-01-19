@@ -1,25 +1,23 @@
 import cors from 'cors';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 
 import db from './db';
+import envs from './env';
 import router from './routes';
+import { log } from './logger';
 import jsonResponse from './middleware/jsonResponse';
 import listenToTestNetContractEvents from './event/listenToTestNetContractEvents';
 // import listenToMainNetContractEvents from './event/listenToMainNetContractEvents';
-import { log } from './logger';
-
-dotenv.config();
 
 const app = express();
 
-const { PORT: port, DB_URI: uriDB, DB_NAME: nameDB } = process.env;
+const { PORT: port, DB_URI: uriDB, DB_NAME: nameDB } = envs();
 
 if (typeof uriDB !== 'string' || typeof nameDB !== 'string') {
-  log.fatal({ message: 'database URI or name is invalid' });
+  log.fatal('database URI or name is invalid');
   process.exit(1);
 }
 
@@ -40,5 +38,5 @@ app.use(jsonResponse);
 app.use(router);
 
 app.listen(port, () => {
-  log.info({ message: 'App started' });
+  log.info('App started');
 });

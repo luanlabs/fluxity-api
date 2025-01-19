@@ -1,26 +1,26 @@
 import enforceEnv from 'envil';
 
-const checkIfEnvsAreSet = () => {
-  const envs = [
+const envs = () => {
+  const envValues = [
     'DB_URI',
     'DB_NAME',
     'PORT',
-    'ADMIN_SECRET_KEY',
-    'ADMIN_PASSWORD',
-    'TESTNET_FUTURENET_RPC_URL',
-    'MAINNET_FUTURENET_RPC_URL',
-    'MAILER_SERVICE_USER',
-    'MAC_MAILER_SERVICE_PASS',
+    'NODE_ENV',
     'BASE_FEE',
+    'ADMIN_PASSWORD',
+    'LOG_FILE_PATH',
+    'ADMIN_SECRET_KEY',
+    'CLAIM_TOKEN_AMOUNT',
+    'MAILER_SERVICE_USER',
     'TESTNET_CONTRACT_ID',
     'MAINNET_CONTRACT_ID',
-    'NODE_ENV',
-    'LOG_FILE_PATH',
     'CLAIM_STREAM_AMOUNT',
-    'CLAIM_TOKEN_AMOUNT',
+    'MAC_MAILER_SERVICE_PASS',
+    'MAINNET_SOROBAN_RPC_URL',
+    'TESTNET_SOROBAN_RPC_URL',
   ];
 
-  enforceEnv(envs);
+  return enforceEnv(envValues, { returnValues: true });
 };
 
-export default checkIfEnvsAreSet;
+export default envs;

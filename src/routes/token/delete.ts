@@ -19,7 +19,7 @@ const deleteTokenRoute: RequestHandler = async (req, res) => {
 
     const tokenDeleted = await Token.findOneAndDelete({ address: token, network });
 
-    log.info({ message: 'Token deleted successfully', value: tokenDeleted });
+    log.info(`Token deleted successfully, token: ${tokenDeleted?.address}`);
 
     return res.status(200).j({
       status: 'success',
@@ -27,7 +27,7 @@ const deleteTokenRoute: RequestHandler = async (req, res) => {
       result: tokenDeleted,
     });
   } catch (e) {
-    log.error({ message: e.message });
+    log.error(e.message);
 
     return res.status(500).j({
       status: 'error',

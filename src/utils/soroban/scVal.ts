@@ -4,7 +4,7 @@ import numberToScVal from './numberToScval';
 import scValToNative from './scValToNative';
 import toXdrValue from './lockup/createMintStream/createStreamValues';
 
-const { scvU32, scvU64, scvSymbol } = xdr.ScVal;
+const { scvU32, scvU64, scvSymbol, scvBool } = xdr.ScVal;
 
 class ToScVal {
   public static i128(value: bigint) {
@@ -21,6 +21,9 @@ class ToScVal {
   }
   public static symbol(symbol: string) {
     return scvSymbol(symbol);
+  }
+  public static boolean(bool: boolean) {
+    return scvBool(bool);
   }
   public static fromXDR(event: string) {
     return scValToNative(event);

@@ -7,7 +7,7 @@ const db = async (url: string, dbName: string) => {
     migrate();
     await connect(url, { dbName });
   } catch (error) {
-    log.fatal({ message: "databse didn't connect" });
+    log.fatal("databse didn't connect");
     process.exit(1);
   }
 };

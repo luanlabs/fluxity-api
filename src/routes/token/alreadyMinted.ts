@@ -31,7 +31,7 @@ const alreadyMintedRoute: RequestHandler = async (req, res) => {
       result: { minted: false },
     });
   } catch (e) {
-    log.error({ message: e.message });
+    log.error(e.message);
 
     return res.status(500).j({
       status: 'error',
