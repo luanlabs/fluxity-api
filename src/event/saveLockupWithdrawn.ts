@@ -16,7 +16,9 @@ const saveLockupWithdrawn = async (id: string, network: Network) => {
     { withdrawn: lockupDetails.withdrawn },
   );
 
-  log.info({ message: 'Save withdrawn lockup successful', value: updateLockup });
+  log.info(
+    `Save withdrawn lockup successful, lockup: ${updateLockup?.id}, newWithdrawn:${lockupDetails.withdrawn}`,
+  );
 
   if (!updateLockup) {
     await saveNewLockup(id, network);

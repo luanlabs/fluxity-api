@@ -29,6 +29,7 @@ export interface ICreateLockup {
   rate: Rate;
   receiver: string;
   sender: string;
+  spender: string;
   start_date: number;
   token: Schema.Types.ObjectId;
   withdrawn: string;
@@ -51,6 +52,7 @@ const Lockup = new Schema<ICreateLockup>(
     rate: { type: Number, required: true },
     receiver: { type: String, required: true },
     sender: { type: String, required: true },
+    spender: { type: String, required: true },
     start_date: { type: Number, required: true },
     token: { type: Schema.Types.ObjectId, ref: 'Token', required: true },
     withdrawn: { type: String, required: true },

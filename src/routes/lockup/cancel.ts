@@ -16,7 +16,8 @@ const cancelLockupRoute: RequestHandler = async (req, res) => {
       result: {},
     });
   } catch (e) {
-    log.error({ message: e.message });
+    log.error(e.message);
+
     return res.status(500).j({
       status: 'error',
       message: e.message,

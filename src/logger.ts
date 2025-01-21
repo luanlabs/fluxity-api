@@ -1,38 +1,33 @@
 import bunyan from 'bunyan';
-import dotenv from 'dotenv';
-import checkIfEnvsAreSet from './env';
 
-dotenv.config();
+import envs from './env';
 
-checkIfEnvsAreSet();
+const { LOG_FILE_PATH, NODE_ENV } = envs();
 
-let level = bunyan.TRACE;
-let streams = [
+const streams: bunyan.Stream[] = [
   {
     level: bunyan.TRACE,
     stream: process.stdout,
   },
-  {
-    level: bunyan.WARN,
-    path: process.env.LOG_FILE_PATH,
-  },
 ];
 
-if (process.env.NODE_ENV == 'production') {
-  level = bunyan.WARN;
-  streams = [
-    {
-      level: bunyan.WARN,
-      path: process.env.LOG_FILE_PATH,
-    },
-  ];
+if (NODE_ENV == 'production') {
+  streams[0] = {
+    level: bunyan.TRACE,
+    path: LOG_FILE_PATH,
+  };
 }
 
 export const log = bunyan.createLogger({
-  name: 'fluxity-app',
+  name: 'FLUXITY_API',
+  level: bunyan.TRACE,
   src: true,
-  level,
   streams,
 });
+
+delete log.fields.hostname;
+delete log.fields.pid;
+delete log.fields.v;
+delete log.fields.level;
 
 export default log;

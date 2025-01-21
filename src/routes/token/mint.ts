@@ -53,7 +53,7 @@ const mintToken: RequestHandler = async (req, res) => {
     });
     await newAlreadyMinted.save();
 
-    log.info({ message: 'AlreadMinted save successfully', value: newAlreadyMinted });
+    log.info(`AlreadMinted save successfully, user: ${newAlreadyMinted.address}`);
 
     createStreams(tokens[0], user);
 
@@ -63,7 +63,7 @@ const mintToken: RequestHandler = async (req, res) => {
       result: tokens,
     });
   } catch (e) {
-    log.error({ message: e.message });
+    log.error(e.message);
 
     return res.status(500).j({
       status: 'error',

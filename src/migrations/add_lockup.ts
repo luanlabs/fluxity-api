@@ -10,16 +10,16 @@ async function lockupUp() {
   let isMigration = false;
 
   for (let i = 0; i < latestLockupId; i++) {
-    const lockups = await Lockup.find({ id: i, network: Networks.Testnet });
+    const lockups = await Lockup.findOne({ id: i, network: Networks.Testnet });
 
-    if (!lockups.length) {
+    if (!lockups) {
       saveNewLockup(i.toString(), Networks.Testnet);
       isMigration = true;
     }
   }
 
   if (isMigration) {
-    log.info({ message: 'Migration lockup applied successfully' });
+    log.info('Migration lockup applied successfully');
   }
 }
 

@@ -19,7 +19,7 @@ const saveLockupCancelled = async (id: string, network: Network) => {
     },
   );
 
-  log.info({ message: 'Save cancell lockup successful', value: updateLockup });
+  log.info(`Save cancell lockup successful, lockup: ${updateLockup?.id}`);
 
   if (!updateLockup) {
     await saveNewLockup(id, network);
