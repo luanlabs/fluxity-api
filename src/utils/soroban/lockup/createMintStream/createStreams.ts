@@ -1,4 +1,4 @@
-import { Account, SorobanRpc, scValToNative } from 'stellar-sdk';
+import { rpc, scValToNative } from '@stellar/stellar-sdk';
 
 import { IToken } from '../../../../models/Token';
 import buildStreamTransaction from './buildStreamTransaction';
@@ -11,27 +11,28 @@ import saveNewLockup from '../../../../event/saveNewLockup';
 
 const createStreams = async (token: IToken, address: string) => {
   try {
-    const { server, admin: accountAdmin } = await getConfig(Networks.Testnet);
-
-    const sequence = BigInt(accountAdmin.sequenceNumber());
-    const admin = new Account(accountAdmin.accountId(), sequence.toString());
+    const { server, admin } = await getConfig(Networks.Testnet);
 
     const approveTx = await buildApproveTransaction(admin, token.address);
+
     const finalizeApprove = await finalizeTransaction(approveTx, server);
 
     if (
-      finalizeApprove.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
+      finalizeApprove.status == rpc.Api.GetTransactionStatus.SUCCESS &&
       finalizeApprove.returnValue
     ) {
-      const admin = new Account(accountAdmin.accountId(), (sequence + BigInt(1)).toString());
+      log.info(`Approved stream, address: ${address}, token:${token.address}`);
 
       const streamTx = await buildStreamTransaction(admin, address, token.address);
+
       const finalizeStream = await finalizeTransaction(streamTx, server);
 
       if (
-        finalizeStream.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
+        finalizeStream.status == rpc.Api.GetTransactionStatus.SUCCESS &&
         finalizeStream.returnValue
       ) {
+        log.info(`Create stream, address: ${address}, token:${token.address}`);
+
         const streamId = scValToNative(finalizeStream.returnValue).toString();
 
         await saveNewLockup(streamId, Networks.Testnet);

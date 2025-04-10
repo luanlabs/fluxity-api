@@ -13,7 +13,7 @@ const getSubscribers: RequestHandler = async (req, res) => {
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error) {
-    log.error({ message: error.message });
+    log.error(error.message);
 
     return res.status(500).j({
       status: 'error',

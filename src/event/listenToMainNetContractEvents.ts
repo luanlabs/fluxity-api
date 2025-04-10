@@ -66,10 +66,7 @@ const listenToMainNetContractEvents = async () => {
       const updateLastLedger = await Ledger.findOneAndUpdate({ id: '1' }, { last: lastUsedLedger });
 
       if (updateLastLedger) {
-        log.info({
-          message: 'Update lastUsedLedger (Mainnet) successful',
-          value: updateLastLedger,
-        });
+        log.info(`Update lastUsedLedger (Mainnet) successful, ledger: ${lastUsedLedger}`);
       }
 
       if (!updateLastLedger) {
@@ -79,11 +76,11 @@ const listenToMainNetContractEvents = async () => {
         });
         await ledger.save();
 
-        log.info({ message: 'Save lastUsedLedger (Mainnet) successful', value: ledger });
+        log.info(`Save lastUsedLedger (Mainnet) successful, ledger: ${lastUsedLedger}`);
       }
     }
   } catch (e) {
-    log.error({ message: e.message });
+    log.error(e.message);
   }
 
   await new Promise((resolve) => setTimeout(resolve, 15000));

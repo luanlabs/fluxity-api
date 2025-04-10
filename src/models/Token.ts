@@ -21,4 +21,6 @@ const Token = new Schema<IToken>({
   network: { type: String, required: true },
 });
 
+Token.index({ address: 1, network: 1 }, { unique: true });
+
 export default model<IToken>('Token', Token);

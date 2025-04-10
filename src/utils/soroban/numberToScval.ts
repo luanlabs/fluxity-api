@@ -1,4 +1,4 @@
-import { xdr } from 'stellar-sdk';
+import { xdr } from '@stellar/stellar-sdk';
 
 const bigIntToI128 = (bn: bigint): Buffer => {
   let hex = BigInt(bn).toString(16).replace(/^-/, '');

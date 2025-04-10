@@ -23,7 +23,11 @@ const editTokenRoute: RequestHandler = async (req, res) => {
       { logo, claimable },
     );
 
-    log.info({ message: 'Token changed successfully', value: tokenEdited });
+    log.info(
+      `Token changed successfully, token: ${tokenEdited?.address}, ${
+        claimable ? `claimable: ${claimable}` : ''
+      }, ${logo ? `logo: ${logo}` : ''}`,
+    );
 
     return res.status(200).j({
       status: 'success',
@@ -31,7 +35,7 @@ const editTokenRoute: RequestHandler = async (req, res) => {
       result: tokenEdited,
     });
   } catch (e) {
-    log.error({ message: e.message });
+    log.error(e.message);
 
     return res.status(500).j({
       status: 'error',

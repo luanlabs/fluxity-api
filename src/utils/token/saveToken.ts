@@ -1,4 +1,4 @@
-import { Contract } from 'stellar-sdk';
+import { Contract } from '@stellar/stellar-sdk';
 
 import simulateTransaction from '../soroban/token/simulateTransaction';
 import Token from '../../models/Token';
@@ -27,10 +27,13 @@ const saveToken = async (token: string, network: Network, logo?: string, claimab
     claimable,
     network,
   });
+  try {
+    await newToken.save();
+  } catch (e) {
+    log.error(e.message);
+  }
 
-  await newToken.save();
-
-  log.info({ message: 'Token save successfully', value: newToken });
+  log.info(`Token save successfully, token: ${newToken.address}, symbol:${newToken.symbol}`);
 
   return newToken;
 };

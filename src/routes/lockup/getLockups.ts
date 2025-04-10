@@ -36,7 +36,7 @@ const getLockupsRoute: RequestHandler = async (req, res) => {
       result: lockups,
     });
   } catch (e) {
-    log.error({ message: e.message });
+    log.error(e.message);
 
     return res.status(500).j({
       status: 'error',

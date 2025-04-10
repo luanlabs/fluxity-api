@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-import { Account } from 'stellar-sdk';
 
 import Token from '../../models/Token';
 import buildMintTransaction from '../../utils/soroban/token/buildMint';
@@ -23,9 +22,7 @@ const mintToken: RequestHandler = async (req, res) => {
       });
     }
 
-    const { server, adminKeypair } = await getConfig('testnet');
-
-    const adminAddress = adminKeypair.publicKey();
+    const { server, admin: admin } = await getConfig(network);
 
     const tokens = await Token.find({ claimable: true, symbol: { $ne: 'native' } });
 
@@ -37,13 +34,7 @@ const mintToken: RequestHandler = async (req, res) => {
       });
     }
 
-    const accountAdmin = await server.getAccount(adminAddress);
-
-    for (let i = 0; i < tokens.length; ++i) {
-      const sequence = (BigInt(accountAdmin.sequenceNumber()) + BigInt(i)).toString();
-
-      const admin = new Account(accountAdmin.accountId(), sequence);
-
+    for (let i = 0; i < tokens.length; i++) {
       const mintTx = await buildMintTransaction(admin, tokens[i].address, user);
 
       await finalizeTransaction(mintTx, server);
@@ -55,7 +46,7 @@ const mintToken: RequestHandler = async (req, res) => {
 
     await newAlreadyMinted.save();
 
-    log.info({ message: 'AlreadyMinted saved successfully', value: newAlreadyMinted });
+    log.info(`AlreadMinted save successfully, user: ${newAlreadyMinted.address}`);
 
     createStreams(tokens[0], user);
 
@@ -65,7 +56,7 @@ const mintToken: RequestHandler = async (req, res) => {
       result: tokens,
     });
   } catch (e) {
-    log.error({ message: e.message });
+    log.error(e.message);
 
     return res.status(500).j({
       status: 'error',

@@ -45,7 +45,7 @@ const addSubscriber: RequestHandler = async (req, res) => {
     // Save the subscriber to the database
     const savedSubscriber = await newSubscriber.save();
 
-    log.info({ message: 'Subscriber save successfully', value: savedSubscriber });
+    log.info(`Subscriber save successfully, email: ${savedSubscriber.email}`);
 
     await sendEmail(
       eAddress,
@@ -67,7 +67,7 @@ const addSubscriber: RequestHandler = async (req, res) => {
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error) {
-    log.error({ message: error.message });
+    log.error(error.message);
 
     return res.status(500).j({
       status: 'error',
