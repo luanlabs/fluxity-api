@@ -13,13 +13,14 @@ const buildMintTransaction = async (
   const { server, adminKeypair } = await getConfig(Networks.Testnet);
   const contract = new Contract(token);
 
-  const address = await ToScVal.address(toAddress);
+  const address = ToScVal.address(toAddress);
 
   const mintCall = contract.call('mint', address, ToScVal.i128(BigInt('10000000000')));
 
   const transaction = await baseTransaction(admin, mintCall);
 
   const transactionPrepare = await server.prepareTransaction(transaction);
+
   transactionPrepare.sign(adminKeypair);
 
   const response = await server.sendTransaction(transactionPrepare);

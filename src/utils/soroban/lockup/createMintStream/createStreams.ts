@@ -18,6 +18,7 @@ const createStreams = async (token: IToken, address: string) => {
 
     const approveTx = await buildApproveTransaction(admin, token.address);
     const finalizeApprove = await finalizeTransaction(approveTx, server);
+
     if (
       finalizeApprove.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
       finalizeApprove.returnValue
@@ -26,16 +27,21 @@ const createStreams = async (token: IToken, address: string) => {
 
       const streamTx = await buildStreamTransaction(admin, address, token.address);
       const finalizeStream = await finalizeTransaction(streamTx, server);
+
       if (
         finalizeStream.status == SorobanRpc.Api.GetTransactionStatus.SUCCESS &&
         finalizeStream.returnValue
       ) {
         const streamId = scValToNative(finalizeStream.returnValue).toString();
+
         await saveNewLockup(streamId, Networks.Testnet);
+
         log.info({ message: 'Create stream for address : ' + address });
       }
     }
   } catch (e) {
+    console.log(e);
+
     log.error({ message: e.message });
   }
 };

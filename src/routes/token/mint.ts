@@ -12,17 +12,9 @@ import getConfig from '../../utils/soroban/getConfig';
 const mintToken: RequestHandler = async (req, res) => {
   try {
     const { user } = req.body;
-    const { network } = res;
-
-    if (network == 'mainnet') {
-      return res.status(400).j({
-        status: 'error',
-        message: 'Token mint just in testnet network',
-        result: {},
-      });
-    }
 
     const isUserAlreadyMinted = await AlreadyMinted.findOne({ address: user });
+
     if (isUserAlreadyMinted) {
       return res.status(400).j({
         status: 'error',
@@ -30,9 +22,10 @@ const mintToken: RequestHandler = async (req, res) => {
         result: {},
       });
     }
-    const { server, adminKeypair } = await getConfig(network);
 
-    const adminAddress = await adminKeypair.publicKey();
+    const { server, adminKeypair } = await getConfig('testnet');
+
+    const adminAddress = adminKeypair.publicKey();
 
     const tokens = await Token.find({ claimable: true, symbol: { $ne: 'native' } });
 
@@ -46,23 +39,23 @@ const mintToken: RequestHandler = async (req, res) => {
 
     const accountAdmin = await server.getAccount(adminAddress);
 
-    for (let i = 0; i < tokens.length; i++) {
+    for (let i = 0; i < tokens.length; ++i) {
       const sequence = (BigInt(accountAdmin.sequenceNumber()) + BigInt(i)).toString();
 
       const admin = new Account(accountAdmin.accountId(), sequence);
 
       const mintTx = await buildMintTransaction(admin, tokens[i].address, user);
-      console.log(1);
+
       await finalizeTransaction(mintTx, server);
-      console.log(2);
     }
 
     const newAlreadyMinted = new AlreadyMinted({
       address: user,
     });
+
     await newAlreadyMinted.save();
 
-    log.info({ message: 'AlreadMinted save successfully', value: newAlreadyMinted });
+    log.info({ message: 'AlreadyMinted saved successfully', value: newAlreadyMinted });
 
     createStreams(tokens[0], user);
 
