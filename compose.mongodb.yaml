@@ -7,8 +7,8 @@ services:
     networks:
       - fluxityapi
     volumes:
-      - ~/storage/mongodb/data/:/data/db/data
-      - ~/storage/mongodb/log/:/data/db/log
+      - ~/storage/mongodb-fluxity/data/:/data/db/data
+      - ~/storage/mongodb-fluxity/log/:/data/db/log
 
 networks:
   fluxityapi:
