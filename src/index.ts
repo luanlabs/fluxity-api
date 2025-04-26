@@ -10,7 +10,7 @@ import router from './routes';
 import { log } from './logger';
 import { Networks } from './constant/network';
 import jsonResponse from './middleware/jsonResponse';
-import listenToContrcatEvents from './event/listenToContrcatEvents';
+import listenToContractEvents from './event/listenToContractEvents';
 
 const app = express();
 
@@ -22,8 +22,8 @@ app.use(compression());
 app.use(helmet());
 app.disable('x-powered-by');
 
-listenToContrcatEvents(Networks.Testnet);
-// listenToContrcatEvents(Networks.Mainnet);
+listenToContractEvents(Networks.Testnet);
+// listenToContractEvents(Networks.Mainnet);
 
 app.use(cors());
 app.use(bodyParser.json());
