@@ -3,7 +3,7 @@ services:
     container_name: fluxity-api
     env_file: .env
     environment:
-      DB_URI: mongodb://mongo-wagent:27017
+      DB_URI: mongodb://mongo-fluxity:27017
       LOG_FILE_PATH: /app/storage/${LOG_FILENAME}
     build: .
     restart: unless-stopped
