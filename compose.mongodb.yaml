@@ -1,0 +1,16 @@
+services:
+  mongo-fluxity:
+    image: mongo:8.0.0-rc13-jammy
+    container_name: mongo-fluxity
+    ports:
+      - '127.0.0.1:27016:27017'
+    networks:
+      - fluxityapi
+    volumes:
+      - ~/storage/mongodb/data/:/data/db/data
+      - ~/storage/mongodb/log/:/data/db/log
+
+networks:
+  fluxityapi:
+    name: fluxityapi
+    external: true
