@@ -2,7 +2,7 @@ services:
   fluxity-api:
     env_file: .env
     environment:
-      DB_URI: mongodb://mongo-fluxity:27016
+      DB_URI: mongodb://mongo-fluxity:27015
       LOG_FILE_PATH: /app/storage/${LOG_FILENAME}
     build: .
     networks:
