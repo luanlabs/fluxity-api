@@ -7,21 +7,29 @@ import getConfig from '../utils/soroban/getConfig';
 import { Network } from '../types/networkType';
 
 const saveLockupWithdrawn = async (id: string, network: Network) => {
-  const { contract, admin } = await getConfig(network);
-  const lockup = await getLockup(admin, contract, id, network);
-  const lockupDetails = bigintValuesToNumbers(lockup);
+  try {
+    const { contract, admin } = await getConfig(network);
+    const lockup = await getLockup(admin, contract, id, network);
+    const lockupDetails = bigintValuesToNumbers(lockup);
 
-  const updateLockup = await Lockup.findOneAndUpdate(
-    { id, network },
-    { withdrawn: lockupDetails.withdrawn },
-  );
+    const updateLockup = await Lockup.findOneAndUpdate(
+      { id, network },
+      { withdrawn: lockupDetails.withdrawn },
+    );
 
-  log.info(
-    `Save withdrawn lockup successful, lockup: ${updateLockup?.id}, newWithdrawn:${lockupDetails.withdrawn}`,
-  );
+    log.info(
+      `Save withdrawn lockup successful, lockup: ${updateLockup?.id}, newWithdrawn:${lockupDetails.withdrawn}`,
+    );
 
-  if (!updateLockup) {
-    await saveNewLockup(id, network);
+    if (!updateLockup) {
+      await saveNewLockup(id, network);
+    }
+
+    return true;
+  } catch (e) {
+    log.error(e.message);
+
+    return false;
   }
 };
 
