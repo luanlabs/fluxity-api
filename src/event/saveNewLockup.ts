@@ -35,12 +35,12 @@ const saveNewLockup = async (id: string, network: Network) => {
     await newLockup.save();
 
     log.info(`Save new lockup successful, lockup: ${newLockup.id}`);
+
+    return true;
   } catch (e) {
-    if (e.code == 'ECONNRESET') {
-      saveNewLockup(id, network);
-    } else {
-      log.error(e.message);
-    }
+    log.error(e.message);
+
+    return false;
   }
 };
 

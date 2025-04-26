@@ -8,18 +8,13 @@ import db from './db';
 import envs from './env';
 import router from './routes';
 import { log } from './logger';
+import { Networks } from './constant/network';
 import jsonResponse from './middleware/jsonResponse';
-import listenToTestNetContractEvents from './event/listenToTestNetContractEvents';
-// import listenToMainNetContractEvents from './event/listenToMainNetContractEvents';
+import listenToContrcatEvents from './event/listenToContrcatEvents';
 
 const app = express();
 
 const { PORT: port, DB_URI: uriDB, DB_NAME: nameDB } = envs();
-
-if (typeof uriDB !== 'string' || typeof nameDB !== 'string') {
-  log.fatal('database URI or name is invalid');
-  process.exit(1);
-}
 
 db(uriDB, nameDB);
 
@@ -27,8 +22,8 @@ app.use(compression());
 app.use(helmet());
 app.disable('x-powered-by');
 
-// listenToMainNetContractEvents();
-listenToTestNetContractEvents();
+listenToContrcatEvents(Networks.Testnet);
+// listenToContrcatEvents(Networks.Mainnet);
 
 app.use(cors());
 app.use(bodyParser.json());
