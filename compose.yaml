@@ -12,3 +12,8 @@ services:
       - '${LOG_DIRNAME}:/app/storage'
     ports:
       - '127.0.0.1:3000:5000'
+
+networks:
+  fluxityapi:
+    name: fluxityapi
+    external: true
