@@ -8,7 +8,7 @@ import saveLockupWithdrawn from './saveLockupWithdrawn';
 import updateLastLedger from '../utils/updateLastLedger';
 import calculateLastUsedLedger from '../utils/soroban/lockup/calculateLastUsedLedger';
 
-const listenToContrcatEvents = async (network: Network) => {
+const listenToContractEvents = async (network: Network) => {
   try {
     const { server, contract } = await getConfig(network);
 
@@ -76,7 +76,7 @@ const listenToContrcatEvents = async (network: Network) => {
   }
 
   await new Promise((resolve) => setTimeout(resolve, 10000));
-  listenToContrcatEvents(network);
+  listenToContractEvents(network);
 };
 
-export default listenToContrcatEvents;
+export default listenToContractEvents;
