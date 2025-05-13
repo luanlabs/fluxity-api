@@ -1,12 +1,11 @@
 services:
   fluxity-api:
+    network_mode: host
     env_file: .env
     environment:
-      DB_URI: mongodb://mongo-fluxity
+      DB_URI: mongodb://localhost:27017
       LOG_FILE_PATH: /app/storage/${LOG_FILENAME}
     build: .
-    networks:
-        - fluxityapi
     restart: unless-stopped
     volumes:
       - '${LOG_DIRNAME}:/app/storage'
