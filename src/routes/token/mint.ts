@@ -22,7 +22,7 @@ const mintToken: RequestHandler = async (req, res) => {
       });
     }
 
-    const { server, admin: admin } = await getConfig(network);
+    const { server, admin: admin } = await getConfig('testnet');
 
     const tokens = await Token.find({ claimable: true, symbol: { $ne: 'native' } });
 
