@@ -3,13 +3,33 @@ import { RequestHandler } from 'express';
 import Token from '../../models/Token';
 import saveToken from '../../utils/token/saveToken';
 import log from '../../logger';
+import getErrorMessage from '../../utils/getErrorMessage';
+import { isValidContractAddress } from '../../utils/validation';
 
 const addTokenRoute: RequestHandler = async (req, res) => {
   try {
     const { token, logo, claimable } = req.body;
     const { network } = res;
 
-    const existingToken = await Token.findOne({ address: token });
+    if (!isValidContractAddress(token)) {
+      return res.status(400).j({
+        status: 'error',
+        message: 'A valid token contract address is required',
+        result: {},
+      });
+    }
+
+    if (logo !== undefined && typeof logo !== 'string') {
+      return res.status(400).j({ status: 'error', message: 'logo must be a string', result: {} });
+    }
+
+    if (claimable !== undefined && typeof claimable !== 'boolean') {
+      return res
+        .status(400)
+        .j({ status: 'error', message: 'claimable must be a boolean', result: {} });
+    }
+
+    const existingToken = await Token.findOne({ address: token, network });
     if (existingToken) {
       return res.status(400).j({
         status: 'error',
@@ -25,12 +45,12 @@ const addTokenRoute: RequestHandler = async (req, res) => {
       message: 'Token has been saved successfully',
       result: newToken,
     });
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to add token: ${getErrorMessage(error)}`);
 
     return res.status(500).j({
       status: 'error',
-      message: e.message,
+      message: 'Failed to add token',
       result: {},
     });
   }

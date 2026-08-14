@@ -6,21 +6,23 @@ import bigintValuesToNumbers from '../utils/soroban/lockup/bigintValuesToNumbers
 import log from '../logger';
 import getConfig from '../utils/soroban/getConfig';
 import { Network } from '../types/networkType';
+import getErrorMessage from '../utils/getErrorMessage';
 
 const saveNewLockup = async (id: string, network: Network) => {
   try {
     const { contract, admin } = await getConfig(network);
 
-    const existinglockup = await Lockup.findOne({ id, network });
+    const existingLockup = await Lockup.findOne({ id, network });
 
-    if (existinglockup) {
-      return;
+    if (existingLockup) {
+      // Already mirrored — report success so the event cursor can advance.
+      return true;
     }
 
     const lockup = await getLockup(admin, contract, id, network);
     const lockupDetails = bigintValuesToNumbers(lockup);
 
-    let token = await Token.findOne({ address: lockupDetails.token });
+    let token = await Token.findOne({ address: lockupDetails.token, network });
 
     if (!token) {
       token = await saveToken(lockupDetails.token, network);
@@ -34,11 +36,11 @@ const saveNewLockup = async (id: string, network: Network) => {
 
     await newLockup.save();
 
-    log.info(`Save new lockup successful, lockup: ${newLockup.id}`);
+    log.info(`Saved new lockup successfully, lockup: ${newLockup.id}`);
 
     return true;
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to save new lockup ${id} on ${network}: ${getErrorMessage(error)}`);
 
     return false;
   }

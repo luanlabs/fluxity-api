@@ -3,24 +3,11 @@ import Ledger from '../models/Ledger';
 import { Network } from '../types/networkType';
 
 const updateLastLedger = async (lastUsedLedger: number, network: Network) => {
-  const updateLastLedger = await Ledger.findOneAndUpdate(
-    { id: network === 'testnet' ? '0' : '1' },
-    { last: lastUsedLedger },
-  );
+  const id = network === 'testnet' ? '0' : '1';
 
-  if (updateLastLedger) {
-    log.info(`Update lastUsedLedger (Testnet) successful, ledger: ${lastUsedLedger}`);
-  }
+  await Ledger.findOneAndUpdate({ id }, { last: String(lastUsedLedger) }, { upsert: true });
 
-  if (!updateLastLedger) {
-    const ledger = new Ledger({
-      id: network === 'testnet' ? '0' : '1',
-      last: lastUsedLedger,
-    });
-    await ledger.save();
-
-    log.info(`Save lastUsedLedger (Testnet) successful, ledger: ${lastUsedLedger}`);
-  }
+  log.info(`Updated lastUsedLedger (${network}) successfully, ledger: ${lastUsedLedger}`);
 };
 
 export default updateLastLedger;

@@ -1,18 +1,30 @@
 services:
-  fluxity-api:
-    network_mode: host
-    env_file: .env
-    environment:
-      DB_URI: mongodb://localhost:27017
-      LOG_FILE_PATH: /app/storage/${LOG_FILENAME}
-    build: .
+  mongo:
+    image: mongo:7
     restart: unless-stopped
     volumes:
-      - '${LOG_DIRNAME}:/app/storage'
-    ports:
-      - '127.0.0.1:3000:3000'
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
-networks:
-  fluxityapi:
-    name: fluxityapi
-    external: true
+  api:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Point the API at the mongo service and pin the in-container port.
+      DB_URI: mongodb://mongo:27017
+      NODE_ENV: production
+      PORT: 3000
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - '127.0.0.1:${HOST_PORT:-3000}:3000'
+
+volumes:
+  mongo-data:

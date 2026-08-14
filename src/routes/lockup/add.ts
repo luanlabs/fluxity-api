@@ -2,25 +2,43 @@ import { RequestHandler } from 'express';
 
 import saveNewLockup from '../../event/saveNewLockup';
 import log from '../../logger';
+import getErrorMessage from '../../utils/getErrorMessage';
+import { normalizeLockupId } from '../../utils/validation';
 
 const addLockupRoute: RequestHandler = async (req, res) => {
   try {
-    const { id } = req.body;
     const { network } = res;
+    const id = normalizeLockupId(req.body?.id);
 
-    await saveNewLockup(id, network);
+    if (id === null) {
+      return res.status(400).j({
+        status: 'error',
+        message: 'A valid lockup id is required',
+        result: {},
+      });
+    }
+
+    const saved = await saveNewLockup(id, network);
+
+    if (!saved) {
+      return res.status(500).j({
+        status: 'error',
+        message: 'Failed to save the lockup',
+        result: {},
+      });
+    }
 
     return res.status(201).j({
       status: 'success',
       message: 'Save lockup to db',
       result: {},
     });
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to add lockup: ${getErrorMessage(error)}`);
 
     return res.status(500).j({
       status: 'error',
-      message: e.message,
+      message: 'Failed to save the lockup',
       result: {},
     });
   }

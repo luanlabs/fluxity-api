@@ -4,6 +4,7 @@ import Lockup from '../../models/Lockup';
 import getLockupsQueries from '../../utils/soroban/lockup/getLockupsQueries';
 import calculateLockupStatus from '../../utils/soroban/lockup/calculateLockupStatus';
 import log from '../../logger';
+import getErrorMessage from '../../utils/getErrorMessage';
 
 const getLockupsRoute: RequestHandler = async (req, res) => {
   try {
@@ -14,35 +15,31 @@ const getLockupsRoute: RequestHandler = async (req, res) => {
 
     const lockupAll = await Lockup.find(query).populate('token').sort({ start_date: -1 }).exec();
 
-    let lockups = lockupAll.map((lockup) => lockup.toObject());
-
-    for (let i = 0; i < lockups.length; i++) {
-      lockups[i].status = calculateLockupStatus(
-        lockups[i].start_date,
-        lockups[i].end_date,
-        lockups[i].cancelled_date,
-      );
-    }
+    let lockups = lockupAll.map((lockup) => {
+      const plain = lockup.toObject();
+      plain.status = calculateLockupStatus(plain.start_date, plain.end_date, plain.cancelled_date);
+      return plain;
+    });
 
     if (status) {
-      lockups = lockups.filter((lockup) => {
-        return lockup.status === status.toString().toLowerCase();
-      });
+      const wanted = status.toString().toLowerCase();
+      lockups = lockups.filter((lockup) => lockup.status === wanted);
     }
 
     return res.status(200).j({
       status: 'success',
-      message: '',
+      message: 'Lockups have been successfully found',
       result: lockups,
     });
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to fetch lockups: ${getErrorMessage(error)}`);
 
     return res.status(500).j({
       status: 'error',
-      message: e.message,
+      message: 'Failed to fetch lockups',
       result: {},
     });
   }
 };
+
 export default getLockupsRoute;

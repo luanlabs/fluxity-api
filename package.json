@@ -3,13 +3,18 @@
   "version": "0.1.0",
   "description": "The Fluxity API",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "dev:start": "nodemon --exec node dist/index.js",
-    "dev:build": "tsc --watch",
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "npm-run-all --parallel dev:build dev:start",
-    "lint": "eslint . --ext .ts"
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "repository": {
     "type": "git",
@@ -18,40 +23,37 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "devDependencies": {
-    "@stellar/stellar-sdk": "^13.1.0",
-    "@types/bunyan": "^1.8.11",
-    "@types/compression": "^1.7.4",
-    "@types/cors": "^2.8.15",
-    "@types/express": "^4.17.20",
-    "@types/node": "^20.8.7",
-    "@types/nodemailer": "^6.4.13",
-    "@types/swagger-jsdoc": "^6.0.2",
-    "@types/swagger-ui-express": "^4.1.5",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "@typescript-eslint/parser": "^6.8.0",
-    "eslint": "^8.52.0",
-    "eslint-config-standard-with-typescript": "^39.1.1",
-    "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-n": "^16.2.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "express": "^4.18.2",
-    "nodemon": "^3.0.1",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^5.2.2"
-  },
   "dependencies": {
-    "@types/bunyan": "^1.8.11",
-    "body-parser": "^1.20.2",
-    "bunyan": "^1.8.15",
-    "compression": "^1.7.4",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "envil": "^0.1.4",
-    "helmet": "^7.0.0",
-    "mongoose": "^7.6.3",
-    "nodemailer": "^6.9.7",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0"
+    "@stellar/stellar-sdk": "^16.0.1",
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "helmet": "^8.2.0",
+    "mongoose": "^8.24.1",
+    "pino": "^10.3.1",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/compression": "^1.8.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.13.2",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "eslint": "^10.6.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.7.0",
+    "pino-pretty": "^13.1.3",
+    "prettier": "^3.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "~5.9",
+    "typescript-eslint": "^8.62.0"
+  },
+  "overrides": {
+    "js-yaml": "^4.3.0"
   }
 }

@@ -1,3 +1,5 @@
+import path from 'path';
+
 const configSwagger = () => {
   const options = {
     definition: {
@@ -6,19 +8,15 @@ const configSwagger = () => {
         title: 'Fluxity API',
         version: '0.1.0',
         description:
-          'Fluxity API allows users to mint free tokens, subscribe to our news, and get aggregared data of the streams',
+          'The Fluxity API lets users mint free testnet tokens and query aggregated lockup/stream data on the Stellar network.',
       },
-      servers: [
-        {
-          url: 'https://api.fluxity.finance',
-        },
-        {
-          url: 'http://localhost:3000',
-        },
-      ],
+      servers: [{ url: 'https://api.fluxity.finance' }, { url: 'http://localhost:3000' }],
     },
-    apis: ['./src/swagger/**/*.ts', './src/swagger/**/**/*.ts'],
+    // Resolved relative to this file (not the cwd) and matched against both the
+    // TypeScript sources (dev via tsx) and the compiled output (production).
+    apis: [path.join(__dirname, '../../swagger/**/*.{ts,js}')],
   };
+
   return options;
 };
 

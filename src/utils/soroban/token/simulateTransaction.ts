@@ -1,6 +1,6 @@
-import { Account, scValToNative, Contract } from '@stellar/stellar-sdk';
+import { Account, rpc, scValToNative, Contract } from '@stellar/stellar-sdk';
 
-import createTransaction from '../baseTransaction';
+import baseTransaction from '../baseTransaction';
 import getConfig from '../getConfig';
 import { Network } from '../../../types/networkType';
 
@@ -10,17 +10,19 @@ export const simulateTransaction = async (
   functionName: string,
   network: Network,
 ): Promise<string> => {
-  const { server } = await getConfig(network);
+  const { server, networkPassphrase } = await getConfig(network);
 
   const call = contract.call(functionName);
 
-  const transactionResult = await createTransaction(admin, call);
+  const transaction = baseTransaction(admin, call, networkPassphrase);
 
-  const transactionSimulate = await server.simulateTransaction(transactionResult);
+  const simulation = await server.simulateTransaction(transaction);
 
-  const retval: string = scValToNative(Object(transactionSimulate).result.retval);
+  if (!rpc.Api.isSimulationSuccess(simulation) || !simulation.result) {
+    throw new Error(`Failed to simulate "${functionName}" on ${network}`);
+  }
 
-  return retval;
+  return scValToNative(simulation.result.retval);
 };
 
 export default simulateTransaction;

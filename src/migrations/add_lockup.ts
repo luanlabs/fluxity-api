@@ -5,21 +5,23 @@ import Lockup from '../models/Lockup';
 import getLatestLockupId from '../utils/soroban/lockup/getLatestLockupId';
 
 async function lockupUp() {
-  const latestLockupId = await getLatestLockupId(Networks.Testnet);
+  const latestLockupId = Number(await getLatestLockupId(Networks.Testnet));
 
-  let isMigration = false;
+  let applied = 0;
 
+  // Serialized on purpose: firing every save concurrently floods the Soroban RPC.
   for (let i = 0; i < latestLockupId; i++) {
-    const lockups = await Lockup.findOne({ id: i, network: Networks.Testnet });
+    const id = String(i);
+    const existing = await Lockup.findOne({ id, network: Networks.Testnet });
 
-    if (!lockups) {
-      saveNewLockup(i.toString(), Networks.Testnet);
-      isMigration = true;
+    if (!existing) {
+      await saveNewLockup(id, Networks.Testnet);
+      applied++;
     }
   }
 
-  if (isMigration) {
-    log.info('Migration lockup applied successfully');
+  if (applied > 0) {
+    log.info(`Migration applied successfully, added ${applied} lockup(s)`);
   }
 }
 

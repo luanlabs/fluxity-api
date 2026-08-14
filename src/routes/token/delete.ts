@@ -2,36 +2,45 @@ import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 import log from '../../logger';
+import getErrorMessage from '../../utils/getErrorMessage';
+import { isValidContractAddress } from '../../utils/validation';
 
 const deleteTokenRoute: RequestHandler = async (req, res) => {
   try {
     const { token } = req.body;
     const { network } = res;
 
-    const existingToken = await Token.findOne({ address: token, network });
-    if (!existingToken) {
-      return res.status(404).j({
+    if (!isValidContractAddress(token)) {
+      return res.status(400).j({
         status: 'error',
-        message: 'Token dose not exist',
+        message: 'A valid token contract address is required',
         result: {},
       });
     }
 
     const tokenDeleted = await Token.findOneAndDelete({ address: token, network });
 
-    log.info(`Token deleted successfully, token: ${tokenDeleted?.address}`);
+    if (!tokenDeleted) {
+      return res.status(404).j({
+        status: 'error',
+        message: 'Token does not exist',
+        result: {},
+      });
+    }
+
+    log.info(`Token deleted successfully, token: ${tokenDeleted.address}`);
 
     return res.status(200).j({
       status: 'success',
       message: 'Token deleted successfully',
       result: tokenDeleted,
     });
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to delete token: ${getErrorMessage(error)}`);
 
     return res.status(500).j({
       status: 'error',
-      message: e.message,
+      message: 'Failed to delete token',
       result: {},
     });
   }

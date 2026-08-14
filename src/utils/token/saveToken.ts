@@ -10,32 +10,37 @@ const saveToken = async (token: string, network: Network, logo?: string, claimab
   const { admin } = await getConfig(network);
   const contract = new Contract(token);
 
-  const getTokenName = simulateTransaction(admin, contract, 'name', network);
+  const [name, symbol, decimals] = await Promise.all([
+    simulateTransaction(admin, contract, 'name', network),
+    simulateTransaction(admin, contract, 'symbol', network),
+    simulateTransaction(admin, contract, 'decimals', network),
+  ]);
 
-  const getTokenSymbol = simulateTransaction(admin, contract, 'symbol', network);
-
-  const getTokenDecimals = simulateTransaction(admin, contract, 'decimals', network);
-
-  const result = await Promise.all([getTokenName, getTokenSymbol, getTokenDecimals]);
-
-  const newToken = new Token({
-    address: token,
-    name: result[0],
-    symbol: result[1],
-    decimals: result[2],
-    logo,
-    claimable,
-    network,
-  });
   try {
-    await newToken.save();
-  } catch (e) {
-    log.error(e.message);
+    const newToken = await Token.create({
+      address: token,
+      name,
+      symbol,
+      decimals,
+      logo,
+      claimable,
+      network,
+    });
+
+    log.info(`Token saved successfully, token: ${newToken.address}, symbol: ${newToken.symbol}`);
+
+    return newToken;
+  } catch (error) {
+    // Most likely a duplicate-key race: another request saved this token first.
+    const existing = await Token.findOne({ address: token, network });
+
+    if (existing) {
+      return existing;
+    }
+
+    // Genuine failure — surface it so the caller can return an error response.
+    throw error;
   }
-
-  log.info(`Token save successfully, token: ${newToken.address}, symbol:${newToken.symbol}`);
-
-  return newToken;
 };
 
 export default saveToken;

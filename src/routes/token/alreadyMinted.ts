@@ -2,42 +2,48 @@ import { RequestHandler } from 'express';
 
 import AlreadyMinted from '../../models/AlreadyMinted';
 import log from '../../logger';
+import getErrorMessage from '../../utils/getErrorMessage';
+import { isValidPublicKey } from '../../utils/validation';
 
 const alreadyMintedRoute: RequestHandler = async (req, res) => {
   try {
     const { user } = req.params;
     const { network } = res;
 
-    if (network == 'mainnet') {
+    if (network === 'mainnet') {
       return res.status(400).j({
         status: 'error',
-        message: 'Already Minted just in testnet network',
+        message: 'Minting is only available on the testnet network',
+        result: {},
+      });
+    }
+
+    if (!isValidPublicKey(user)) {
+      return res.status(400).j({
+        status: 'error',
+        message: 'A valid account address is required',
         result: {},
       });
     }
 
     const isUserAlreadyMinted = await AlreadyMinted.findOne({ address: user });
-    if (isUserAlreadyMinted) {
-      return res.status(200).j({
-        status: 'success',
-        message: 'User has already minted tokens',
-        result: { minted: true },
-      });
-    }
 
     return res.status(200).j({
       status: 'success',
-      message: 'User has not minted tokens',
-      result: { minted: false },
+      message: isUserAlreadyMinted
+        ? 'User has already minted tokens'
+        : 'User has not minted tokens',
+      result: { minted: Boolean(isUserAlreadyMinted) },
     });
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to check minted status: ${getErrorMessage(error)}`);
 
     return res.status(500).j({
       status: 'error',
-      message: e.message,
+      message: 'Failed to check minted status',
       result: {},
     });
   }
 };
+
 export default alreadyMintedRoute;

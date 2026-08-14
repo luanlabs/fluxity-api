@@ -8,6 +8,7 @@ import log from '../../../../logger';
 import getConfig from '../../getConfig';
 import { Networks } from '../../../../constant/network';
 import saveNewLockup from '../../../../event/saveNewLockup';
+import getErrorMessage from '../../../getErrorMessage';
 
 const createStreams = async (token: IToken, address: string) => {
   try {
@@ -18,32 +19,35 @@ const createStreams = async (token: IToken, address: string) => {
     const finalizeApprove = await finalizeTransaction(approveTx, server);
 
     if (
-      finalizeApprove.status == rpc.Api.GetTransactionStatus.SUCCESS &&
-      finalizeApprove.returnValue
+      finalizeApprove.status !== rpc.Api.GetTransactionStatus.SUCCESS ||
+      !finalizeApprove.returnValue
     ) {
-      log.info(`Approved stream, address: ${address}, token:${token.address}`);
-
-      const streamTx = await buildStreamTransaction(admin, address, token.address);
-
-      const finalizeStream = await finalizeTransaction(streamTx, server);
-
-      if (
-        finalizeStream.status == rpc.Api.GetTransactionStatus.SUCCESS &&
-        finalizeStream.returnValue
-      ) {
-        log.info(`Create stream, address: ${address}, token:${token.address}`);
-
-        const streamId = scValToNative(finalizeStream.returnValue).toString();
-
-        await saveNewLockup(streamId, Networks.Testnet);
-
-        log.info({ message: 'Create stream for address : ' + address });
-      }
+      log.warn(`Approve transaction did not succeed, address: ${address}, token: ${token.address}`);
+      return;
     }
-  } catch (e) {
-    console.log(e);
 
-    log.error({ message: e.message });
+    log.info(`Approved stream, address: ${address}, token: ${token.address}`);
+
+    const streamTx = await buildStreamTransaction(admin, address, token.address);
+
+    const finalizeStream = await finalizeTransaction(streamTx, server);
+
+    if (
+      finalizeStream.status !== rpc.Api.GetTransactionStatus.SUCCESS ||
+      !finalizeStream.returnValue
+    ) {
+      log.warn(`Stream transaction did not succeed, address: ${address}, token: ${token.address}`);
+      return;
+    }
+
+    const streamId = scValToNative(finalizeStream.returnValue).toString();
+
+    await saveNewLockup(streamId, Networks.Testnet);
+
+    log.info(`Created stream for address: ${address}, streamId: ${streamId}`);
+  } catch (error) {
+    log.error(`Failed to create stream for address ${address}: ${getErrorMessage(error)}`);
   }
 };
+
 export default createStreams;

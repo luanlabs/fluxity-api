@@ -1,23 +1,25 @@
 import { Account, xdr, Networks, TransactionBuilder, Operation } from '@stellar/stellar-sdk';
-import getConfig from './getConfig';
-import { Networks as Network } from '../../constant/network';
 
-const baseTransaction = async (
+import envs from '../../env';
+
+/**
+ * Builds a single-operation Soroban transaction.
+ *
+ * The fee is read directly from configuration (no extra RPC round-trip), and the
+ * network passphrase defaults to Testnet for backwards compatibility while
+ * allowing callers to pass the correct one for the network in use.
+ */
+const baseTransaction = (
   admin: Account,
   call: xdr.Operation<Operation.InvokeHostFunction>,
+  networkPassphrase: string = Networks.TESTNET,
 ) => {
-  const { fee } = await getConfig(Network.Testnet);
+  const { BASE_FEE } = envs();
 
-  let transaction = await new TransactionBuilder(admin, {
-    fee,
-    networkPassphrase: Networks.TESTNET,
-  });
-
-  transaction = transaction.addOperation(call);
-
-  transaction = transaction.setTimeout(30);
-  const transactionBuild = transaction.build();
-
-  return transactionBuild;
+  return new TransactionBuilder(admin, { fee: BASE_FEE, networkPassphrase })
+    .addOperation(call)
+    .setTimeout(30)
+    .build();
 };
+
 export default baseTransaction;

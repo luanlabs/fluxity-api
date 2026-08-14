@@ -2,25 +2,43 @@ import { RequestHandler } from 'express';
 
 import saveLockupWithdrawn from '../../event/saveLockupWithdrawn';
 import log from '../../logger';
+import getErrorMessage from '../../utils/getErrorMessage';
+import { normalizeLockupId } from '../../utils/validation';
 
 const withdrawLockupRoute: RequestHandler = async (req, res) => {
   try {
-    const { id } = req.body;
     const { network } = res;
+    const id = normalizeLockupId(req.body?.id);
 
-    await saveLockupWithdrawn(id, network);
+    if (id === null) {
+      return res.status(400).j({
+        status: 'error',
+        message: 'A valid lockup id is required',
+        result: {},
+      });
+    }
+
+    const saved = await saveLockupWithdrawn(id, network);
+
+    if (!saved) {
+      return res.status(500).j({
+        status: 'error',
+        message: 'Failed to save the withdrawn lockup',
+        result: {},
+      });
+    }
 
     return res.status(200).j({
       status: 'success',
       message: 'Successfully saved the lockup on the DB',
       result: {},
     });
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to withdraw lockup: ${getErrorMessage(error)}`);
 
     return res.status(500).j({
       status: 'error',
-      message: e.message,
+      message: 'Failed to save the withdrawn lockup',
       result: {},
     });
   }

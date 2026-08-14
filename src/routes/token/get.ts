@@ -2,14 +2,13 @@ import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 import log from '../../logger';
+import getErrorMessage from '../../utils/getErrorMessage';
 
-const getTokensRoute: RequestHandler = async (req, res) => {
+const getTokensRoute: RequestHandler = async (_req, res) => {
   try {
     const { network } = res;
 
-    const tokens = await Token.find({
-      network,
-    })
+    const tokens = await Token.find({ network })
       .collation({ locale: 'en' })
       .sort({ symbol: 1 })
       .exec();
@@ -19,14 +18,15 @@ const getTokensRoute: RequestHandler = async (req, res) => {
       message: 'Tokens have been successfully found',
       result: tokens,
     });
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to fetch tokens: ${getErrorMessage(error)}`);
 
     return res.status(500).j({
       status: 'error',
-      message: e.message,
+      message: 'Failed to fetch tokens',
       result: {},
     });
   }
 };
+
 export default getTokensRoute;

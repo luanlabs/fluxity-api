@@ -7,7 +7,12 @@ import baseTransaction from '../../baseTransaction';
 import { Networks } from '../../../../constant/network';
 
 const buildApproveTransaction = async (admin: Account, token: string): Promise<string> => {
-  const { server, contract: contractId, adminKeypair } = await getConfig(Networks.Testnet);
+  const {
+    server,
+    contract: contractId,
+    adminKeypair,
+    networkPassphrase,
+  } = await getConfig(Networks.Testnet);
 
   const { CLAIM_STREAM_AMOUNT } = envs();
 
@@ -24,13 +29,17 @@ const buildApproveTransaction = async (admin: Account, token: string): Promise<s
 
   const approveCall = contract.call('approve', from, spender, amountScVal, expirationLedger);
 
-  const transaction = await baseTransaction(admin, approveCall);
+  const transaction = baseTransaction(admin, approveCall, networkPassphrase);
 
   const transactionPrepare = await server.prepareTransaction(transaction);
 
   transactionPrepare.sign(adminKeypair);
 
   const response = await server.sendTransaction(transactionPrepare);
+
+  if (response.status === 'ERROR') {
+    throw new Error(`Failed to submit approve transaction for token ${token}`);
+  }
 
   return response.hash;
 };

@@ -5,13 +5,14 @@ import saveNewLockup from './saveNewLockup';
 import log from '../logger';
 import getConfig from '../utils/soroban/getConfig';
 import { Network } from '../types/networkType';
+import getErrorMessage from '../utils/getErrorMessage';
 
 const saveLockupCancelled = async (id: string, network: Network) => {
   try {
     const { contract, admin } = await getConfig(network);
     const lockup = await getLockup(admin, contract, id, network);
 
-    const updateLockup = await Lockup.findOneAndUpdate(
+    const updatedLockup = await Lockup.findOneAndUpdate(
       { id, network },
       {
         is_cancelled: lockup.is_cancelled,
@@ -20,15 +21,16 @@ const saveLockupCancelled = async (id: string, network: Network) => {
       },
     );
 
-    log.info(`Save cancell lockup successful, lockup: ${updateLockup?.id}`);
-
-    if (!updateLockup) {
+    if (!updatedLockup) {
+      // Cancellation arrived before the lockup was mirrored — create it now.
       await saveNewLockup(id, network);
+    } else {
+      log.info(`Saved cancelled lockup successfully, lockup: ${updatedLockup.id}`);
     }
 
     return true;
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to save cancelled lockup ${id} on ${network}: ${getErrorMessage(error)}`);
 
     return false;
   }

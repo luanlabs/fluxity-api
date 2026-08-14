@@ -5,6 +5,7 @@ import saveNewLockup from './saveNewLockup';
 import log from '../logger';
 import getConfig from '../utils/soroban/getConfig';
 import { Network } from '../types/networkType';
+import getErrorMessage from '../utils/getErrorMessage';
 
 const saveLockupWithdrawn = async (id: string, network: Network) => {
   try {
@@ -12,22 +13,23 @@ const saveLockupWithdrawn = async (id: string, network: Network) => {
     const lockup = await getLockup(admin, contract, id, network);
     const lockupDetails = bigintValuesToNumbers(lockup);
 
-    const updateLockup = await Lockup.findOneAndUpdate(
+    const updatedLockup = await Lockup.findOneAndUpdate(
       { id, network },
       { withdrawn: lockupDetails.withdrawn },
     );
 
-    log.info(
-      `Save withdrawn lockup successful, lockup: ${updateLockup?.id}, newWithdrawn:${lockupDetails.withdrawn}`,
-    );
-
-    if (!updateLockup) {
+    if (!updatedLockup) {
+      // Withdrawal arrived before the lockup was mirrored — create it now.
       await saveNewLockup(id, network);
+    } else {
+      log.info(
+        `Saved withdrawn lockup successfully, lockup: ${updatedLockup.id}, newWithdrawn: ${lockupDetails.withdrawn}`,
+      );
     }
 
     return true;
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to save withdrawn lockup ${id} on ${network}: ${getErrorMessage(error)}`);
 
     return false;
   }

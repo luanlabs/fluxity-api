@@ -1,33 +1,33 @@
-import bunyan from 'bunyan';
+import pino, { type LoggerOptions } from 'pino';
 
 import envs from './env';
 
-const { LOG_FILE_PATH, NODE_ENV } = envs();
+const { LOG_LEVEL, NODE_ENV, LOG_FILE_PATH } = envs();
 
-const streams: bunyan.Stream[] = [
-  {
-    level: bunyan.TRACE,
-    stream: process.stdout,
-  },
-];
+const options: LoggerOptions = {
+  level: LOG_LEVEL,
+  // Drop pino's default `pid`/`hostname` fields; keep a single service name.
+  base: { name: 'FLUXITY_API' },
+};
 
-if (NODE_ENV == 'production') {
-  streams[0] = {
-    level: bunyan.TRACE,
-    path: LOG_FILE_PATH,
-  };
+function createLogger() {
+  if (NODE_ENV === 'production') {
+    // Structured JSON to a file (when configured) or stdout, collected by the platform.
+    return LOG_FILE_PATH
+      ? pino(options, pino.destination({ dest: LOG_FILE_PATH, mkdir: true, sync: false }))
+      : pino(options);
+  }
+
+  // Human-friendly, colorized output for local development/tests.
+  return pino({
+    ...options,
+    transport: {
+      target: 'pino-pretty',
+      options: { colorize: true, translateTime: 'SYS:standard', ignore: 'pid,hostname' },
+    },
+  });
 }
 
-export const log = bunyan.createLogger({
-  name: 'FLUXITY_API',
-  level: bunyan.TRACE,
-  src: true,
-  streams,
-});
-
-delete log.fields.hostname;
-delete log.fields.pid;
-delete log.fields.v;
-delete log.fields.level;
+export const log = createLogger();
 
 export default log;

@@ -2,11 +2,10 @@ import { xdr, scValToNative as toNative } from '@stellar/stellar-sdk';
 
 const { ScVal } = xdr;
 
-const fromXDR = (xdr: string) => {
-  const bufEvent = Buffer.from(xdr, 'base64');
-  const xdrEvent = ScVal.fromXDR(bufEvent);
-  const nativeEvent = toNative(xdrEvent).toString();
-  return nativeEvent;
+const fromXDR = (encoded: string) => {
+  const buffer = Buffer.from(encoded, 'base64');
+  const scVal = ScVal.fromXDR(buffer);
+  return toNative(scVal).toString();
 };
 
 export default fromXDR;

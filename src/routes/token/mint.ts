@@ -7,10 +7,21 @@ import finalizeTransaction from '../../utils/soroban/finalizeTransaction';
 import log from '../../logger';
 import createStreams from '../../utils/soroban/lockup/createMintStream/createStreams';
 import getConfig from '../../utils/soroban/getConfig';
+import getErrorMessage from '../../utils/getErrorMessage';
+import { isValidPublicKey } from '../../utils/validation';
+import { Networks } from '../../constant/network';
 
 const mintToken: RequestHandler = async (req, res) => {
   try {
     const { user } = req.body;
+
+    if (!isValidPublicKey(user)) {
+      return res.status(400).j({
+        status: 'error',
+        message: 'A valid account address is required',
+        result: {},
+      });
+    }
 
     const isUserAlreadyMinted = await AlreadyMinted.findOne({ address: user });
 
@@ -22,45 +33,47 @@ const mintToken: RequestHandler = async (req, res) => {
       });
     }
 
-    const { server, admin: admin } = await getConfig('testnet');
+    const { server, admin } = await getConfig(Networks.Testnet);
 
-    const tokens = await Token.find({ claimable: true, symbol: { $ne: 'native' } });
+    const tokens = await Token.find({
+      network: Networks.Testnet,
+      claimable: true,
+      symbol: { $ne: 'native' },
+    });
 
     if (!tokens.length) {
       return res.status(404).j({
         status: 'error',
-        message: 'Token claimable not found',
+        message: 'No claimable token found',
         result: {},
       });
     }
 
-    for (let i = 0; i < tokens.length; i++) {
-      const mintTx = await buildMintTransaction(admin, tokens[i].address, user);
+    for (const token of tokens) {
+      const mintTx = await buildMintTransaction(admin, token.address, user);
 
       await finalizeTransaction(mintTx, server);
     }
 
-    const newAlreadyMinted = new AlreadyMinted({
-      address: user,
-    });
+    await AlreadyMinted.create({ address: user });
 
-    await newAlreadyMinted.save();
+    log.info(`AlreadyMinted saved successfully, user: ${user}`);
 
-    log.info(`AlreadMinted save successfully, user: ${newAlreadyMinted.address}`);
-
-    createStreams(tokens[0], user);
+    // Fire-and-forget: streaming a sample lockup should not block the response.
+    // createStreams handles its own errors internally.
+    void createStreams(tokens[0], user);
 
     return res.status(200).j({
       status: 'success',
       message: 'Tokens minted successfully',
       result: tokens,
     });
-  } catch (e) {
-    log.error(e.message);
+  } catch (error) {
+    log.error(`Failed to mint tokens: ${getErrorMessage(error)}`);
 
     return res.status(500).j({
       status: 'error',
-      message: e.message,
+      message: 'Failed to mint tokens',
       result: {},
     });
   }
