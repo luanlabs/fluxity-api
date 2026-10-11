@@ -1,9 +1,5 @@
 import { StrKey } from '@stellar/stellar-sdk';
 
-/** A Stellar account public key (starts with `G`). */
-export const isValidPublicKey = (value: unknown): value is string =>
-  typeof value === 'string' && StrKey.isValidEd25519PublicKey(value);
-
 /** A Soroban contract / token address (starts with `C`). */
 export const isValidContractAddress = (value: unknown): value is string =>
   typeof value === 'string' && StrKey.isValidContract(value);

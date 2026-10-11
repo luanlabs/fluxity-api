@@ -4,7 +4,7 @@ The backend service for [Fluxity](https://fluxity.finance) — a token-streaming
 lockup platform built on the **Stellar / Soroban** network.
 
 It exposes a REST API for token and lockup data, mirrors on-chain lockup contract
-events into MongoDB, and provides a testnet faucet (free token mint + sample stream).
+events into MongoDB, and supports independent testnet and mainnet deployments.
 
 ---
 
@@ -28,7 +28,7 @@ events into MongoDB, and provides a testnet faucet (free token mint + sample str
 
 - Node.js **22 or newer**
 - A reachable **MongoDB** instance
-- Stellar **admin secret key** with access to the Soroban contracts (for faucet/mint)
+- A funded Stellar **admin secret key** used as the source account for contract queries
 
 ---
 
@@ -60,7 +60,7 @@ npm start          # run the compiled server (node dist/index.js)
 
 ## Environment variables
 
-All variables are validated at startup. If any are missing or malformed, the
+All required variables are validated at startup. If any are missing or malformed, the
 process prints a detailed report and exits.
 
 | Variable                  | Required | Default       | Description                                                     |
@@ -70,13 +70,11 @@ process prints a detailed report and exits.
 | `DB_URI`                  |   yes    | —             | MongoDB connection string                                       |
 | `DB_NAME`                 |   yes    | —             | MongoDB database name                                           |
 | `BASE_FEE`                |    no    | `100000`      | Soroban base fee (stroops, numeric string)                      |
-| `ADMIN_SECRET_KEY`        |   yes    | —             | Stellar admin secret key (`S...`) used to sign faucet/mint txs  |
+| `ADMIN_SECRET_KEY`        |   yes    | —             | Stellar admin secret key (`S...`) used for contract queries     |
 | `TESTNET_SOROBAN_RPC_URL` |   yes    | —             | Testnet Soroban RPC URL                                         |
-| `MAINNET_SOROBAN_RPC_URL` |   yes    | —             | Mainnet Soroban RPC URL                                         |
+| `MAINNET_SOROBAN_RPC_URL` |    no    | —             | Mainnet RPC URL; requires `MAINNET_CONTRACT_ID`                 |
 | `TESTNET_CONTRACT_ID`     |   yes    | —             | Testnet lockup contract id (`C...`)                             |
-| `MAINNET_CONTRACT_ID`     |   yes    | —             | Mainnet lockup contract id (`C...`)                             |
-| `CLAIM_STREAM_AMOUNT`     |   yes    | —             | Faucet stream amount (numeric string)                           |
-| `CLAIM_TOKEN_AMOUNT`      |   yes    | —             | Faucet mint amount (numeric string)                             |
+| `MAINNET_CONTRACT_ID`     |    no    | —             | Mainnet contract id; requires `MAINNET_SOROBAN_RPC_URL`         |
 | `ADMIN_PASSWORD`          |   yes    | —             | Shared secret for the `Authorization` header on admin endpoints |
 | `LOG_LEVEL`               |    no    | `info`        | `trace`…`fatal` \| `silent`                                     |
 | `LOG_FILE_PATH`           |    no    | stdout        | In production, write JSON logs to this file instead of stdout   |
@@ -93,23 +91,24 @@ Responses share a consistent envelope:
 ```
 
 Endpoints (except `/health` and `/swagger`) are namespaced by network:
-`/:network/...` where `network` is `testnet` or `mainnet`.
+`/:network/...` where `network` is always `testnet` and is also `mainnet` when
+both mainnet environment variables are configured. Without them, the service
+logs a startup warning, returns `404` for mainnet routes, omits mainnet from
+Swagger, and otherwise runs normally with testnet support only.
 
-| Method | Path                                   | Auth  | Description                          |
-| ------ | -------------------------------------- | ----- | ------------------------------------ |
-| GET    | `/health`                              | —     | Liveness/readiness probe             |
-| GET    | `/swagger`                             | —     | Swagger UI                           |
-| GET    | `/:network/token`                      | —     | List tokens                          |
-| POST   | `/:network/token`                      | admin | Add a token                          |
-| PUT    | `/:network/token/:token`               | admin | Edit a token (`logo`, `claimable`)   |
-| DELETE | `/:network/token`                      | admin | Delete a token                       |
-| GET    | `/:network/token/already-minted/:user` | —     | Has a testnet user already minted?   |
-| POST   | `/:network/token/mint`                 | —     | Testnet faucet: mint + sample stream |
-| GET    | `/:network/lockup`                     | —     | List lockups (filterable)            |
-| GET    | `/:network/lockup/:id`                 | —     | Get a lockup by id                   |
-| POST   | `/:network/lockup`                     | —     | Mirror a created lockup              |
-| PUT    | `/:network/lockup`                     | —     | Mirror a withdrawal                  |
-| DELETE | `/:network/lockup`                     | —     | Mirror a cancellation                |
+| Method | Path                     | Auth  | Description               |
+| ------ | ------------------------ | ----- | ------------------------- |
+| GET    | `/health`                | —     | Liveness/readiness probe  |
+| GET    | `/swagger`               | —     | Swagger UI                |
+| GET    | `/:network/token`        | —     | List tokens               |
+| POST   | `/:network/token`        | admin | Add a token               |
+| PUT    | `/:network/token/:token` | admin | Edit a token logo         |
+| DELETE | `/:network/token`        | admin | Delete a token            |
+| GET    | `/:network/lockup`       | —     | List lockups (filterable) |
+| GET    | `/:network/lockup/:id`   | —     | Get a lockup by id        |
+| POST   | `/:network/lockup`       | —     | Mirror a created lockup   |
+| PUT    | `/:network/lockup`       | —     | Mirror a withdrawal       |
+| DELETE | `/:network/lockup`       | —     | Mirror a cancellation     |
 
 **Admin authentication:** send the `ADMIN_PASSWORD` value in the `Authorization`
 header. The comparison is constant-time.
@@ -167,7 +166,7 @@ src/
 ├── db.ts               # mongoose connection + background migration
 ├── constant/           # enums (networks)
 ├── middleware/         # auth, json envelope, network guard, error handler
-├── models/             # mongoose schemas (Token, Lockup, Ledger, AlreadyMinted)
+├── models/             # mongoose schemas (Token, Lockup, Ledger)
 ├── routes/             # token, lockup and swagger routers
 ├── event/              # contract event listener + sync handlers
 ├── migrations/         # startup lockup backfill

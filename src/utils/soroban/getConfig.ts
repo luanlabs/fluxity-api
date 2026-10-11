@@ -24,10 +24,16 @@ const getConfig = async (network: Network) => {
   } = envs();
 
   const isMainnet = network === 'mainnet';
+  const sorobanRpcUrl = isMainnet ? MAINNET_SOROBAN_RPC_URL : TESTNET_SOROBAN_RPC_URL;
+  const contractId = isMainnet ? MAINNET_CONTRACT_ID : TESTNET_CONTRACT_ID;
+
+  if (!sorobanRpcUrl || !contractId) {
+    throw new Error('Mainnet is not configured');
+  }
 
   const adminKeypair = Keypair.fromSecret(ADMIN_SECRET_KEY);
-  const server = new rpc.Server(isMainnet ? MAINNET_SOROBAN_RPC_URL : TESTNET_SOROBAN_RPC_URL);
-  const contract = new Contract(isMainnet ? MAINNET_CONTRACT_ID : TESTNET_CONTRACT_ID);
+  const server = new rpc.Server(sorobanRpcUrl);
+  const contract = new Contract(contractId);
   const networkPassphrase = isMainnet ? Networks.PUBLIC : Networks.TESTNET;
 
   let admin: Account;

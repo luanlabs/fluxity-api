@@ -7,7 +7,7 @@ import { isValidContractAddress } from '../../utils/validation';
 
 const editTokenRoute: RequestHandler = async (req, res) => {
   try {
-    const { logo, claimable } = req.body;
+    const { logo } = req.body;
     const { token } = req.params;
     const { network } = res;
 
@@ -23,15 +23,8 @@ const editTokenRoute: RequestHandler = async (req, res) => {
       return res.status(400).j({ status: 'error', message: 'logo must be a string', result: {} });
     }
 
-    if (claimable !== undefined && typeof claimable !== 'boolean') {
-      return res
-        .status(400)
-        .j({ status: 'error', message: 'claimable must be a boolean', result: {} });
-    }
-
-    const update: Partial<{ logo: string; claimable: boolean }> = {};
+    const update: Partial<{ logo: string }> = {};
     if (logo !== undefined) update.logo = logo;
-    if (claimable !== undefined) update.claimable = claimable;
 
     const tokenEdited = await Token.findOneAndUpdate({ address: token, network }, update, {
       new: true,

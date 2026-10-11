@@ -2,7 +2,7 @@
  * @swagger
  * /testnet/token:
  *   delete:
- *     summary: Deletes a token from the list of claimable tokens.
+ *     summary: Deletes a token from the token list.
  *     tags: [token (testnet)]
  *     requestBody:
  *       required: true
@@ -42,7 +42,6 @@
  *                     name: FakeDAI,
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
- *                     claimable: true,
  *                     network: testnet,
  *                     __v: 0
  *                   }

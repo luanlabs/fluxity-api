@@ -89,7 +89,6 @@
  *                         name: FakeDAI,
  *                         decimals: 7,
  *                         logo: /public/images/assets/fdai.svg,
- *                         calimable: true,
  *                         network: testnet,
  *                         __v: 0
  *                     },

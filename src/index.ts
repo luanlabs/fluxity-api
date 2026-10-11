@@ -49,7 +49,6 @@ async function bootstrap() {
 
   // Start syncing on-chain lockup events. Mainnet is intentionally disabled for now.
   void listenToContractEvents(Networks.Testnet);
-  // void listenToContractEvents(Networks.Mainnet);
 
   const server = app.listen(PORT, () => {
     log.info(`Fluxity API listening on port ${PORT}`);

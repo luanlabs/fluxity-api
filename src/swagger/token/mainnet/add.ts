@@ -2,7 +2,7 @@
  * @swagger
  * /mainnet/token:
  *   post:
- *     summary: Adds an ERC20-like token to the list of claimable tokens.
+ *     summary: Adds a token to the token list.
  *     tags: [token (mainnet)]
  *     requestBody:
  *       required: true
@@ -19,10 +19,6 @@
  *                 type: string
  *                 required: false
  *                 example : /public/images/assets/fusdc.svg
- *               claimable:
- *                 type: string
- *                 required: false
- *                 example : true
  *
  *
  *     security:
@@ -52,7 +48,6 @@
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
  *                     _id: 6539a4b453971c96d697f9c0,
- *                     claimable: false,
  *                     network: mainnet,
  *                     __v: 0
  *                   }

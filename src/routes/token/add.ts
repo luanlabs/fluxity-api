@@ -8,7 +8,7 @@ import { isValidContractAddress } from '../../utils/validation';
 
 const addTokenRoute: RequestHandler = async (req, res) => {
   try {
-    const { token, logo, claimable } = req.body;
+    const { token, logo } = req.body;
     const { network } = res;
 
     if (!isValidContractAddress(token)) {
@@ -23,12 +23,6 @@ const addTokenRoute: RequestHandler = async (req, res) => {
       return res.status(400).j({ status: 'error', message: 'logo must be a string', result: {} });
     }
 
-    if (claimable !== undefined && typeof claimable !== 'boolean') {
-      return res
-        .status(400)
-        .j({ status: 'error', message: 'claimable must be a boolean', result: {} });
-    }
-
     const existingToken = await Token.findOne({ address: token, network });
     if (existingToken) {
       return res.status(400).j({
@@ -38,7 +32,7 @@ const addTokenRoute: RequestHandler = async (req, res) => {
       });
     }
 
-    const newToken = await saveToken(token, network, logo, claimable);
+    const newToken = await saveToken(token, network, logo);
 
     return res.status(201).j({
       status: 'success',

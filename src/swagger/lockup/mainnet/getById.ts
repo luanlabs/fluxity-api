@@ -49,7 +49,6 @@
  *                         symbol: fDAI,
  *                         name: FakeDAI,
  *                         decimals: 7,
- *                         claimable: false,
  *                         network: mainnet,
  *                         logo: /public/images/assets/fdai.svg,
  *                         __v: 0

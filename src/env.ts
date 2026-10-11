@@ -9,6 +9,9 @@ const STELLAR_SECRET_KEY = /^S[A-Z2-7]{55}$/;
 const STELLAR_CONTRACT_ID = /^C[A-Z2-7]{55}$/;
 const NUMERIC_STRING = /^\d+$/;
 
+const emptyStringAsUndefined = (value: unknown) =>
+  typeof value === 'string' && value.trim() === '' ? undefined : value;
+
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.coerce.number().int().positive().max(65535).default(3000),
@@ -23,17 +26,20 @@ const envSchema = z.object({
     .string()
     .regex(STELLAR_SECRET_KEY, 'ADMIN_SECRET_KEY must be a valid Stellar secret key'),
   TESTNET_SOROBAN_RPC_URL: z.url('TESTNET_SOROBAN_RPC_URL must be a valid URL'),
-  MAINNET_SOROBAN_RPC_URL: z.url('MAINNET_SOROBAN_RPC_URL must be a valid URL'),
+  MAINNET_SOROBAN_RPC_URL: z.preprocess(
+    emptyStringAsUndefined,
+    z.url('MAINNET_SOROBAN_RPC_URL must be a valid URL').optional(),
+  ),
   TESTNET_CONTRACT_ID: z
     .string()
     .regex(STELLAR_CONTRACT_ID, 'TESTNET_CONTRACT_ID must be a valid contract id'),
-  MAINNET_CONTRACT_ID: z
-    .string()
-    .regex(STELLAR_CONTRACT_ID, 'MAINNET_CONTRACT_ID must be a valid contract id'),
-
-  // Faucet amounts (kept as numeric strings, consumed via Number()/BigInt()).
-  CLAIM_STREAM_AMOUNT: z.string().regex(NUMERIC_STRING, 'CLAIM_STREAM_AMOUNT must be numeric'),
-  CLAIM_TOKEN_AMOUNT: z.string().regex(NUMERIC_STRING, 'CLAIM_TOKEN_AMOUNT must be numeric'),
+  MAINNET_CONTRACT_ID: z.preprocess(
+    emptyStringAsUndefined,
+    z
+      .string()
+      .regex(STELLAR_CONTRACT_ID, 'MAINNET_CONTRACT_ID must be a valid contract id')
+      .optional(),
+  ),
 
   // Auth
   ADMIN_PASSWORD: z.string().min(1, 'ADMIN_PASSWORD is required'),
@@ -58,6 +64,15 @@ if (!parsed.success) {
 }
 
 const env: Readonly<Env> = Object.freeze(parsed.data);
+
+export const isMainnetEnabled = (): boolean =>
+  Boolean(env.MAINNET_CONTRACT_ID && env.MAINNET_SOROBAN_RPC_URL);
+
+if (!isMainnetEnabled()) {
+  console.warn(
+    'Mainnet support is disabled. Set both MAINNET_CONTRACT_ID and MAINNET_SOROBAN_RPC_URL to enable it.',
+  );
+}
 
 /**
  * Returns the validated, immutable environment configuration.

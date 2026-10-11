@@ -2,7 +2,7 @@
  * @swagger
  * /testnet/token:
  *   get:
- *     summary: Returns the list of the claimable tokens.
+ *     summary: Returns the token list.
  *     tags: [token (testnet)]
  *
  *     responses:
@@ -28,7 +28,6 @@
  *                     name: FakeDAI,
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
- *                     claimable: true,
  *                     network: testnet,
  *                     __v: 0
  *                   },]

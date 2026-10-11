@@ -24,10 +24,6 @@
  *                 type: string
  *                 required: false
  *                 example : /public/images/assets/fdai.svg
- *               claimable:
- *                 type: string
- *                 required: false
- *                 example : true
  *
  *     security:
  *       - Authorization : []
@@ -55,7 +51,6 @@
  *                     name: FakeDAI,
  *                     decimals: 7,
  *                     logo: /public/images/assets/fdai.svg,
- *                     claimable: true,
  *                     network: testnet,
  *                     __v: 0
  *                   }
